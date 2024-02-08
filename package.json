@@ -1,0 +1,19 @@
+{
+  "name": "idb-crud",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "start": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "preact": "^10.5.15",
+    "sass": "^1.70.0"
+  },
+  "devDependencies": {
+    "@crxjs/vite-plugin": "^1.0.14",
+    "@preact/preset-vite": "^2.1.5",
+    "vite": "^2.9.9"
+  }
+}

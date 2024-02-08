@@ -1,0 +1,25 @@
+{
+  "manifest_version": 3,
+  "name": "idb crud",
+  "version": "1.0",
+  "action": {
+    "default_popup": "index.html",
+    "default_icon": {
+      "16": "media/appicon16.png",
+      "32": "media/appicon32.png",
+      "48": "media/appicon48.png",
+      "128": "media/appicon128.png"
+    }
+  },
+  "permissions": [],
+  "content_scripts": [
+    {
+      "js": [
+        "src/content.jsx"
+      ],
+      "matches": [
+        "https://dev.supersorted.app/*"
+      ]
+    }
+  ]
+}
