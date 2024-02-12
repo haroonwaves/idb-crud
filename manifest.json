@@ -18,7 +18,7 @@
         "src/content.jsx"
       ],
       "matches": [
-        "https://dev.supersorted.app/*"
+        "<all_urls>"
       ]
     }
   ]
