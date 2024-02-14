@@ -1,19 +1,22 @@
 import { useState } from "preact/hooks";
+
+import Drawer from "./components/drawer";
+
 import "./styles/app.scss";
 
 export const App = () => {
-  const [showBar, setShowBar] = useState(true);
+  const [openDrawer, setOpenDrawer] = useState(false);
 
-  const hideBar = () => {
-    setShowBar(false);
+  const toggleDrawer = () => {
+    setOpenDrawer(!openDrawer);
   };
 
-  return showBar ? (
-    <div className="supersorted-cta">
-      <a href="https://mail.supersorted.app" target="_blank" rel="noreferrer">
-        Go to Supersorted ↗
-      </a>
-      <button onClick={hideBar}>✕</button>
+  return (
+    <div className="idb-crud-main">
+      <button type="button" onClick={toggleDrawer}>
+        &lt;
+      </button>
+      <Drawer open={openDrawer} />
     </div>
-  ) : null;
+  );
 };

@@ -1,31 +1,19 @@
-.supersorted-cta {
+.idb-crud-main {
   font-family: Archivo, Roboto, sans-serif !important;
   font-size: 13px;
 
-  width: 200px;
-  height: 34px;
-
-  position: fixed;
-  bottom: 0;
-  right: 72px;
-
-  z-index: 100;
-
-  color: #ffffff !important;
-  background-color: #323232;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-
-  a {
-    text-decoration: none;
-    color: inherit;
-  }
+  position: absolute;
+  z-index: 9999999;
 
   button {
     all: unset;
-    color: #bcbcbc;
+
+    position: fixed;
+    bottom: 50%;
+    right: 5px;
+
+    background-color: black;
+    color: white;
     cursor: pointer;
   }
 }
