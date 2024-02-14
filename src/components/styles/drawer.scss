@@ -3,15 +3,16 @@
   top: 0;
   right: -80%;
 
+  padding: 15px;
   height: 100%;
   width: 80%;
 
   background-color: #f9fafb;
   transition: right 0.3s ease;
-  box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px,
-    rgba(0, 0, 0, 0.22) 0px 10px 10px;
 
   &.open {
     right: 0;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px,
+      rgba(0, 0, 0, 0.22) 0px 10px 10px;
   }
 }

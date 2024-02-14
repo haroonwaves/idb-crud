@@ -8,6 +8,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "dexie": "^3.2.5",
     "preact": "^10.5.15",
     "sass": "^1.70.0"
   },
