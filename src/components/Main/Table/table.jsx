@@ -28,7 +28,14 @@ function IdbCrudTable({ selectedDatabase, selectedTable }) {
       const columnNames = calculateColumnNames(data);
       const columns = columnNames.map((columnName) =>
         columnHelper.accessor(columnName, {
-          cell: (info) => info.getValue(),
+          cell: (info) => {
+            const value = info.getValue();
+            if (typeof value === "object") {
+              return JSON.stringify(value);
+            }
+
+            return value;
+          },
         })
       );
       setColumns(columns);
