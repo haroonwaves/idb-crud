@@ -9,7 +9,7 @@ const initialValue = {
   idb: null,
 };
 
-export const AppStore = createContext(initialValue);
+export const Databases = createContext(initialValue);
 
 export const App = () => {
   const [openDrawer, setOpenDrawer] = useState(false);
@@ -31,7 +31,7 @@ export const App = () => {
   }
 
   return (
-    <AppStore.Provider value={initialValue}>
+    <Databases.Provider value={initialValue}>
       <div className="idb-crud-main">
         <button
           className="idb-crud-drawer-toggler"
@@ -42,6 +42,6 @@ export const App = () => {
         </button>
         <Drawer open={openDrawer} />
       </div>
-    </AppStore.Provider>
+    </Databases.Provider>
   );
 };

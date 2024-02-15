@@ -1,14 +1,19 @@
 import { useContext, useState } from "preact/hooks";
 
-import { AppStore } from "../../../app";
+import { Databases } from "../../../app";
 import Database from "./database";
 import RightArrow from "../../../icons/arrow_right.svg?component";
 import DownArrow from "../../../icons/arrow_down.svg?component";
 
-const Sidebar = () => {
+const Sidebar = ({
+  selectedDatabase,
+  setSelectedDatabase,
+  selectedTable,
+  setSelectedTable,
+}) => {
   const [openDbs, setOpenDbs] = useState(false);
-  const { idb } = useContext(AppStore);
-  const databases = Object.keys(idb);
+  const { idb } = useContext(Databases);
+  const dbNames = Object.keys(idb);
 
   return (
     <>
@@ -23,8 +28,16 @@ const Sidebar = () => {
         <span>IndexedDB</span>
       </div>
       {openDbs &&
-        (databases.length > 0 ? (
-          databases.map((name) => <Database name={name} db={idb[name]} />)
+        (dbNames.length > 0 ? (
+          dbNames.map((name) => (
+            <Database
+              name={name}
+              db={idb[name]}
+              setSelectedDatabase={setSelectedDatabase}
+              selectedTable={selectedTable}
+              setSelectedTable={setSelectedTable}
+            />
+          ))
         ) : (
           <div style={{ padding: "4px 17px" }}>No databases found...</div>
         ))}

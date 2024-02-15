@@ -5,7 +5,13 @@ import DownArrow from "../../../icons/arrow_down.svg?component";
 
 import "./styles/database.scss";
 
-const Database = ({ name, db }) => {
+const Database = ({
+  name,
+  db,
+  setSelectedDatabase,
+  selectedTable,
+  setSelectedTable,
+}) => {
   const [openDb, setOpenDb] = useState(false);
 
   useEffect(() => {
@@ -32,7 +38,19 @@ const Database = ({ name, db }) => {
         <span>{name}</span>
       </div>
       {openDb &&
-        tables.map((table) => <div className="idb-crud-db-table">{table}</div>)}
+        tables.map((table) => (
+          <div
+            className={`idb-crud-db-table ${
+              selectedTable === table ? "selected" : ""
+            }`}
+            onClick={() => {
+              setSelectedDatabase(name);
+              setSelectedTable(table);
+            }}
+          >
+            {table}
+          </div>
+        ))}
     </div>
   );
 };

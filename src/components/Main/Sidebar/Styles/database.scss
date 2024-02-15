@@ -1,8 +1,19 @@
+@import "../../../../styles/variables.scss";
+
 .idb-crud-database {
   .idb-crud-db-name {
     padding: 0 5px 0 17px;
   }
   .idb-crud-db-table {
+    cursor: pointer;
     padding: 2px 5px 2px 35px;
+
+    &.selected {
+      background-color: $primary-light;
+    }
+
+    &:not(.selected):hover {
+      background-color: $secondary-light;
+    }
   }
 }

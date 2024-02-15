@@ -1,11 +1,23 @@
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
+import { createContext } from "preact";
+import { useState } from "preact/hooks";
 
 import Sidebar from "./Sidebar/sidebar";
 import Table from "./Table/table";
 
+const initialState = {
+  selectedDatabase: null,
+  selectedTable: null,
+};
+
+const AppState = createContext(initialState);
+
 const Main = () => {
+  const [selectedDatabase, setSelectedDatabase] = useState(null);
+  const [selectedTable, setSelectedTable] = useState(null);
+
   return (
-    <>
+    <AppState.Provider value={initialState}>
       <PanelGroup direction="horizontal">
         <>
           <Panel
@@ -14,7 +26,12 @@ const Main = () => {
             minSize={10}
             order={1}
           >
-            <Sidebar />
+            <Sidebar
+              selectedDatabase={selectedDatabase}
+              setSelectedDatabase={setSelectedDatabase}
+              selectedTable={selectedTable}
+              setSelectedTable={setSelectedTable}
+            />
           </Panel>
           <PanelResizeHandle
             className="idb-crud-panel-resizer"
@@ -25,7 +42,7 @@ const Main = () => {
           <Table />
         </Panel>
       </PanelGroup>
-    </>
+    </AppState.Provider>
   );
 };
 
