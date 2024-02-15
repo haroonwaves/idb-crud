@@ -1,11 +1,11 @@
 .idb-crud-main {
   font-family: Archivo, Roboto, sans-serif !important;
-  font-size: 13px;
+  font-size: 14px;
 
   position: absolute;
   z-index: 9999999;
 
-  button {
+  .idb-crud-drawer-toggler {
     all: unset;
 
     position: fixed;

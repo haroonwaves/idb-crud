@@ -33,7 +33,11 @@ export const App = () => {
   return (
     <AppStore.Provider value={initialValue}>
       <div className="idb-crud-main">
-        <button type="button" onClick={toggleDrawer}>
+        <button
+          className="idb-crud-drawer-toggler"
+          type="button"
+          onClick={toggleDrawer}
+        >
           &lt;
         </button>
         <Drawer open={openDrawer} />
