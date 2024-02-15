@@ -8,6 +8,9 @@ dependencies:
   '@honkhonk/vite-plugin-svgr':
     specifier: ^1.1.0
     version: 1.1.0(vite@2.9.17)
+  '@tanstack/react-table':
+    specifier: ^8.12.0
+    version: 8.12.0(react-dom@18.2.0)(react@18.2.0)
   dexie:
     specifier: ^3.2.5
     version: 3.2.5(karma@6.4.2)
@@ -551,6 +554,23 @@ packages:
       svg-parser: 2.0.4
     transitivePeerDependencies:
       - supports-color
+    dev: false
+
+  /@tanstack/react-table@8.12.0(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-LlEQ1Gpz4bfpiET+qmle4BhKDgKN3Y/sssc+O/wLqX8HRtjV+nhusYbllZlutZfMR8oeef83whKTj/VhaV8EeA==}
+    engines: {node: '>=12'}
+    peerDependencies:
+      react: '>=16'
+      react-dom: '>=16'
+    dependencies:
+      '@tanstack/table-core': 8.12.0
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
+  /@tanstack/table-core@8.12.0:
+    resolution: {integrity: sha512-cq/ylWVrOwixmwNXQjgZaQw1Izf7+nPxjczum7paAnMtwPg1S2qRAJU+Jb8rEBUWm69voC/zcChmePlk2hc6ug==}
+    engines: {node: '>=12'}
     dev: false
 
   /@types/babel__core@7.20.5:

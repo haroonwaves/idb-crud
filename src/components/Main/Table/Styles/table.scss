@@ -1,0 +1,40 @@
+.idb-crud-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  &-head {
+    background-color: #f2f2f2;
+    color: #333;
+    text-align: left;
+    padding: 10px 8px;
+    border-bottom: 2px solid #ddd;
+  }
+
+  &-row {
+    &:nth-child(odd) {
+      background-color: #fff;
+    }
+
+    &:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    &:hover {
+      background-color: #e8e8e8;
+    }
+  }
+
+  &-data {
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+  }
+
+  th,
+  td {
+    border-right: 1px solid #ddd;
+
+    &:last-child {
+      border-right: none;
+    }
+  }
+}

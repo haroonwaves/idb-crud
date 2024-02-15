@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@honkhonk/vite-plugin-svgr": "^1.1.0",
+    "@tanstack/react-table": "^8.12.0",
     "dexie": "^3.2.5",
     "preact": "^10.5.15",
     "react-resizable-panels": "^2.0.8",
