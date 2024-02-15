@@ -84,7 +84,7 @@ function IdbCrudTable({ selectedDatabase, selectedTable }) {
             ))}
           </tbody>
           {columns.length === 0 && (
-            <div className="idb-crud-table-no-content">No content</div>
+            <div className="idb-crud-text-center">No content</div>
           )}
         </table>
       )}

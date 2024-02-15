@@ -2,12 +2,14 @@
 
 .idb-crud-table-container {
   width: 100%;
-  height: 100%;
+  height: 99%;
 
   overflow: auto;
 
   .idb-crud-table {
     width: 100%;
+    height: 100%;
+
     border-collapse: collapse;
 
     &-head {
@@ -47,15 +49,6 @@
       &:last-child {
         border-right: none;
       }
-    }
-
-    &-no-content {
-      width: 100%;
-      height: 100%;
-
-      display: flex;
-      justify-content: center;
-      align-items: center;
     }
   }
 }

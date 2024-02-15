@@ -19,6 +19,15 @@
     cursor: pointer;
   }
 
+  .idb-crud-text-center {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
   /* width */
   ::-webkit-scrollbar {
     width: 7px;
