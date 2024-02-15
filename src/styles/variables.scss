@@ -1,7 +1,13 @@
-$primary-light: #bfdbfe;
-$primary-medium: #60a5fa;
-$primary-dark: #1d4ed8;
+// Refer - https://tailwindcss.com/docs/customizing-colors
 
-$secondary-light: #f3f4f6;
-$secondary-medium: #9ca3af;
-$secondary-dark: #374151;
+$primary-lighter: #eff6ff; // blue-50
+$primary-light: #dbeafe; // blue-100
+$primary-medium: #93c5fd; // blue-300
+$primary-dark: #3b82f6; // blue-500
+$primary-darker: #2563eb; // blue-600
+
+$secondary-lighter: #f9fafb; // gray-50
+$secondary-light: #f3f4f6; // gray-100
+$secondary-medium: #d1d5db; // gray-300
+$secondary-dark: #6b7280; // gray-500
+$secondary-darker: #4b5563; // gray-600

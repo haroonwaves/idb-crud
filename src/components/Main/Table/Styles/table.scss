@@ -1,40 +1,58 @@
-.idb-crud-table {
+@import "../../../../styles/variables.scss";
+
+.idb-crud-table-container {
   width: 100%;
-  border-collapse: collapse;
+  height: 100%;
 
-  &-head {
-    background-color: #f2f2f2;
-    color: #333;
-    text-align: left;
-    padding: 10px 8px;
-    border-bottom: 2px solid #ddd;
-  }
+  overflow: scroll;
 
-  &-row {
-    &:nth-child(odd) {
-      background-color: #fff;
+  .idb-crud-table {
+    width: 100%;
+    border-collapse: collapse;
+
+    &-head {
+      background-color: $secondary-lighter;
+      color: #333;
+      text-align: left;
+      padding: 10px 8px;
+      border-bottom: 2px solid $secondary-medium;
     }
 
-    &:nth-child(even) {
-      background-color: #f9f9f9;
+    &-row {
+      &:nth-child(odd) {
+        background-color: #fff;
+      }
+
+      &:nth-child(even) {
+        background-color: $secondary-lighter;
+      }
+
+      &:hover {
+        background-color: $secondary-light;
+      }
     }
 
-    &:hover {
-      background-color: #e8e8e8;
+    &-data {
+      padding: 8px;
+      border-bottom: 1px solid $secondary-medium;
     }
-  }
 
-  &-data {
-    padding: 8px;
-    border-bottom: 1px solid #ddd;
-  }
+    th,
+    td {
+      border-right: 1px solid $secondary-medium;
 
-  th,
-  td {
-    border-right: 1px solid #ddd;
+      &:last-child {
+        border-right: none;
+      }
+    }
 
-    &:last-child {
-      border-right: none;
+    &-no-content {
+      width: 100%;
+      height: 100%;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
   }
 }

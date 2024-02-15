@@ -11,3 +11,9 @@ export async function connect() {
 
   return databases;
 }
+
+export async function get(db, selectedTable) {
+  const data = await db.table(selectedTable).toArray();
+
+  return data;
+}

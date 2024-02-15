@@ -39,7 +39,14 @@ const Main = () => {
           />
         </>
         <Panel id="idb-crud-table-panel" minSize={40} order={2}>
-          <Table />
+          {selectedTable && selectedDatabase ? (
+            <Table
+              selectedDatabase={selectedDatabase}
+              selectedTable={selectedTable}
+            />
+          ) : (
+            <div>Select a table to view</div>
+          )}
         </Panel>
       </PanelGroup>
     </AppState.Provider>
