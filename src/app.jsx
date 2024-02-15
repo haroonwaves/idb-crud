@@ -40,7 +40,7 @@ export const App = () => {
         >
           &lt;
         </button>
-        <Drawer open={openDrawer} />
+        <Drawer open={openDrawer} setOpen={setOpenDrawer} />
       </div>
     </Databases.Provider>
   );
