@@ -23,7 +23,7 @@ const Drawer = ({ open, setOpen }) => {
       ref={idbCrudDrawerRef}
       className={`idb-crud-drawer ${open ? "open" : ""}`}
       tabIndex={-1} // focusable
-      onBlur={() => setOpen(false)}
+      // onBlur={() => setOpen(false)}
     >
       <PanelGroup direction="vertical">
         <>

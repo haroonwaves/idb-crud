@@ -6,11 +6,13 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
-import "./Styles/table.scss";
 import { get } from "../../../dexie/dexie";
 import { Databases } from "../../../app";
 import calculateColumnNames from "./Utils/calculate-column-names";
 import LoadingSpinner from "../Common/loading-spinner";
+
+import "./Styles/table.scss";
+import ControlPanel from "./control-panel";
 
 const columnHelper = createColumnHelper();
 
@@ -55,38 +57,44 @@ function IdbCrudTable({ selectedDatabase, selectedTable }) {
       {loading ? (
         <LoadingSpinner />
       ) : (
-        <table className="idb-crud-table">
-          <thead className="idb-crud-table-header">
-            {table.getHeaderGroups().map((headerGroup) => (
-              <tr className="idb-crud-table-row" key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <th className="idb-crud-table-head" key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody className="idb-crud-table-body">
-            {table.getRowModel().rows.map((row) => (
-              <tr className="idb-crud-table-row" key={row.id}>
-                {row.getVisibleCells().map((cell) => (
-                  <td className="idb-crud-table-data" key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-          {columns.length === 0 && (
-            <div className="idb-crud-text-center">No content</div>
-          )}
-        </table>
+        <>
+          <ControlPanel />
+          <table className="idb-crud-table">
+            <thead className="idb-crud-table-header">
+              {table.getHeaderGroups().map((headerGroup) => (
+                <tr className="idb-crud-table-row" key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => (
+                    <th className="idb-crud-table-head" key={header.id}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                    </th>
+                  ))}
+                </tr>
+              ))}
+            </thead>
+            <tbody className="idb-crud-table-body">
+              {table.getRowModel().rows.map((row) => (
+                <tr className="idb-crud-table-row" key={row.id}>
+                  {row.getVisibleCells().map((cell) => (
+                    <td className="idb-crud-table-data" key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+            {columns.length === 0 && (
+              <div className="idb-crud-text-center">No content</div>
+            )}
+          </table>
+        </>
       )}
     </div>
   );
