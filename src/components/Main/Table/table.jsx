@@ -19,6 +19,7 @@ const columnHelper = createColumnHelper();
 function IdbCrudTable({ selectedDatabase, selectedTable }) {
   const [data, setData] = useState([]);
   const [columns, setColumns] = useState([]);
+  const [rowSelection, setRowSelection] = useState({});
 
   const [loading, setLoading] = useState(true);
 
@@ -28,8 +29,23 @@ function IdbCrudTable({ selectedDatabase, selectedTable }) {
     setLoading(true);
     get(idb[selectedDatabase], selectedTable).then((data) => {
       const columnNames = calculateColumnNames(data);
-      const columns = columnNames.map((columnName) =>
-        columnHelper.accessor(columnName, {
+      if (columnNames.length > 0) columnNames.unshift("selection");
+
+      const columns = columnNames.map((columnName) => {
+        if (columnName === "selection") {
+          return {
+            Header: "",
+            id: "selection",
+            cell: ({ row }) => (
+              <input
+                type="checkbox"
+                checked={row.getIsSelected()}
+                onChange={row.getToggleSelectedHandler()}
+              />
+            ),
+          };
+        }
+        return columnHelper.accessor(columnName, {
           cell: (info) => {
             const value = info.getValue();
             if (typeof value === "object") {
@@ -38,8 +54,8 @@ function IdbCrudTable({ selectedDatabase, selectedTable }) {
 
             return value;
           },
-        })
-      );
+        });
+      });
       setColumns(columns);
       setData(data);
       setLoading(false);
@@ -49,6 +65,11 @@ function IdbCrudTable({ selectedDatabase, selectedTable }) {
   const table = useReactTable({
     data,
     columns,
+    state: {
+      rowSelection,
+    },
+    enableRowSelection: true,
+    onRowSelectionChange: setRowSelection,
     getCoreRowModel: getCoreRowModel(),
   });
 
