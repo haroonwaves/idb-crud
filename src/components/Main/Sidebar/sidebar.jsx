@@ -1,9 +1,9 @@
-import { useContext, useState } from "preact/hooks";
+import { useState } from "preact/hooks";
 
-import { Databases } from "../../../app";
 import Database from "./database";
 import RightArrow from "../../../icons/arrow_right.svg?component";
 import DownArrow from "../../../icons/arrow_down.svg?component";
+import dexieDatabase from "../../../dexie/dexie";
 
 const Sidebar = ({
   selectedDatabase,
@@ -12,8 +12,8 @@ const Sidebar = ({
   setSelectedTable,
 }) => {
   const [openDbs, setOpenDbs] = useState(false);
-  const { idb } = useContext(Databases);
-  const dbNames = Object.keys(idb);
+
+  const dbNames = dexieDatabase.dbNames();
 
   return (
     <>
@@ -31,8 +31,7 @@ const Sidebar = ({
         (dbNames.length > 0 ? (
           dbNames.map((name) => (
             <Database
-              name={name}
-              db={idb[name]}
+              dbName={name}
               setSelectedDatabase={setSelectedDatabase}
               selectedTable={selectedTable}
               setSelectedTable={setSelectedTable}

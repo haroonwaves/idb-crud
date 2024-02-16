@@ -4,10 +4,10 @@ import RightArrow from "../../../icons/arrow_right.svg?component";
 import DownArrow from "../../../icons/arrow_down.svg?component";
 
 import "./styles/database.scss";
+import dexieDatabase from "../../../dexie/dexie";
 
 const Database = ({
-  name,
-  db,
+  dbName,
   setSelectedDatabase,
   selectedTable,
   setSelectedTable,
@@ -15,12 +15,13 @@ const Database = ({
   const [openDb, setOpenDb] = useState(false);
 
   useEffect(() => {
+    const db = dexieDatabase[dbName];
     if (!db.isOpen()) {
       db.open();
     }
-  }, [name, db]);
+  }, [dbName]);
 
-  const tables = db.allTables().map((table) => table.name);
+  const tables = dexieDatabase[dbName].allTables().map((table) => table.name);
 
   return (
     <div className="idb-crud-database">
@@ -35,7 +36,7 @@ const Database = ({
             <RightArrow onClick={() => setOpenDb(true)} />
           )}
         </span>
-        <span>{name}</span>
+        <span>{dbName}</span>
       </div>
       {openDb &&
         tables.map((table) => (
@@ -44,7 +45,7 @@ const Database = ({
               selectedTable === table ? "selected" : ""
             }`}
             onClick={() => {
-              setSelectedDatabase(name);
+              setSelectedDatabase(dbName);
               setSelectedTable(table);
             }}
           >

@@ -36,8 +36,6 @@ export class DexieBuilder {
   }
 
   async insert(data) {
-    this.updateMemory("insert", data);
-
     return await (Array.isArray(data)
       ? this.#selectedTable.bulkPut(data)
       : this.#selectedTable.put(data));

@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "preact/hooks";
+import { useEffect, useState } from "preact/hooks";
 import {
   createColumnHelper,
   flexRender,
@@ -6,8 +6,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
-import { get, getPagedData } from "../../../dexie/dexie";
-import { Databases } from "../../../app";
+import { getPagedData } from "../../../dexie/dexie";
 import calculateColumnNames from "./Utils/calculate-column-names";
 import LoadingSpinner from "../Common/loading-spinner";
 
@@ -23,11 +22,9 @@ function IdbCrudTable({ selectedDatabase, selectedTable }) {
 
   const [loading, setLoading] = useState(true);
 
-  const { idb } = useContext(Databases);
-
   useEffect(() => {
     setLoading(true);
-    getPagedData(idb[selectedDatabase], selectedTable, 1, 10).then((data) => {
+    getPagedData(selectedDatabase, selectedTable, 1, 10).then((data) => {
       const columnNames = calculateColumnNames(data);
       if (columnNames.length > 0) columnNames.unshift("selection");
 
