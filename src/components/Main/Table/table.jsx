@@ -8,7 +8,7 @@ import {
 
 import { getPagedData } from "../../../dexie/dexie";
 import calculateColumnNames from "./Utils/calculate-column-names";
-import LoadingSpinner from "../Common/loading-spinner";
+import LoadingSpinner from "../../Common/loading-spinner";
 
 import "./Styles/table.scss";
 import ControlPanel from "./control-panel";
@@ -24,7 +24,7 @@ function IdbCrudTable({ selectedDatabase, selectedTable }) {
 
   useEffect(() => {
     setLoading(true);
-    getPagedData(selectedDatabase, selectedTable, 1, 10).then((data) => {
+    getPagedData(selectedDatabase, selectedTable, 0, 10).then((data) => {
       const columnNames = calculateColumnNames(data);
       if (columnNames.length > 0) columnNames.unshift("selection");
 
