@@ -20,7 +20,7 @@ const Database = ({
     }
   }, [name, db]);
 
-  const tables = db.tables.map((table) => table.name);
+  const tables = db.allTables().map((table) => table.name);
 
   return (
     <div className="idb-crud-database">

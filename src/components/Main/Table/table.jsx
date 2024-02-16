@@ -6,7 +6,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
-import { get } from "../../../dexie/dexie";
+import { get, getPagedData } from "../../../dexie/dexie";
 import { Databases } from "../../../app";
 import calculateColumnNames from "./Utils/calculate-column-names";
 import LoadingSpinner from "../Common/loading-spinner";
@@ -27,7 +27,7 @@ function IdbCrudTable({ selectedDatabase, selectedTable }) {
 
   useEffect(() => {
     setLoading(true);
-    get(idb[selectedDatabase], selectedTable).then((data) => {
+    getPagedData(idb[selectedDatabase], selectedTable, 1, 10).then((data) => {
       const columnNames = calculateColumnNames(data);
       if (columnNames.length > 0) columnNames.unshift("selection");
 
