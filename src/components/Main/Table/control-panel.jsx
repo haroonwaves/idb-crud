@@ -5,7 +5,6 @@ import "./Styles/control-panel.scss";
 const ControlPanel = ({ itemsPerPage, totalItems, setPage }) => {
   return (
     <div className="idb-crud-table-control-panel">
-      <div>I am a header</div>
       <Pagination
         loading={totalItems === null}
         totalItems={totalItems}

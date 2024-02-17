@@ -1,4 +1,6 @@
 import { useCallback, useState } from "preact/hooks";
+import ChevronRight from "../../icons/chevron_right.svg?component";
+import ChevronLeft from "../../icons/chevron_left.svg?component";
 
 import "./Style/pagination.scss";
 
@@ -22,18 +24,14 @@ const Pagination = ({ totalItems, itemsPerPage, onPageChange, loading }) => {
   return (
     <div className="idb-crud-pagination">
       <div className="idb-crud-pagination-button-group">
-        <div
+        <ChevronLeft
           className="idb-crud-pagination-previous"
           onClick={() => handlePageClick(currentPage - 1)}
-        >
-          previous
-        </div>
-        <div
+        />
+        <ChevronRight
           className="idb-crud-pagination-next"
           onClick={() => handlePageClick(currentPage + 1)}
-        >
-          next
-        </div>
+        />
       </div>
       <div className="idb-crud-pagination-page-info">
         {loading ? "Loading..." : `${fromItem} - ${toItem} of ${totalItems}`}

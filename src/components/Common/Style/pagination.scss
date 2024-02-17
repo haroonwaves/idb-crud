@@ -1,9 +1,18 @@
+@import "../../../../src/styles/variables.scss";
+
 .idb-crud-pagination {
   display: flex;
+  align-items: center;
   gap: 10px;
 
   &-button-group {
     display: flex;
     gap: 5px;
+  }
+
+  &-next,
+  &-previous {
+    border: 1px solid $secondary-light;
+    border-radius: 50%;
   }
 }

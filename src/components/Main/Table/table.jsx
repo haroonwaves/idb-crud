@@ -98,7 +98,6 @@ function IdbCrudTable({ selectedDatabase, selectedTable }) {
   );
 
   useEffect(() => {
-    console.log("USE EFFECT");
     onPageChange(0, true);
   }, [selectedDatabase, selectedTable]);
 
