@@ -1,3 +1,5 @@
+@import "../../../../../src//styles/variables.scss";
+
 .idb-crud-table-control-panel {
   position: fixed;
   top: 0;
@@ -5,4 +7,6 @@
   background-color: #fff;
   width: 100%;
   height: 40px;
+
+  border-bottom: 2px solid $secondary-light;
 }

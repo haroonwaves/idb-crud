@@ -56,7 +56,7 @@ const Main = () => {
 const styles = {
   resizeHandler: {
     width: "2px",
-    background: "#d1d5db",
+    background: "#e2e8f0",
   },
 };
 

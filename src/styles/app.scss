@@ -46,6 +46,41 @@
     }
   }
 
+  input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    padding: 0.1rem;
+    border: 1px solid $secondary-medium;
+    border-radius: 0.32rem;
+    cursor: pointer;
+    width: 0.95rem;
+    height: 0.95rem;
+
+    &::before {
+      content: "";
+      width: 0.65rem;
+      height: 0.65rem;
+      clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
+      transform: scale(0);
+      background-color: $secondary-lighter;
+    }
+
+    &:checked {
+      background-color: $primary-medium;
+      border-color: $primary-medium;
+      &::before {
+        transform: scale(1);
+      }
+    }
+
+    &:hover {
+      border-color: $secondary-dark;
+    }
+  }
+
   /* width */
   ::-webkit-scrollbar {
     width: 7px;
