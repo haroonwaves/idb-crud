@@ -9,11 +9,11 @@
     padding: 2px 5px 2px 35px;
 
     &.selected {
-      background-color: $primary-light;
+      background-color: $primary-lighter;
     }
 
     &:not(.selected):hover {
-      background-color: $secondary-light;
+      background-color: $secondary-lighter;
     }
   }
 }
