@@ -1,9 +1,9 @@
 import { useState } from "preact/hooks";
 
 import Database from "./database";
-import RightArrow from "../../../icons/arrow_right.svg?component";
-import DownArrow from "../../../icons/arrow_down.svg?component";
-import dexieDatabase from "../../../dexie/dexie";
+import RightArrow from "../../icons/arrow_right.svg?component";
+import DownArrow from "../../icons/arrow_down.svg?component";
+import dexieDatabase from "../../dexie/dexie";
 
 const Sidebar = ({
   selectedDatabase,

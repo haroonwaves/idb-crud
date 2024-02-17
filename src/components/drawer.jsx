@@ -1,14 +1,17 @@
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
-import { useEffect } from "preact/hooks";
+import { useEffect, useState } from "preact/hooks";
 import { createRef } from "preact";
 
 import Main from "./Main/main";
-import Editor from "./Editor/editor";
 
 import "./styles/drawer.scss";
+import Sidebar from "./Sidebar/sidebar";
 
 const Drawer = ({ open, setOpen }) => {
   const idbCrudDrawerRef = createRef();
+
+  const [selectedDatabase, setSelectedDatabase] = useState(null);
+  const [selectedTable, setSelectedTable] = useState(null);
 
   useEffect(() => {
     if (open) {
@@ -25,23 +28,31 @@ const Drawer = ({ open, setOpen }) => {
       tabIndex={-1} // focusable
       // onBlur={() => setOpen(false)}
     >
-      <PanelGroup direction="vertical">
+      <PanelGroup direction="horizontal">
         <>
-          <Panel id="idb-crud-main-panel" minSize={10} order={1}>
-            <Main />
+          <Panel
+            id="idb-crud-side-panel"
+            defaultSize={15}
+            minSize={10}
+            order={1}
+          >
+            <Sidebar
+              selectedDatabase={selectedDatabase}
+              setSelectedDatabase={setSelectedDatabase}
+              selectedTable={selectedTable}
+              setSelectedTable={setSelectedTable}
+            />
           </Panel>
           <PanelResizeHandle
             className="idb-crud-panel-resizer"
             style={styles.resizeHandler}
           />
         </>
-        <Panel
-          id="idb-crud-editor-panel"
-          defaultSize={25}
-          minSize={25}
-          order={2}
-        >
-          <Editor />
+        <Panel id="idb-crud-main-panel" minSize={80} order={2}>
+          <Main
+            selectedDatabase={selectedDatabase}
+            selectedTable={selectedTable}
+          />
         </Panel>
       </PanelGroup>
     </div>
@@ -50,7 +61,7 @@ const Drawer = ({ open, setOpen }) => {
 
 const styles = {
   resizeHandler: {
-    height: "2px",
+    width: "2px",
     background: "#e2e8f0",
   },
 };

@@ -1,9 +1,8 @@
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import { createContext } from "preact";
-import { useState } from "preact/hooks";
 
-import Sidebar from "./Sidebar/sidebar";
 import Table from "./Table/table";
+import Editor from "./Editor/editor";
 
 const initialState = {
   selectedDatabase: null,
@@ -12,41 +11,33 @@ const initialState = {
 
 const AppState = createContext(initialState);
 
-const Main = () => {
-  const [selectedDatabase, setSelectedDatabase] = useState(null);
-  const [selectedTable, setSelectedTable] = useState(null);
-
+const Main = ({ selectedDatabase, selectedTable }) => {
   return (
     <AppState.Provider value={initialState}>
-      <PanelGroup direction="horizontal">
+      <PanelGroup direction="vertical">
         <>
-          <Panel
-            id="idb-crud-side-panel"
-            defaultSize={15}
-            minSize={10}
-            order={1}
-          >
-            <Sidebar
-              selectedDatabase={selectedDatabase}
-              setSelectedDatabase={setSelectedDatabase}
-              selectedTable={selectedTable}
-              setSelectedTable={setSelectedTable}
-            />
+          <Panel id="idb-crud-table-panel" minSize={30} order={1}>
+            {selectedTable && selectedDatabase ? (
+              <Table
+                selectedDatabase={selectedDatabase}
+                selectedTable={selectedTable}
+              />
+            ) : (
+              <div className="idb-crud-text-center">Select a table to view</div>
+            )}
           </Panel>
           <PanelResizeHandle
             className="idb-crud-panel-resizer"
             style={styles.resizeHandler}
           />
         </>
-        <Panel id="idb-crud-table-panel" minSize={40} order={2}>
-          {selectedTable && selectedDatabase ? (
-            <Table
-              selectedDatabase={selectedDatabase}
-              selectedTable={selectedTable}
-            />
-          ) : (
-            <div className="idb-crud-text-center">Select a table to view</div>
-          )}
+        <Panel
+          id="idb-crud-editor-panel"
+          defaultSize={15}
+          minSize={10}
+          order={2}
+        >
+          <Editor />
         </Panel>
       </PanelGroup>
     </AppState.Provider>
@@ -55,7 +46,7 @@ const Main = () => {
 
 const styles = {
   resizeHandler: {
-    width: "2px",
+    height: "2px",
     background: "#e2e8f0",
   },
 };

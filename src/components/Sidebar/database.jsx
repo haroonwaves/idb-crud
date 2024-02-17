@@ -1,10 +1,10 @@
 import { useEffect, useState } from "preact/hooks";
 
-import RightArrow from "../../../icons/arrow_right.svg?component";
-import DownArrow from "../../../icons/arrow_down.svg?component";
+import RightArrow from "../../icons/arrow_right.svg?component";
+import DownArrow from "../../icons/arrow_down.svg?component";
 
 import "./styles/database.scss";
-import dexieDatabase from "../../../dexie/dexie";
+import dexieDatabase from "../../dexie/dexie";
 
 const Database = ({
   dbName,
