@@ -1,0 +1,45 @@
+import { useCallback, useState } from "preact/hooks";
+
+import "./Style/pagination.scss";
+
+const Pagination = ({ totalItems, itemsPerPage, onPageChange, loading }) => {
+  const [currentPage, setCurrentPage] = useState(0);
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+  const handlePageClick = useCallback(
+    (page) => {
+      if (page < 0 || page >= totalPages || loading) return;
+      setCurrentPage(page);
+      onPageChange(page);
+    },
+    [loading, onPageChange, totalPages, setCurrentPage]
+  );
+
+  // Calculate the range of items for the current page
+  const fromItem = currentPage * itemsPerPage + 1;
+  const toItem = Math.min((currentPage + 1) * itemsPerPage, totalItems);
+
+  return (
+    <div className="idb-crud-pagination">
+      <div className="idb-crud-pagination-button-group">
+        <div
+          className="idb-crud-pagination-previous"
+          onClick={() => handlePageClick(currentPage - 1)}
+        >
+          previous
+        </div>
+        <div
+          className="idb-crud-pagination-next"
+          onClick={() => handlePageClick(currentPage + 1)}
+        >
+          next
+        </div>
+      </div>
+      <div className="idb-crud-pagination-page-info">
+        {loading ? "Loading..." : `${fromItem} - ${toItem} of ${totalItems}`}
+      </div>
+    </div>
+  );
+};
+
+export default Pagination;

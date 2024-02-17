@@ -17,7 +17,7 @@ const dexieDatabase = Object.create(dexieDatabaseMethods);
 
 export default dexieDatabase;
 
-export async function getPagedData(dbName, tableName, page, pageSize) {
+export async function getPagedData(dbName, tableName, page, pageSize = 20) {
   const selectedTable = dexieDatabase[dbName].table(tableName);
   const primaryKey = selectedTable.primaryKey;
 
@@ -28,4 +28,8 @@ export async function getPagedData(dbName, tableName, page, pageSize) {
     .toArray();
 
   return result;
+}
+
+export async function getCount(dbName, tableName) {
+  return dexieDatabase[dbName].table(tableName).count();
 }

@@ -110,6 +110,10 @@ export class DexieBuilder {
     return this;
   }
 
+  count() {
+    return this.#collection.count();
+  }
+
   drop() {
     this.#selectedTable.clear();
   }
