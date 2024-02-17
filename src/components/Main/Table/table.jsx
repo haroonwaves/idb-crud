@@ -18,7 +18,13 @@ const columnHelper = createColumnHelper();
 const itemsPerPage = 20;
 let currentPage = 0;
 
-function IdbCrudTable({ selectedDatabase, selectedTable, setSelectedRows }) {
+function IdbCrudTable({
+  selectedDatabase,
+  selectedTable,
+  setSelectedRows,
+  setRefreshAfterEdit,
+  refreshAfterEdit,
+}) {
   const [data, setData] = useState([]);
   const [columns, setColumns] = useState([]);
   const [rowSelection, setRowSelection] = useState({});
@@ -114,8 +120,17 @@ function IdbCrudTable({ selectedDatabase, selectedTable, setSelectedRows }) {
     const selectedRows = Object.keys(rowSelection).map((index) => data[index]);
     if (selectedRows?.length > 0) {
       setSelectedRows(selectedRows);
+    } else {
+      setSelectedRows(null);
     }
   }, [rowSelection]);
+
+  useEffect(() => {
+    if (refreshAfterEdit) {
+      onPageChange(currentPage, false, false);
+      setRefreshAfterEdit(false);
+    }
+  }, [refreshAfterEdit]);
 
   const table = useReactTable({
     data,

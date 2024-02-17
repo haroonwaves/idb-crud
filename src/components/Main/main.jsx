@@ -1,6 +1,6 @@
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
 import { createContext } from "preact";
-import { useState } from "preact/hooks";
+import { useCallback, useState } from "preact/hooks";
 
 import Table from "./Table/table";
 import Editor from "./Editor/editor";
@@ -14,6 +14,11 @@ const AppState = createContext(initialState);
 
 const Main = ({ selectedDatabase, selectedTable }) => {
   const [selectedRows, setSelectedRows] = useState(null);
+  const [refreshAfterEdit, setRefreshAfterEdit] = useState(false);
+
+  const onAfterEdit = useCallback(() => {
+    setRefreshAfterEdit(true);
+  }, [setRefreshAfterEdit]);
 
   return (
     <AppState.Provider value={initialState}>
@@ -24,7 +29,9 @@ const Main = ({ selectedDatabase, selectedTable }) => {
               <Table
                 selectedDatabase={selectedDatabase}
                 selectedTable={selectedTable}
+                refreshAfterEdit={refreshAfterEdit}
                 setSelectedRows={setSelectedRows}
+                setRefreshAfterEdit={setRefreshAfterEdit}
               />
             ) : (
               <div className="idb-crud-text-center">Select a table to view</div>
@@ -45,6 +52,7 @@ const Main = ({ selectedDatabase, selectedTable }) => {
             selectedRows={selectedRows}
             selectedDatabase={selectedDatabase}
             selectedTable={selectedTable}
+            onAfterEdit={onAfterEdit}
           />
         </Panel>
       </PanelGroup>

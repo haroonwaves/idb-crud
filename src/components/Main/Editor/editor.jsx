@@ -5,7 +5,12 @@ import { replace } from "../../../dexie/dexie";
 
 import "./Styles/editor.scss";
 
-const Editor = ({ selectedRows, selectedDatabase, selectedTable }) => {
+const Editor = ({
+  selectedRows,
+  selectedDatabase,
+  selectedTable,
+  onAfterEdit,
+}) => {
   const onEdit = useCallback(
     ({ existing_src, updated_src, namespace }) => {
       const existingRows = [];
@@ -19,7 +24,7 @@ const Editor = ({ selectedRows, selectedDatabase, selectedTable }) => {
 
       replace(existingRows, updatedRows, selectedDatabase, selectedTable).then(
         () => {
-          console.log("success");
+          onAfterEdit();
         }
       );
     },
