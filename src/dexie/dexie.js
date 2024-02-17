@@ -33,3 +33,15 @@ export async function getPagedData(dbName, tableName, page, pageSize = 20) {
 export async function getCount(dbName, tableName) {
   return dexieDatabase[dbName].table(tableName).count();
 }
+
+export async function replace(existingValues, newValues, dbName, tableName) {
+  const selectedTable = dexieDatabase[dbName].table(tableName);
+  const primaryKey = selectedTable.primaryKey;
+
+  for (const oldValue of existingValues) {
+    const primaryKeyValue = oldValue[primaryKey];
+    await selectedTable.where({ [primaryKey]: primaryKeyValue }).delete();
+  }
+
+  await selectedTable.insert(newValues);
+}

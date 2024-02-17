@@ -1,7 +1,50 @@
+import { useCallback } from "preact/hooks";
+import JsonViewer from "react-json-view";
+
+import { replace } from "../../../dexie/dexie";
+
 import "./Styles/editor.scss";
 
-const Editor = () => {
-  return <div className="idb-crud-editor">I am a editor</div>;
+const Editor = ({ selectedRows, selectedDatabase, selectedTable }) => {
+  const onEdit = useCallback(
+    ({ existing_src, updated_src, namespace }) => {
+      const existingRows = [];
+      const updatedRows = [];
+      for (const index in namespace) {
+        const existingRow = existing_src[index];
+        const updatedRow = updated_src[index];
+        if (existingRow) existingRows.push(existingRow);
+        if (updatedRow) updatedRows.push(updatedRow);
+      }
+
+      replace(existingRows, updatedRows, selectedDatabase, selectedTable).then(
+        () => {
+          console.log("success");
+        }
+      );
+    },
+    [selectedDatabase, selectedTable]
+  );
+
+  return (
+    <div className="idb-crud-editor">
+      {selectedRows ? (
+        <JsonViewer
+          theme="rjv-default"
+          name="array"
+          onEdit={onEdit}
+          collapsed={true}
+          enableClipboard={false}
+          displayObjectSize={false}
+          displayDataTypes={false}
+          groupArraysAfterLength={50}
+          src={selectedRows}
+        />
+      ) : (
+        <div className="idb-crud-text-center">Select a row to view</div>
+      )}
+    </div>
+  );
 };
 
 export default Editor;
