@@ -41,7 +41,7 @@
 
     &:not(.disabled):hover {
       path {
-        fill: $secondary-darker;
+        fill: $secondary-dark;
       }
     }
   }
@@ -98,7 +98,7 @@
       border-color: $primary-medium;
     }
 
-    &:hover {
+    &:not(:focus):hover {
       border-color: $secondary-dark;
     }
   }
