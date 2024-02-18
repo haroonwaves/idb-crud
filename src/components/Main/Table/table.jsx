@@ -66,7 +66,7 @@ function IdbCrudTable({
           },
         });
       });
-      if (data.length === 0 && Object.keys(filter.current)) {
+      if (data.length === 0 && Object.keys(filter.current).length > 0) {
         // Don't reset column if filter is applied and no data is returned
       } else {
         setColumns(allColumns);

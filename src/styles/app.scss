@@ -87,6 +87,7 @@
     padding: 0 5px;
     font-weight: 400;
     color: $secondary-dark;
+    min-width: 60px;
 
     &::placeholder {
       color: $secondary-medium;
