@@ -19,11 +19,16 @@ export class DexieBuilder {
     return this;
   }
 
-  where(queryObject) {
+  where(queryObject = {}) {
     const keysOfQuery = Object.keys(queryObject);
-    this.whereCondition = queryObject;
 
-    if (this.primaryKey) {
+    if (keysOfQuery.length === 0) return this;
+
+    const areKeysIndexed = Object.keys(queryObject).every(
+      (key) => this.primaryKey === key || this.secondaryKeys.includes(key)
+    );
+
+    if (areKeysIndexed) {
       this.#collection = this.#selectedTable.where(queryObject);
     } else {
       // Non-indexed query
