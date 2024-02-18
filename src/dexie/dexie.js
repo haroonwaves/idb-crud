@@ -17,7 +17,13 @@ const dexieDatabase = Object.create(dexieDatabaseMethods);
 
 export default dexieDatabase;
 
-export async function getPagedData(dbName, tableName, page, pageSize = 20) {
+export async function getPagedData(
+  dbName,
+  tableName,
+  query,
+  page,
+  pageSize = 20
+) {
   const selectedTable = dexieDatabase[dbName].table(tableName);
   const primaryKey = selectedTable.primaryKey;
 
@@ -25,13 +31,14 @@ export async function getPagedData(dbName, tableName, page, pageSize = 20) {
     .orderBy(primaryKey, "desc")
     .offset(page)
     .limit(pageSize)
+    .where(query)
     .toArray();
 
   return result;
 }
 
-export async function getCount(dbName, tableName) {
-  return dexieDatabase[dbName].table(tableName).count();
+export async function getCount(dbName, tableName, query) {
+  return dexieDatabase[dbName].table(tableName).where(query).count();
 }
 
 export async function replace(existingValues, newValues, dbName, tableName) {

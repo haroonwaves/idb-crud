@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "preact/hooks";
+import { useCallback, useEffect, useRef, useState } from "preact/hooks";
 import {
   createColumnHelper,
   flexRender,
@@ -17,6 +17,7 @@ const columnHelper = createColumnHelper();
 
 const itemsPerPage = 20;
 let currentPage = 0;
+let searchTimeOutId = null;
 
 function IdbCrudTable({
   selectedDatabase,
@@ -31,13 +32,16 @@ function IdbCrudTable({
   const [totalCount, setTotalCount] = useState(null);
 
   const [loadingTable, setLoadingTable] = useState(true);
+  const [loadingData, setLoadingData] = useState(false);
+
+  const filter = useRef({});
 
   const setPagedData = useCallback(
     (data) => {
       const columnNames = calculateColumnNames(data);
       if (columnNames.length > 0) columnNames.unshift("selection");
 
-      const columns = columnNames.map((columnName) => {
+      const allColumns = columnNames.map((columnName) => {
         if (columnName === "selection") {
           return {
             Header: "",
@@ -62,11 +66,15 @@ function IdbCrudTable({
           },
         });
       });
-      setColumns(columns);
+      if (data.length === 0 && Object.keys(filter.current)) {
+        // Don't reset column if filter is applied and no data is returned
+      } else {
+        setColumns(allColumns);
+      }
       setData(data);
       return;
     },
-    [setColumns, setData]
+    [setColumns, setData, filter]
   );
 
   const onPageChange = useCallback(
@@ -81,8 +89,6 @@ function IdbCrudTable({
 
       if (loadCount) {
         setTotalCount(null);
-        setLoadingTable(true);
-
         pageSize = itemsPerPage;
       } else {
         if (page + 1 >= totalCount / itemsPerPage) {
@@ -91,13 +97,20 @@ function IdbCrudTable({
         }
       }
 
-      getPagedData(selectedDatabase, selectedTable, page, pageSize)
+      getPagedData(
+        selectedDatabase,
+        selectedTable,
+        filter.current,
+        page,
+        pageSize
+      )
         .then(setPagedData)
         .then(() => {
+          setLoadingTable(false);
           if (loadCount) {
-            setLoadingTable(false);
-            setTotalCount(null);
-            getCount(selectedDatabase, selectedTable).then(setTotalCount);
+            getCount(selectedDatabase, selectedTable, filter.current).then(
+              setTotalCount
+            );
           }
         });
     },
@@ -112,7 +125,25 @@ function IdbCrudTable({
     ]
   );
 
+  const handleFilter = (key, value) => {
+    setLoadingData(true);
+    if (searchTimeOutId) clearTimeout(searchTimeOutId);
+
+    if (filter.current[key] && value === "") {
+      delete filter.current[key];
+    } else {
+      filter.current[key] = value;
+    }
+
+    searchTimeOutId = setTimeout(() => {
+      onPageChange(currentPage, true, false);
+      setLoadingData(false);
+    }, 600);
+  };
+
   useEffect(() => {
+    filter.current = {};
+    setLoadingTable(true);
     onPageChange(0, true);
   }, [selectedDatabase, selectedTable]);
 
@@ -158,7 +189,7 @@ function IdbCrudTable({
             <thead className="idb-crud-table-header">
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr className="idb-crud-table-row" key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => (
+                  {headerGroup.headers.map((header, index) => (
                     <th className="idb-crud-table-head" key={header.id}>
                       {header.isPlaceholder ? null : (
                         <div
@@ -173,7 +204,15 @@ function IdbCrudTable({
                             header.column.columnDef.header,
                             header.getContext()
                           )}
-                          <input type="text" placeholder="Search..." />
+                          {index > 0 && (
+                            <input
+                              onChange={(e) =>
+                                handleFilter(header.id, e.target.value)
+                              }
+                              type="text"
+                              placeholder="Search..."
+                            />
+                          )}
                         </div>
                       )}
                     </th>
