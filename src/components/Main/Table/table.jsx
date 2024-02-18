@@ -160,12 +160,22 @@ function IdbCrudTable({
                 <tr className="idb-crud-table-row" key={headerGroup.id}>
                   {headerGroup.headers.map((header) => (
                     <th className="idb-crud-table-head" key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
+                      {header.isPlaceholder ? null : (
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                            gap: "2px",
+                          }}
+                        >
+                          {flexRender(
                             header.column.columnDef.header,
                             header.getContext()
                           )}
+                          <input type="text" placeholder="Search..." />
+                        </div>
+                      )}
                     </th>
                   ))}
                 </tr>

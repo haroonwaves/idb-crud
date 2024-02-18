@@ -81,6 +81,27 @@
     }
   }
 
+  input[type="text"] {
+    border: 1px solid $secondary-medium;
+    border-radius: 0.32rem;
+    padding: 0 5px;
+    font-weight: 400;
+    color: $secondary-dark;
+
+    &::placeholder {
+      color: $secondary-medium;
+      font-weight: 100;
+    }
+
+    &:focus {
+      border-color: $primary-medium;
+    }
+
+    &:hover {
+      border-color: $secondary-dark;
+    }
+  }
+
   /* width */
   ::-webkit-scrollbar {
     width: 7px;
