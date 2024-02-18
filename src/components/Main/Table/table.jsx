@@ -12,6 +12,7 @@ import LoadingSpinner from "../../Common/loading-spinner";
 
 import "./Styles/table.scss";
 import ControlPanel from "./control-panel";
+import Pagination from "../../Common/pagination";
 
 const columnHelper = createColumnHelper();
 
@@ -186,9 +187,8 @@ function IdbCrudTable({
   return (
     <>
       <ControlPanel
-        itemsPerPage={itemsPerPage}
-        totalItems={totalCount}
-        onPageChange={onPageChange}
+        columns={columns}
+        selectedItems={selectedRows}
         onDelete={onDelete}
       />
       <div className="idb-crud-table-container">
@@ -249,6 +249,14 @@ function IdbCrudTable({
             )}
           </table>
         )}
+      </div>
+      <div className="idb-crud-table-footer">
+        <Pagination
+          loading={totalCount === null}
+          totalItems={totalCount}
+          itemsPerPage={itemsPerPage}
+          onPageChange={onPageChange}
+        />
       </div>
     </>
   );
