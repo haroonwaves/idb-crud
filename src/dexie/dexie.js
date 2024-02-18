@@ -52,3 +52,19 @@ export async function replace(existingValues, newValues, dbName, tableName) {
 
   await selectedTable.insert(newValues);
 }
+
+export async function deleteData(dbName, tableName, values) {
+  const selectedTable = dexieDatabase[dbName].table(tableName);
+  const primaryKey = selectedTable.primaryKey;
+
+  const promises = [];
+
+  for (const value of values) {
+    const promise = selectedTable
+      .where({ [primaryKey]: value[primaryKey] })
+      .delete();
+    promises.push(promise);
+  }
+
+  await Promise.all(promises);
+}

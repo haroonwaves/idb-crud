@@ -6,7 +6,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
-import { getCount, getPagedData } from "../../../dexie/dexie";
+import { deleteData, getCount, getPagedData } from "../../../dexie/dexie";
 import calculateColumnNames from "./Utils/calculate-column-names";
 import LoadingSpinner from "../../Common/loading-spinner";
 
@@ -22,6 +22,7 @@ let searchTimeOutId = null;
 function IdbCrudTable({
   selectedDatabase,
   selectedTable,
+  selectedRows,
   setSelectedRows,
   setRefreshAfterEdit,
   refreshAfterEdit,
@@ -125,6 +126,12 @@ function IdbCrudTable({
     ]
   );
 
+  const onDelete = useCallback(() => {
+    deleteData(selectedDatabase, selectedTable, selectedRows).then(() => {
+      onPageChange(currentPage, true, true);
+    });
+  }, [selectedDatabase, selectedTable, selectedRows, currentPage]);
+
   const handleFilter = (key, value) => {
     setLoadingData(true);
     if (searchTimeOutId) clearTimeout(searchTimeOutId);
@@ -148,9 +155,11 @@ function IdbCrudTable({
   }, [selectedDatabase, selectedTable]);
 
   useEffect(() => {
-    const selectedRows = Object.keys(rowSelection).map((index) => data[index]);
-    if (selectedRows?.length > 0) {
-      setSelectedRows(selectedRows);
+    const newSelectedRows = Object.keys(rowSelection).map(
+      (index) => data[index]
+    );
+    if (newSelectedRows?.length > 0) {
+      setSelectedRows(newSelectedRows);
     } else {
       setSelectedRows(null);
     }
@@ -175,16 +184,17 @@ function IdbCrudTable({
   });
 
   return (
-    <div className="idb-crud-table-container">
-      {loadingTable ? (
-        <LoadingSpinner />
-      ) : (
-        <>
-          <ControlPanel
-            itemsPerPage={itemsPerPage}
-            totalItems={totalCount}
-            setPage={onPageChange}
-          />
+    <>
+      <ControlPanel
+        itemsPerPage={itemsPerPage}
+        totalItems={totalCount}
+        onPageChange={onPageChange}
+        onDelete={onDelete}
+      />
+      <div className="idb-crud-table-container">
+        {loadingTable ? (
+          <LoadingSpinner />
+        ) : (
           <table className="idb-crud-table">
             <thead className="idb-crud-table-header">
               {table.getHeaderGroups().map((headerGroup) => (
@@ -238,9 +248,9 @@ function IdbCrudTable({
               <div className="idb-crud-text-center">No content</div>
             )}
           </table>
-        </>
-      )}
-    </div>
+        )}
+      </div>
+    </>
   );
 }
 

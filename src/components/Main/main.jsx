@@ -29,6 +29,7 @@ const Main = ({ selectedDatabase, selectedTable }) => {
               <Table
                 selectedDatabase={selectedDatabase}
                 selectedTable={selectedTable}
+                selectedRows={selectedRows}
                 refreshAfterEdit={refreshAfterEdit}
                 setSelectedRows={setSelectedRows}
                 setRefreshAfterEdit={setRefreshAfterEdit}
