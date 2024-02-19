@@ -13,6 +13,7 @@ import LoadingSpinner from "../../Common/loading-spinner";
 import "./Styles/table.scss";
 import ControlPanel from "./control-panel";
 import Pagination from "../../Common/pagination";
+import MultiSelect from "../../Common/multi-select";
 
 const columnHelper = createColumnHelper();
 
@@ -133,6 +134,17 @@ function IdbCrudTable({
     });
   }, [selectedDatabase, selectedTable, selectedRows, currentPage]);
 
+  const onColumnsSelect = useCallback(
+    (selectedColumns) => {
+      const filteredColumns = columns.filter(({ accessorKey }) =>
+        selectedColumns.includes(accessorKey)
+      );
+
+      setColumns(filteredColumns);
+    },
+    [columns]
+  );
+
   const handleFilter = (key, value) => {
     setLoadingData(true);
     if (searchTimeOutId) clearTimeout(searchTimeOutId);
@@ -189,6 +201,10 @@ function IdbCrudTable({
       <ControlPanel
         columns={columns}
         selectedItems={selectedRows}
+        totalItems={totalCount}
+        itemsPerPage={itemsPerPage}
+        onPageChange={onPageChange}
+        onColumnsSelect={onColumnsSelect}
         onDelete={onDelete}
       />
       <div className="idb-crud-table-container">
@@ -249,14 +265,6 @@ function IdbCrudTable({
             )}
           </table>
         )}
-      </div>
-      <div className="idb-crud-table-footer">
-        <Pagination
-          loading={totalCount === null}
-          totalItems={totalCount}
-          itemsPerPage={itemsPerPage}
-          onPageChange={onPageChange}
-        />
       </div>
     </>
   );

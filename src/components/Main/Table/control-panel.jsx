@@ -1,3 +1,5 @@
+import Pagination from "../../Common/pagination";
+import MultiSelect from "../../Common/multi-select";
 import AddIcon from "../../../icons/add.svg?component";
 import DeleteIcon from "../../../icons/delete.svg?component";
 import UploadIcon from "../../../icons/upload.svg?component";
@@ -5,25 +7,33 @@ import DownloadIcon from "../../../icons/download.svg?component";
 
 import "./Styles/control-panel.scss";
 
-const ControlPanel = ({ columns, selectedItems, onDelete }) => {
+const ControlPanel = ({
+  columns,
+  selectedItems,
+  totalItems,
+  itemsPerPage,
+  onPageChange,
+  onColumnsSelect,
+  onDelete,
+}) => {
   const selectedItemsCount = selectedItems?.length ?? 0;
 
   return (
     <div className="idb-crud-table-control-panel">
-      <div className="idb-crud-table-control-panel-filter-columns">
-        <select
-          name="idb-crud-table-control-panel-filter-columns"
-          id="idb-crud-table-control-panel-filter-columns"
-        >
-          {columns.map((column, i) => (
-            <option key={i} value={column.accessorKey}>
-              {column.id === "selection"
-                ? "Choose columns"
-                : column.accessorKey}
-            </option>
-          ))}
-        </select>
-      </div>
+      <Pagination
+        loading={totalItems === null}
+        totalItems={totalItems}
+        itemsPerPage={itemsPerPage}
+        onPageChange={onPageChange}
+      />
+      <MultiSelect
+        placeHolder={"Filter columns"}
+        options={columns.map((column) => ({
+          id: column.accessorKey,
+          value: column.accessorKey,
+        }))}
+        onSelect={onColumnsSelect}
+      />
       <div className="idb-crud-table-control-panel-actions">
         <AddIcon />
         <DeleteIcon

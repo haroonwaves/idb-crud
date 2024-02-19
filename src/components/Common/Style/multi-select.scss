@@ -1,0 +1,66 @@
+@import "../../../styles/variables.scss";
+
+.idb-crud-multi-select {
+  position: relative;
+  width: 200px;
+  cursor: pointer;
+
+  &.open {
+    .idb-crud-multi-select-options {
+      display: block;
+    }
+    .idb-crud-multi-select-toggler {
+      border-color: $primary-medium;
+    }
+  }
+
+  &-toggler {
+    color: $secondary-medium;
+    border: solid 1px $secondary-medium;
+    border-radius: 5px;
+    padding: 1px 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    &:hover {
+      border-color: $secondary-dark;
+    }
+
+    &-icon {
+      height: 18px;
+    }
+  }
+
+  &-options {
+    margin-top: 5px;
+    height: 300px;
+    overflow: auto;
+    position: absolute;
+    box-sizing: border-box;
+    border: 1px solid $secondary-medium;
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 25px 50px -12px;
+    border-radius: 5px;
+    left: 0;
+    width: 100%;
+    list-style: none;
+    padding: 1px 5px;
+    background: #fff;
+    display: none; // Initially hidden
+  }
+
+  &-option {
+    display: flex;
+    align-items: center;
+    padding: 6px 10px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: $primary-lighter;
+    }
+
+    &-checkbox {
+      margin-right: 6px;
+    }
+  }
+}
