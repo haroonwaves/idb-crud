@@ -3,12 +3,22 @@ import { createRef } from "preact";
 import ChevronDownIcon from "../../icons/chevron_down.svg?component";
 
 import "./Style/multi-select.scss";
+import { useEffect } from "preact/hooks";
 
-const MultiSelect = ({ options, onSelect }) => {
-  const [selected, setSelected] = useState([]);
+const MultiSelect = ({
+  options,
+  onSelect,
+  selectedColumns = [],
+  placeHolder,
+}) => {
+  const [selected, setSelected] = useState(selectedColumns);
   const [open, setOpen] = useState(false);
 
   const multiSelectRef = createRef(null);
+
+  useEffect(() => {
+    setSelected(selectedColumns);
+  }, [selectedColumns]);
 
   const handleSelect = (id) => {
     const newSelected = selected.includes(id)

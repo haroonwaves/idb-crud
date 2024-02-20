@@ -9,6 +9,7 @@ import "./Styles/control-panel.scss";
 
 const ControlPanel = ({
   columns,
+  selectedColumns,
   selectedItems,
   totalItems,
   itemsPerPage,
@@ -20,18 +21,13 @@ const ControlPanel = ({
 
   return (
     <div className="idb-crud-table-control-panel">
-      <Pagination
-        loading={totalItems === null}
-        totalItems={totalItems}
-        itemsPerPage={itemsPerPage}
-        onPageChange={onPageChange}
-      />
       <MultiSelect
         placeHolder={"Filter columns"}
         options={columns.map((column) => ({
           id: column.accessorKey,
           value: column.accessorKey,
         }))}
+        selectedColumns={selectedColumns}
         onSelect={onColumnsSelect}
       />
       <div className="idb-crud-table-control-panel-actions">
@@ -43,6 +39,12 @@ const ControlPanel = ({
         <UploadIcon className="disabled" />
         <DownloadIcon className="disabled" />
       </div>
+      <Pagination
+        loading={totalItems === null}
+        totalItems={totalItems}
+        itemsPerPage={itemsPerPage}
+        onPageChange={onPageChange}
+      />
     </div>
   );
 };
