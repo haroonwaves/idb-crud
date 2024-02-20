@@ -277,28 +277,36 @@ function IdbCrudTable({
                               gap: "7px",
                             }}
                           >
-                            <div
-                              style={{
-                                display: "flex",
-                                gap: "8px",
-                                alignItems: "center",
-                              }}
-                            >
+                            <div className="idb-crud-table-head-name">
                               {flexRender(
                                 header.column.columnDef.header,
                                 header.getContext()
                               )}
                               {header.id === "selection" ? null : (
                                 <div
-                                  style={{
-                                    display: "flex",
-                                    gap: "1px",
-                                    cursor: "pointer",
-                                  }}
+                                  className="idb-crud-table-head-name-sort"
                                   onClick={() => handleSort(header.id)}
                                 >
-                                  <div>↓</div>
-                                  <div>↑</div>
+                                  <div
+                                    className={`idb-crud-table-head-name-sort-icon ${
+                                      sort.current[0] === header.id &&
+                                      sort.current[1] === "desc"
+                                        ? "active"
+                                        : ""
+                                    }`}
+                                  >
+                                    ↓
+                                  </div>
+                                  <div
+                                    className={`idb-crud-table-head-name-sort-icon ${
+                                      sort.current[0] === header.id &&
+                                      sort.current[1] === "asc"
+                                        ? "active"
+                                        : ""
+                                    }`}
+                                  >
+                                    ↑
+                                  </div>
                                 </div>
                               )}
                             </div>

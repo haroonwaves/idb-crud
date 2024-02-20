@@ -42,6 +42,26 @@
       color: #333;
       text-align: center;
       padding: 10px 8px;
+
+      &-name {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+
+        &-sort {
+          display: flex;
+          gap: 1px;
+          cursor: pointer;
+
+          &-icon {
+            color: $secondary-medium;
+
+            &.active {
+              color: $secondary-darker;
+            }
+          }
+        }
+      }
     }
 
     &-row {
