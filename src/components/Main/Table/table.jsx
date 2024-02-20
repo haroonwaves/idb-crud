@@ -103,12 +103,6 @@ function IdbCrudTable({
 
       if (resetRef.current.count) {
         setTotalCount(null);
-        pageSize = itemsPerPage;
-      } else {
-        if (page + 1 >= totalCount / itemsPerPage) {
-          // Last page
-          pageSize = totalCount % itemsPerPage;
-        }
       }
 
       getPagedData(

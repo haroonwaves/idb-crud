@@ -24,12 +24,13 @@ export async function getPagedData(
   page,
   pageSize = 20
 ) {
+  const offset = page * pageSize;
   const selectedTable = dexieDatabase[dbName].table(tableName);
   const primaryKey = selectedTable.primaryKey;
 
   const result = await selectedTable
     .orderBy(primaryKey, "desc")
-    .offset(page)
+    .offset(offset)
     .limit(pageSize)
     .where(query)
     .toArray();
