@@ -23,7 +23,7 @@ const ControlPanel = ({
     <div className="idb-crud-table-control-panel">
       <MultiSelect
         placeHolder={"Filter columns"}
-        options={columns.map((column) => ({
+        options={columns.slice(1).map((column) => ({
           id: column.accessorKey,
           value: column.accessorKey,
         }))}
