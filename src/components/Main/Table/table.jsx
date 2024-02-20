@@ -254,7 +254,7 @@ function IdbCrudTable({
                               display: "flex",
                               flexDirection: "column",
                               alignItems: "center",
-                              gap: "2px",
+                              gap: "5px",
                             }}
                           >
                             {flexRender(

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "preact/hooks";
 
-import RightArrow from "../../icons/arrow_right.svg?component";
-import DownArrow from "../../icons/arrow_down.svg?component";
+import DroprightIcon from "../../icons/arrow-dropright.svg?component";
+import DropdownIcon from "../../icons/arrow-dropdown.svg?component";
 
 import "./styles/database.scss";
 import dexieDatabase from "../../dexie/dexie";
@@ -31,9 +31,9 @@ const Database = ({
       >
         <span>
           {openDb ? (
-            <DownArrow onClick={() => setOpenDb(false)} />
+            <DropdownIcon onClick={() => setOpenDb(false)} />
           ) : (
-            <RightArrow onClick={() => setOpenDb(true)} />
+            <DroprightIcon onClick={() => setOpenDb(true)} />
           )}
         </span>
         <span>{dbName}</span>

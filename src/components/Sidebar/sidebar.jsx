@@ -1,8 +1,8 @@
 import { useState } from "preact/hooks";
 
 import Database from "./database";
-import RightArrow from "../../icons/arrow_right.svg?component";
-import DownArrow from "../../icons/arrow_down.svg?component";
+import DroprightIcon from "../../icons/arrow-dropright.svg?component";
+import DropdownIcon from "../../icons/arrow-dropdown.svg?component";
 import dexieDatabase from "../../dexie/dexie";
 
 const Sidebar = ({
@@ -20,9 +20,9 @@ const Sidebar = ({
       <div style={{ display: "flex", alignItems: "center" }}>
         <span>
           {openDbs ? (
-            <DownArrow onClick={() => setOpenDbs(false)} />
+            <DropdownIcon onClick={() => setOpenDbs(false)} />
           ) : (
-            <RightArrow onClick={() => setOpenDbs(true)} />
+            <DroprightIcon onClick={() => setOpenDbs(true)} />
           )}
         </span>
         <span>IndexedDB</span>
