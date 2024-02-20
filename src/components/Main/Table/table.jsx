@@ -238,52 +238,66 @@ function IdbCrudTable({
         ) : (
           <table className="idb-crud-table">
             <thead className="idb-crud-table-header">
-              {table.getHeaderGroups().map((headerGroup) => (
-                <tr className="idb-crud-table-row" key={headerGroup.id}>
-                  {headerGroup.headers.map((header, index) => (
-                    <th className="idb-crud-table-head" key={header.id}>
-                      {header.isPlaceholder ? null : (
-                        <div
-                          style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "center",
-                            gap: "2px",
-                          }}
-                        >
-                          {flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                          {index > 0 && (
-                            <input
-                              onChange={(e) =>
-                                handleFilter(header.id, e.target.value)
-                              }
-                              type="text"
-                              placeholder="Search..."
-                            />
-                          )}
-                        </div>
-                      )}
-                    </th>
-                  ))}
-                </tr>
-              ))}
+              {table.getHeaderGroups().map((headerGroup) => {
+                const visbileHeaders = headerGroup.headers.filter((header) => {
+                  if (header.id === "selection") return true;
+                  return selectedColumns.includes(header.id);
+                });
+
+                return (
+                  <tr className="idb-crud-table-row" key={headerGroup.id}>
+                    {visbileHeaders.map((header, index) => (
+                      <th className="idb-crud-table-head" key={header.id}>
+                        {header.isPlaceholder ? null : (
+                          <div
+                            style={{
+                              display: "flex",
+                              flexDirection: "column",
+                              alignItems: "center",
+                              gap: "2px",
+                            }}
+                          >
+                            {flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                            {index > 0 && (
+                              <input
+                                onChange={(e) =>
+                                  handleFilter(header.id, e.target.value)
+                                }
+                                type="text"
+                                placeholder="Search..."
+                              />
+                            )}
+                          </div>
+                        )}
+                      </th>
+                    ))}
+                  </tr>
+                );
+              })}
             </thead>
             <tbody className="idb-crud-table-body">
-              {table.getRowModel().rows.map((row) => (
-                <tr className="idb-crud-table-row" key={row.id}>
-                  {row.getVisibleCells().map((cell) => (
-                    <td className="idb-crud-table-data" key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </td>
-                  ))}
-                </tr>
-              ))}
+              {table.getRowModel().rows.map((row) => {
+                const visibleCells = row.getVisibleCells().filter((cell) => {
+                  if (cell.column.id === "selection") return true;
+                  return selectedColumns.includes(cell.column.id);
+                });
+
+                return (
+                  <tr className="idb-crud-table-row" key={row.id}>
+                    {visibleCells.map((cell) => (
+                      <td className="idb-crud-table-data" key={cell.id}>
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </td>
+                    ))}
+                  </tr>
+                );
+              })}
             </tbody>
             {columns.length === 0 && (
               <div className="idb-crud-text-center">No content</div>
