@@ -37,10 +37,11 @@ function IdbCrudTable({
   const [loadingData, setLoadingData] = useState(false);
 
   const filter = useRef({});
+  const sort = useRef([]);
   const resetRef = useRef({
-    columns: false,
     selectedColumns: false,
     filter: false,
+    sort: false,
     rowSelection: false,
     count: false,
   });
@@ -90,7 +91,6 @@ function IdbCrudTable({
   const onPageChange = useCallback(
     (page) => {
       currentPage = page;
-      let pageSize;
 
       if (resetRef.current.rowSelection) {
         setRowSelection({});
@@ -105,12 +105,18 @@ function IdbCrudTable({
         setTotalCount(null);
       }
 
+      if (resetRef.current.sort) {
+        sort.current = [];
+      }
+
       getPagedData(
         selectedDatabase,
         selectedTable,
         filter.current,
         page,
-        pageSize
+        itemsPerPage,
+        sort.current[0],
+        sort.current[1]
       )
         .then(setPagedData)
         .then(() => {
@@ -123,9 +129,9 @@ function IdbCrudTable({
 
           resetRef.current.selectedColumns = false;
           resetRef.current.filter = false;
-          resetRef.current.columns = false;
           resetRef.current.rowSelection = false;
           resetRef.current.count = false;
+          resetRef.current.sort = false;
         });
     },
     [
@@ -133,7 +139,10 @@ function IdbCrudTable({
       selectedTable,
       selectedDatabase,
       totalCount,
+      sort,
+      filter,
       setTotalCount,
+      setPagedData,
       setLoadingTable,
       setRowSelection,
     ]
@@ -145,7 +154,13 @@ function IdbCrudTable({
       resetRef.current.count = true;
       onPageChange(currentPage);
     });
-  }, [selectedDatabase, selectedTable, selectedRows, currentPage]);
+  }, [
+    selectedDatabase,
+    selectedTable,
+    selectedRows,
+    currentPage,
+    onPageChange,
+  ]);
 
   const onColumnsSelect = useCallback(
     (selectedColumns) => {
@@ -171,12 +186,23 @@ function IdbCrudTable({
     }, 600);
   };
 
+  const handleSort = useCallback(
+    (sortBy) => {
+      const sortDirection = sort.current[1] === "asc" ? "desc" : "asc";
+      sort.current = [sortBy, sortDirection];
+
+      resetRef.current.rowSelection = true;
+      onPageChange(0);
+    },
+    [sort, onPageChange]
+  );
+
   useEffect(() => {
     resetRef.current.selectedColumns = true;
     resetRef.current.filter = true;
-    resetRef.current.columns = true;
     resetRef.current.rowSelection = true;
     resetRef.current.count = true;
+    resetRef.current.sort = true;
 
     setLoadingTable(true);
     onPageChange(0);
@@ -233,14 +259,14 @@ function IdbCrudTable({
           <table className="idb-crud-table">
             <thead className="idb-crud-table-header">
               {table.getHeaderGroups().map((headerGroup) => {
-                const visbileHeaders = headerGroup.headers.filter((header) => {
+                const visibleHeaders = headerGroup.headers.filter((header) => {
                   if (header.id === "selection") return true;
                   return selectedColumns.includes(header.id);
                 });
 
                 return (
                   <tr className="idb-crud-table-row" key={headerGroup.id}>
-                    {visbileHeaders.map((header, index) => (
+                    {visibleHeaders.map((header, index) => (
                       <th className="idb-crud-table-head" key={header.id}>
                         {header.isPlaceholder ? null : (
                           <div
@@ -248,13 +274,34 @@ function IdbCrudTable({
                               display: "flex",
                               flexDirection: "column",
                               alignItems: "center",
-                              gap: "5px",
+                              gap: "7px",
                             }}
                           >
-                            {flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
+                            <div
+                              style={{
+                                display: "flex",
+                                gap: "8px",
+                                alignItems: "center",
+                              }}
+                            >
+                              {flexRender(
+                                header.column.columnDef.header,
+                                header.getContext()
+                              )}
+                              {header.id === "selection" ? null : (
+                                <div
+                                  style={{
+                                    display: "flex",
+                                    gap: "1px",
+                                    cursor: "pointer",
+                                  }}
+                                  onClick={() => handleSort(header.id)}
+                                >
+                                  <div>↓</div>
+                                  <div>↑</div>
+                                </div>
+                              )}
+                            </div>
                             {index > 0 && (
                               <input
                                 onChange={(e) =>

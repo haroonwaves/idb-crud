@@ -22,14 +22,16 @@ export async function getPagedData(
   tableName,
   query,
   page,
-  pageSize = 20
+  pageSize = 20,
+  sortBy = undefined,
+  sortDirection = "desc"
 ) {
   const offset = page * pageSize;
   const selectedTable = dexieDatabase[dbName].table(tableName);
   const primaryKey = selectedTable.primaryKey;
 
   const result = await selectedTable
-    .orderBy(primaryKey, "desc")
+    .orderBy(sortBy ?? primaryKey, sortDirection)
     .offset(offset)
     .limit(pageSize)
     .where(query)

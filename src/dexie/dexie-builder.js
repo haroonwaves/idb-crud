@@ -4,6 +4,9 @@ export class DexieBuilder {
   #selectedTable;
   #collection;
 
+  #sortField = null; // for manual sorting if the orderBy fieldName is not indexed
+  #sortDirection = "asc"; // for manual sorting if orderBy fieldName is not indexed
+
   constructor(dexieInstance) {
     this.#dexieInstance = dexieInstance;
   }
@@ -49,6 +52,19 @@ export class DexieBuilder {
   async toArray(...columnNames) {
     let results = await this.#collection.toArray();
 
+    if (this.#sortField) {
+      results.sort((a, b) => {
+        if (this.#sortDirection === "asc") {
+          return a[this.#sortField] > b[this.#sortField] ? 1 : -1;
+        } else {
+          return a[this.#sortField] < b[this.#sortField] ? 1 : -1;
+        }
+      });
+
+      this.#sortField = null;
+      this.#sortDirection = "asc";
+    }
+
     if (columnNames.length > 0) {
       results = results.map((item) => {
         const selected = {};
@@ -91,10 +107,20 @@ export class DexieBuilder {
   }
 
   orderBy(fieldName, direction = "asc") {
-    this.#collection =
-      direction === "asc"
-        ? this.#selectedTable.orderBy(fieldName)
-        : this.#selectedTable.orderBy(fieldName).reverse();
+    const isFieldIndexed =
+      this.primaryKey === fieldName || this.secondaryKeys.includes(fieldName);
+
+    if (isFieldIndexed) {
+      this.#collection =
+        direction === "asc"
+          ? this.#selectedTable.orderBy(fieldName)
+          : this.#selectedTable.orderBy(fieldName).reverse();
+    } else {
+      // For Manual sorting
+      this.#sortField = fieldName;
+      this.#sortDirection = direction;
+    }
+
     return this;
   }
 
