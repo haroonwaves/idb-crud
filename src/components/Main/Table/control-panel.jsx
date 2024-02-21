@@ -4,6 +4,7 @@ import AddIcon from "../../../icons/add.svg?component";
 import DeleteIcon from "../../../icons/delete.svg?component";
 import UploadIcon from "../../../icons/upload.svg?component";
 import DownloadIcon from "../../../icons/download.svg?component";
+import RefreshIcon from "../../../icons/refresh.svg?component";
 
 import "./Styles/control-panel.scss";
 
@@ -21,16 +22,8 @@ const ControlPanel = ({
 
   return (
     <div className="idb-crud-table-control-panel">
-      <MultiSelect
-        placeHolder={"Filter columns"}
-        options={columns.slice(1).map((column) => ({
-          id: column.accessorKey,
-          value: column.accessorKey,
-        }))}
-        selectedColumns={selectedColumns}
-        onSelect={onColumnsSelect}
-      />
       <div className="idb-crud-table-control-panel-actions">
+        <RefreshIcon />
         <AddIcon />
         <DeleteIcon
           className={`${selectedItemsCount === 0 ? "disabled" : ""}`}
@@ -44,6 +37,15 @@ const ControlPanel = ({
         totalItems={totalItems}
         itemsPerPage={itemsPerPage}
         onPageChange={onPageChange}
+      />
+      <MultiSelect
+        placeHolder={"Filter columns"}
+        options={columns.slice(1).map((column) => ({
+          id: column.accessorKey,
+          value: column.accessorKey,
+        }))}
+        selectedColumns={selectedColumns}
+        onSelect={onColumnsSelect}
       />
     </div>
   );
