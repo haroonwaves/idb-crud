@@ -27,8 +27,18 @@
       border-color: $secondary-dark;
     }
 
-    &-icon {
+    &-icon-container {
       height: 18px;
+      display: flex;
+      align-items: center;
+
+      .idb-crud-select-toggler-icon-reset {
+        display: none;
+
+        &.show {
+          display: inline-block;
+        }
+      }
     }
   }
 

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { createRef } from "preact";
 import ChevronDownIcon from "../../icons/chevron_down.svg?component";
+import CrossIcon from "../../icons/cross-small.svg?component";
 
 import "./Style/multi-select.scss";
 import { useEffect } from "preact/hooks";
@@ -41,6 +42,16 @@ const MultiSelect = ({
     onSelect(selected);
   };
 
+  const reset = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const allIds = options.map((option) => option.id);
+    setSelected(allIds);
+    onSelect(allIds);
+    setOpen(false);
+  };
+
   return (
     <div
       ref={multiSelectRef}
@@ -56,9 +67,19 @@ const MultiSelect = ({
             ? placeHolder
             : options.length - selected.length + ` Unselected`}{" "}
         </div>
-        <span className="idb-crud-select-toggler-icon">
-          <ChevronDownIcon />
-        </span>
+        <div className="idb-crud-multi-select-toggler-icon-container">
+          <span
+            className={`idb-crud-select-toggler-icon-reset ${
+              options.length !== selected.length ? "show" : ""
+            }`}
+            onClick={reset}
+          >
+            <CrossIcon />
+          </span>
+          <span className="idb-crud-select-toggler-icon-chevron">
+            <ChevronDownIcon />
+          </span>
+        </div>
       </div>
       <ul className="idb-crud-multi-select-options">
         {options.map((option) => {
