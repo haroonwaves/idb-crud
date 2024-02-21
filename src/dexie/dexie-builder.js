@@ -4,8 +4,7 @@ export class DexieBuilder {
   #selectedTable;
   #collection;
 
-  #sortField = null; // for manual sorting if the orderBy fieldName is not indexed
-  #sortDirection = "asc"; // for manual sorting if orderBy fieldName is not indexed
+  #sortOptions = null; // for manual sorting if the orderBy fieldName is not indexed
 
   constructor(dexieInstance) {
     this.#dexieInstance = dexieInstance;
@@ -50,19 +49,14 @@ export class DexieBuilder {
   }
 
   async toArray(...columnNames) {
-    let results = await this.#collection.toArray();
+    let results = [];
 
-    if (this.#sortField) {
-      results.sort((a, b) => {
-        if (this.#sortDirection === "asc") {
-          return a[this.#sortField] > b[this.#sortField] ? 1 : -1;
-        } else {
-          return a[this.#sortField] < b[this.#sortField] ? 1 : -1;
-        }
-      });
+    if (this.#sortOptions === null) {
+      results = await this.#collection.toArray();
+    } else {
+      results = await this.#manualSort();
 
-      this.#sortField = null;
-      this.#sortDirection = "asc";
+      this.#sortOptions = null;
     }
 
     if (columnNames.length > 0) {
@@ -97,12 +91,21 @@ export class DexieBuilder {
   }
 
   limit(count) {
-    this.#collection = this.#collection.limit(count);
+    if (this.#sortOptions === null) {
+      this.#collection = this.#collection.limit(count);
+    } else {
+      this.#sortOptions.limit = count;
+    }
+
     return this;
   }
 
-  offset(count) {
-    this.#collection = this.#collection.offset(count);
+  offset(index) {
+    if (this.#sortOptions === null) {
+      this.#collection = this.#collection.offset(index);
+    } else {
+      this.#sortOptions.offset = index;
+    }
     return this;
   }
 
@@ -117,12 +120,28 @@ export class DexieBuilder {
           : this.#selectedTable.orderBy(fieldName).reverse();
     } else {
       // For Manual sorting
-      this.#sortField = fieldName;
-      this.#sortDirection = direction;
+      this.#sortOptions = { fieldName, direction };
     }
 
     return this;
   }
+
+  #manualSort = async () => {
+    let sortedData =
+      this.#sortOptions.direction === "asc"
+        ? await this.#collection.sortBy(this.#sortOptions.fieldName)
+        : await this.#collection.reverse().sortBy(this.#sortOptions.fieldName);
+
+    if (this.#sortOptions.offset !== undefined) {
+      sortedData = sortedData.slice(this.#sortOptions.offset);
+    }
+
+    if (this.#sortOptions.limit !== undefined) {
+      sortedData = sortedData.slice(0, this.#sortOptions.limit);
+    }
+
+    return sortedData;
+  };
 
   equalTo(fieldName, value) {
     this.#collection = this.#collection.and(
