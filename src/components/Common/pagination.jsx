@@ -32,11 +32,15 @@ const Pagination = ({ totalItems, itemsPerPage, onPageChange, loading }) => {
       </div>
       <div className="idb-crud-pagination-button-group">
         <ChevronLeft
-          className="idb-crud-pagination-previous"
+          className={`idb-crud-pagination-previous ${
+            currentPage === 0 ? "disabled" : ""
+          }`}
           onClick={() => handlePageClick(currentPage - 1)}
         />
         <ChevronRight
-          className="idb-crud-pagination-next"
+          className={`idb-crud-pagination-next ${
+            currentPage === totalPages - 1 ? "disabled" : ""
+          }`}
           onClick={() => handlePageClick(currentPage + 1)}
         />
       </div>

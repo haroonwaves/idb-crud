@@ -192,6 +192,7 @@ function IdbCrudTable({
       sort.current = [sortBy, sortDirection];
 
       resetRef.current.rowSelection = true;
+      resetRef.current.count = true;
       onPageChange(0);
     },
     [sort, onPageChange]

@@ -51,7 +51,11 @@ const MultiSelect = ({
         onClick={onToggle}
         onBlur={onToggle}
       >
-        <div>{selected.length} selected</div>
+        <div>
+          {options.length === selected.length
+            ? placeHolder
+            : options.length - selected.length + ` Unselected`}{" "}
+        </div>
         <span className="idb-crud-select-toggler-icon">
           <ChevronDownIcon />
         </span>
