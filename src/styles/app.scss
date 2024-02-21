@@ -28,7 +28,10 @@
     align-items: center;
   }
 
-  svg {
+  svg:not(.react-json-view svg) {
+    background-color: transparent;
+    border-radius: 50%;
+
     path {
       fill: $secondary-medium;
     }
@@ -41,6 +44,8 @@
     }
 
     &:not(.disabled):hover {
+      background-color: $primary-lighter;
+      padding: 2px;
       path {
         fill: $secondary-dark;
       }

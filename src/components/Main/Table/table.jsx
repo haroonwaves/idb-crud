@@ -180,6 +180,7 @@ function IdbCrudTable({
     }
 
     searchTimeOutId = setTimeout(() => {
+      resetRef.current.rowSelection = true;
       resetRef.current.count = true;
       onPageChange(currentPage);
       setLoadingData(false);

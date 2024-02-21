@@ -9,11 +9,11 @@
     width: 100%;
     height: auto;
     border-collapse: collapse;
-    margin-top: 40px;
+    margin-top: 50px;
 
     &-header {
       position: sticky;
-      top: 40px;
+      top: 50px;
       z-index: 1;
 
       &::before {
@@ -54,7 +54,7 @@
           cursor: pointer;
 
           &-icon {
-            color: $secondary-medium;
+            color: lightgray;
 
             &.active {
               color: $secondary-darker;

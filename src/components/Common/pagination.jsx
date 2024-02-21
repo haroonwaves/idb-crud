@@ -27,9 +27,6 @@ const Pagination = ({ totalItems, itemsPerPage, onPageChange, loading }) => {
 
   return (
     <div className="idb-crud-pagination">
-      <div className="idb-crud-pagination-page-info">
-        {loading ? "Loading..." : `${fromItem} - ${toItem} of ${totalItems}`}
-      </div>
       <div className="idb-crud-pagination-button-group">
         <ChevronLeft
           className={`idb-crud-pagination-previous ${
@@ -43,6 +40,9 @@ const Pagination = ({ totalItems, itemsPerPage, onPageChange, loading }) => {
           }`}
           onClick={() => handlePageClick(currentPage + 1)}
         />
+      </div>
+      <div className="idb-crud-pagination-page-info">
+        {loading ? "Loading..." : `${fromItem} - ${toItem} of ${totalItems}`}
       </div>
     </div>
   );

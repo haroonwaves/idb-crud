@@ -32,9 +32,9 @@ export async function getPagedData(
 
   const result = await selectedTable
     .orderBy(sortBy ?? primaryKey, sortDirection)
+    .where(query)
     .offset(offset)
     .limit(pageSize)
-    .where(query)
     .toArray();
 
   return result;
