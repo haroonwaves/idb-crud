@@ -1,11 +1,11 @@
 @import "./variables.scss";
 
-.idb-crud-main {
+#idb-crud-app {
   font-family: Archivo, Roboto, sans-serif !important;
   font-size: 14px;
 
   position: absolute;
-  z-index: 9999999;
+  z-index: 99999999999999999999999 !important;
 
   .idb-crud-drawer-toggler {
     all: unset;

@@ -23,7 +23,7 @@ export const App = () => {
   }
 
   return (
-    <div className="idb-crud-main">
+    <div id="idb-crud-app">
       <button
         className="idb-crud-drawer-toggler"
         type="button"
