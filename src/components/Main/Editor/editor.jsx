@@ -3,7 +3,7 @@ import JsonViewer from "react-json-view";
 
 import { replace } from "../../../dexie/dexie";
 
-import "./Styles/editor.scss";
+import editorStyles from "./Styles/editor.scss?inline";
 
 const Editor = ({
   selectedRows,
@@ -32,23 +32,26 @@ const Editor = ({
   );
 
   return (
-    <div className="idb-crud-editor">
-      {selectedRows ? (
-        <JsonViewer
-          theme="rjv-default"
-          name="array"
-          onEdit={onEdit}
-          collapsed={true}
-          enableClipboard={false}
-          displayObjectSize={false}
-          displayDataTypes={false}
-          groupArraysAfterLength={50}
-          src={selectedRows}
-        />
-      ) : (
-        <div className="idb-crud-text-center">Select a row to view</div>
-      )}
-    </div>
+    <>
+      <style>{editorStyles}</style>
+      <div className="idb-crud-editor">
+        {selectedRows ? (
+          <JsonViewer
+            theme="rjv-default"
+            name="array"
+            onEdit={onEdit}
+            collapsed={true}
+            enableClipboard={false}
+            displayObjectSize={false}
+            displayDataTypes={false}
+            groupArraysAfterLength={50}
+            src={selectedRows}
+          />
+        ) : (
+          <div className="idb-crud-text-center">Select a row to view</div>
+        )}
+      </div>
+    </>
   );
 };
 

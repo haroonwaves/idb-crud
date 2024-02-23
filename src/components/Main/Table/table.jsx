@@ -11,7 +11,7 @@ import calculateColumnNames from "./Utils/calculate-column-names";
 import LoadingSpinner from "../../Common/loading-spinner";
 import ControlPanel from "./control-panel";
 
-import "./Styles/table.scss";
+import tableStyles from "./Styles/table.scss?inline";
 
 const columnHelper = createColumnHelper();
 
@@ -68,7 +68,7 @@ function IdbCrudTable({
         return columnHelper.accessor(columnName, {
           cell: (info) => {
             const value = info.getValue();
-            if (typeof value === "object") {
+            if (typeof value === "object" || typeof value === "boolean") {
               return JSON.stringify(value);
             }
 
@@ -241,6 +241,7 @@ function IdbCrudTable({
 
   return (
     <>
+      <style>{tableStyles}</style>
       <ControlPanel
         columns={columns}
         selectedColumns={selectedColumns}

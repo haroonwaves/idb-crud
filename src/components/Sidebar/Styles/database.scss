@@ -6,7 +6,10 @@
   }
   .idb-crud-db-table {
     cursor: pointer;
-    padding: 2px 5px 2px 35px;
+    height: 27px;
+    display: flex;
+    align-items: center;
+    padding: 0 5px 0 35px;
 
     &.selected {
       background-color: $primary-lighter;

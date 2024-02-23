@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { createRef } from "preact";
+import { useEffect } from "preact/hooks";
+
 import ChevronDownIcon from "../../icons/chevron_down.svg?component";
 import CrossIcon from "../../icons/cross-small.svg?component";
 
-import "./Style/multi-select.scss";
-import { useEffect } from "preact/hooks";
+import multiSelectStyles from "./Style/multi-select.scss?inline";
 
 const MultiSelect = ({
   options,
@@ -53,54 +54,57 @@ const MultiSelect = ({
   };
 
   return (
-    <div
-      ref={multiSelectRef}
-      className={`idb-crud-multi-select ${open ? "open" : ""}`}
-    >
+    <>
+      <style>{multiSelectStyles}</style>
       <div
-        className="idb-crud-multi-select-toggler"
-        onClick={onToggle}
-        onBlur={onToggle}
+        ref={multiSelectRef}
+        className={`idb-crud-multi-select ${open ? "open" : ""}`}
       >
-        <div>
-          {options.length === selected.length
-            ? placeHolder
-            : options.length - selected.length + ` Unselected`}{" "}
-        </div>
-        <div className="idb-crud-multi-select-toggler-icon-container">
-          <span
-            className={`idb-crud-select-toggler-icon-reset ${
-              options.length !== selected.length ? "show" : ""
-            }`}
-            onClick={reset}
-          >
-            <CrossIcon />
-          </span>
-          <span className="idb-crud-select-toggler-icon-chevron">
-            <ChevronDownIcon />
-          </span>
-        </div>
-      </div>
-      <ul className="idb-crud-multi-select-options">
-        {options.map((option) => {
-          const isSelected = selected.includes(option.id);
-
-          return (
-            <li
-              className="idb-crud-multi-select-option"
-              onClick={() => handleSelect(option.id)}
+        <div
+          className="idb-crud-multi-select-toggler"
+          onClick={onToggle}
+          onBlur={onToggle}
+        >
+          <div>
+            {options.length === selected.length
+              ? placeHolder
+              : options.length - selected.length + ` Unselected`}{" "}
+          </div>
+          <div className="idb-crud-multi-select-toggler-icon-container">
+            <span
+              className={`idb-crud-select-toggler-icon-reset ${
+                options.length !== selected.length ? "show" : ""
+              }`}
+              onClick={reset}
             >
-              <input
-                type="checkbox"
-                checked={isSelected}
-                className="idb-crud-multi-select-option-checkbox"
-              ></input>
-              <span>{option.value}</span>
-            </li>
-          );
-        })}
-      </ul>
-    </div>
+              <CrossIcon />
+            </span>
+            <span className="idb-crud-select-toggler-icon-chevron">
+              <ChevronDownIcon />
+            </span>
+          </div>
+        </div>
+        <ul className="idb-crud-multi-select-options">
+          {options.map((option) => {
+            const isSelected = selected.includes(option.id);
+
+            return (
+              <li
+                className="idb-crud-multi-select-option"
+                onClick={() => handleSelect(option.id)}
+              >
+                <input
+                  type="checkbox"
+                  checked={isSelected}
+                  className="idb-crud-multi-select-option-checkbox"
+                ></input>
+                <span>{option.value}</span>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </>
   );
 };
 

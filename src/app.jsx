@@ -2,7 +2,7 @@ import { useEffect, useState } from "preact/hooks";
 import dexieDatabase from "./dexie/dexie";
 import Drawer from "./components/drawer";
 
-import "./styles/app.scss";
+import appStyles from "./styles/app.scss?inline";
 
 export const App = () => {
   const [openDrawer, setOpenDrawer] = useState(false);
@@ -23,15 +23,18 @@ export const App = () => {
   }
 
   return (
-    <div id="idb-crud-app">
-      <button
-        className="idb-crud-drawer-toggler"
-        type="button"
-        onClick={toggleDrawer}
-      >
-        &lt;
-      </button>
-      <Drawer open={openDrawer} setOpen={setOpenDrawer} />
-    </div>
+    <>
+      <style>{appStyles}</style>
+      <div id="idb-crud-app">
+        <button
+          className="idb-crud-drawer-toggler"
+          type="button"
+          onClick={toggleDrawer}
+        >
+          &lt;
+        </button>
+        <Drawer open={openDrawer} setOpen={setOpenDrawer} />
+      </div>
+    </>
   );
 };

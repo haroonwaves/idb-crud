@@ -1,10 +1,13 @@
-import "./Style/loading-spinner.scss";
+import loadingSpinnerStyles from "./Style/loading-spinner.scss?inline";
 
 const LoadingSpinner = () => {
   return (
-    <div className="idb-crud-loading-spinner-container">
-      <div className="idb-crud-loading-spinner"></div>
-    </div>
+    <>
+      <style>{loadingSpinnerStyles}</style>
+      <div className="idb-crud-loading-spinner-container">
+        <div className="idb-crud-loading-spinner"></div>
+      </div>
+    </>
   );
 };
 

@@ -2,9 +2,9 @@ import { useEffect, useState } from "preact/hooks";
 
 import DroprightIcon from "../../icons/arrow-dropright.svg?component";
 import DropdownIcon from "../../icons/arrow-dropdown.svg?component";
-
-import "./styles/database.scss";
 import dexieDatabase from "../../dexie/dexie";
+
+import databaseStyles from "./styles/database.scss?inline";
 
 const Database = ({
   dbName,
@@ -24,35 +24,39 @@ const Database = ({
   const tables = dexieDatabase[dbName].allTables().map((table) => table.name);
 
   return (
-    <div className="idb-crud-database">
-      <div
-        className="idb-crud-db-name"
-        style={{ display: "flex", alignItems: "center" }}
-      >
-        <span>
-          {openDb ? (
-            <DropdownIcon onClick={() => setOpenDb(false)} />
-          ) : (
-            <DroprightIcon onClick={() => setOpenDb(true)} />
-          )}
-        </span>
-        <span>{dbName}</span>
+    <>
+      <style>{databaseStyles}</style>
+
+      <div className="idb-crud-database">
+        <div
+          className="idb-crud-db-name"
+          style={{ display: "flex", alignItems: "center" }}
+        >
+          <span>
+            {openDb ? (
+              <DropdownIcon onClick={() => setOpenDb(false)} />
+            ) : (
+              <DroprightIcon onClick={() => setOpenDb(true)} />
+            )}
+          </span>
+          <span>{dbName}</span>
+        </div>
+        {openDb &&
+          tables.map((table) => (
+            <div
+              className={`idb-crud-db-table ${
+                selectedTable === table ? "selected" : ""
+              }`}
+              onClick={() => {
+                setSelectedDatabase(dbName);
+                setSelectedTable(table);
+              }}
+            >
+              {table}
+            </div>
+          ))}
       </div>
-      {openDb &&
-        tables.map((table) => (
-          <div
-            className={`idb-crud-db-table ${
-              selectedTable === table ? "selected" : ""
-            }`}
-            onClick={() => {
-              setSelectedDatabase(dbName);
-              setSelectedTable(table);
-            }}
-          >
-            {table}
-          </div>
-        ))}
-    </div>
+    </>
   );
 };
 

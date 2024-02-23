@@ -6,7 +6,7 @@ import UploadIcon from "../../../icons/upload.svg?component";
 import DownloadIcon from "../../../icons/download.svg?component";
 import RefreshIcon from "../../../icons/refresh.svg?component";
 
-import "./Styles/control-panel.scss";
+import controlPanelStyles from "./Styles/control-panel.scss?inline";
 
 const ControlPanel = ({
   columns,
@@ -21,33 +21,36 @@ const ControlPanel = ({
   const selectedItemsCount = selectedItems?.length ?? 0;
 
   return (
-    <div className="idb-crud-table-control-panel">
-      <div className="idb-crud-table-control-panel-actions">
-        <RefreshIcon />
-        <AddIcon />
-        <DeleteIcon
-          className={`${selectedItemsCount === 0 ? "disabled" : ""}`}
-          onClick={selectedItemsCount > 0 ? onDelete : () => {}}
+    <>
+      <style>{controlPanelStyles}</style>
+      <div className="idb-crud-table-control-panel">
+        <div className="idb-crud-table-control-panel-actions">
+          <RefreshIcon />
+          <AddIcon />
+          <DeleteIcon
+            className={`${selectedItemsCount === 0 ? "disabled" : ""}`}
+            onClick={selectedItemsCount > 0 ? onDelete : () => {}}
+          />
+          <UploadIcon className="disabled" />
+          <DownloadIcon className="disabled" />
+        </div>
+        <Pagination
+          loading={totalItems === null}
+          totalItems={totalItems}
+          itemsPerPage={itemsPerPage}
+          onPageChange={onPageChange}
         />
-        <UploadIcon className="disabled" />
-        <DownloadIcon className="disabled" />
+        <MultiSelect
+          placeHolder={"Filter columns"}
+          options={columns.slice(1).map((column) => ({
+            id: column.accessorKey,
+            value: column.accessorKey,
+          }))}
+          selectedColumns={selectedColumns}
+          onSelect={onColumnsSelect}
+        />
       </div>
-      <Pagination
-        loading={totalItems === null}
-        totalItems={totalItems}
-        itemsPerPage={itemsPerPage}
-        onPageChange={onPageChange}
-      />
-      <MultiSelect
-        placeHolder={"Filter columns"}
-        options={columns.slice(1).map((column) => ({
-          id: column.accessorKey,
-          value: column.accessorKey,
-        }))}
-        selectedColumns={selectedColumns}
-        onSelect={onColumnsSelect}
-      />
-    </div>
+    </>
   );
 };
 

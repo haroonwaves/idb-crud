@@ -15,10 +15,11 @@
   }
 
   &-toggler {
+    height: 25px;
     color: $secondary-medium;
     border: solid 1px $secondary-medium;
     border-radius: 5px;
-    padding: 1px 5px;
+    padding: 0 5px;
     display: flex;
     justify-content: space-between;
     align-items: center;
