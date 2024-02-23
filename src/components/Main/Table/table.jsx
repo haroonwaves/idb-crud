@@ -16,7 +16,6 @@ import tableStyles from "./Styles/table.scss?inline";
 const columnHelper = createColumnHelper();
 
 const itemsPerPage = 20;
-let currentPage = 0;
 let searchTimeOutId = null;
 
 function IdbCrudTable({
@@ -32,6 +31,7 @@ function IdbCrudTable({
   const [selectedColumns, setSelectedColumns] = useState([]);
   const [rowSelection, setRowSelection] = useState({});
   const [totalCount, setTotalCount] = useState(null);
+  const [currentPage, setCurrentPage] = useState(0);
 
   const [loadingTable, setLoadingTable] = useState(true);
   const [loadingData, setLoadingData] = useState(false);
@@ -90,7 +90,7 @@ function IdbCrudTable({
 
   const onPageChange = useCallback(
     (page) => {
-      currentPage = page;
+      setCurrentPage(page);
 
       if (resetRef.current.rowSelection) {
         setRowSelection({});
@@ -182,7 +182,7 @@ function IdbCrudTable({
     searchTimeOutId = setTimeout(() => {
       resetRef.current.rowSelection = true;
       resetRef.current.count = true;
-      onPageChange(currentPage);
+      onPageChange(0);
       setLoadingData(false);
     }, 600);
   };
@@ -198,6 +198,11 @@ function IdbCrudTable({
     },
     [sort, onPageChange]
   );
+
+  const syncData = useCallback(() => {
+    resetRef.current.count = true;
+    onPageChange(currentPage);
+  }, [currentPage, selectedDatabase, selectedTable]);
 
   useEffect(() => {
     resetRef.current.selectedColumns = true;
@@ -247,6 +252,7 @@ function IdbCrudTable({
         selectedColumns={selectedColumns}
         selectedItems={selectedRows}
         totalItems={totalCount}
+        currentPage={currentPage}
         itemsPerPage={itemsPerPage}
         onPageChange={(page) => {
           resetRef.current.rowSelection = true;
@@ -254,6 +260,7 @@ function IdbCrudTable({
         }}
         onColumnsSelect={onColumnsSelect}
         onDelete={onDelete}
+        syncData={syncData}
       />
       <div className="idb-crud-table-container">
         {loadingTable ? (

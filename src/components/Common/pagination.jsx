@@ -4,26 +4,32 @@ import ChevronLeft from "../../icons/chevron_left.svg?component";
 
 import paginationStyles from "./Style/pagination.scss?inline";
 
-const Pagination = ({ totalItems, itemsPerPage, onPageChange, loading }) => {
-  const [currentPage, setCurrentPage] = useState(0);
+const Pagination = ({
+  totalItems,
+  itemsPerPage,
+  onPageChange,
+  loading,
+  currentPage,
+}) => {
+  const [page, setPage] = useState(currentPage);
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
   useEffect(() => {
-    setCurrentPage(0);
-  }, [loading]);
+    setPage(currentPage);
+  }, [currentPage]);
 
   const handlePageClick = useCallback(
     (page) => {
       if (page < 0 || page >= totalPages || loading) return;
-      setCurrentPage(page);
+      setPage(page);
       onPageChange(page);
     },
-    [loading, onPageChange, totalPages, setCurrentPage]
+    [loading, onPageChange, totalPages, setPage]
   );
 
   // Calculate the range of items for the current page
-  const fromItem = currentPage * itemsPerPage + 1;
-  const toItem = Math.min((currentPage + 1) * itemsPerPage, totalItems);
+  const fromItem = page * itemsPerPage + 1;
+  const toItem = Math.min((page + 1) * itemsPerPage, totalItems);
 
   return (
     <>
@@ -32,15 +38,15 @@ const Pagination = ({ totalItems, itemsPerPage, onPageChange, loading }) => {
         <div className="idb-crud-pagination-button-group">
           <ChevronLeft
             className={`idb-crud-pagination-previous ${
-              currentPage === 0 ? "disabled" : ""
+              page === 0 ? "disabled" : ""
             }`}
-            onClick={() => handlePageClick(currentPage - 1)}
+            onClick={() => handlePageClick(page - 1)}
           />
           <ChevronRight
             className={`idb-crud-pagination-next ${
-              currentPage === totalPages - 1 ? "disabled" : ""
+              page === totalPages - 1 ? "disabled" : ""
             }`}
-            onClick={() => handlePageClick(currentPage + 1)}
+            onClick={() => handlePageClick(page + 1)}
           />
         </div>
         <div className="idb-crud-pagination-page-info">

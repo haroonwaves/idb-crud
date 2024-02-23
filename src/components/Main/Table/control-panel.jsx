@@ -13,10 +13,12 @@ const ControlPanel = ({
   selectedColumns,
   selectedItems,
   totalItems,
+  currentPage,
   itemsPerPage,
   onPageChange,
   onColumnsSelect,
   onDelete,
+  syncData,
 }) => {
   const selectedItemsCount = selectedItems?.length ?? 0;
 
@@ -25,7 +27,7 @@ const ControlPanel = ({
       <style>{controlPanelStyles}</style>
       <div className="idb-crud-table-control-panel">
         <div className="idb-crud-table-control-panel-actions">
-          <SyncIcon />
+          <SyncIcon onClick={syncData} />
           <AddIcon />
           <DeleteIcon
             className={`${selectedItemsCount === 0 ? "disabled" : ""}`}
@@ -36,6 +38,7 @@ const ControlPanel = ({
         </div>
         <Pagination
           loading={totalItems === null}
+          currentPage={currentPage}
           totalItems={totalItems}
           itemsPerPage={itemsPerPage}
           onPageChange={onPageChange}
