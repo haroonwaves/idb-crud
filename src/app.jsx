@@ -2,8 +2,6 @@ import { useCallback, useEffect, useState } from "preact/hooks";
 import dexieDatabase from "./dexie/dexie";
 import Drawer from "./components/drawer";
 
-import appStyles from "./styles/app.scss?inline";
-
 export const App = () => {
   const [openDrawer, setOpenDrawer] = useState(false);
   const [connected, setConnected] = useState(false);
@@ -22,13 +20,8 @@ export const App = () => {
     setOpenDrawer(!openDrawer);
   };
 
-  if (!connected) {
-    return <>Waiting for connection...</>;
-  }
-
   return (
     <>
-      <style>{appStyles}</style>
       <div id="idb-crud-app">
         <button
           className="idb-crud-drawer-toggler"
@@ -38,6 +31,7 @@ export const App = () => {
           &lt;
         </button>
         <Drawer
+          connected={connected}
           open={openDrawer}
           setOpen={setOpenDrawer}
           connectToDatabase={connectToDatabase}

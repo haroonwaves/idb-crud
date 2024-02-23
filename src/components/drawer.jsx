@@ -7,7 +7,7 @@ import Sidebar from "./Sidebar/sidebar";
 
 import drawerStyles from "./styles/drawer.scss?inline";
 
-const Drawer = ({ open, setOpen, connectToDatabase }) => {
+const Drawer = ({ open, setOpen, connectToDatabase, connected }) => {
   const idbCrudDrawerRef = createRef();
 
   const [selectedDatabase, setSelectedDatabase] = useState(null);
@@ -33,12 +33,14 @@ const Drawer = ({ open, setOpen, connectToDatabase }) => {
         <PanelGroup direction="horizontal">
           <>
             <Panel
+              className="!overflow-y-auto !overflow-x-hidden !text-nowrap"
               id="idb-crud-side-panel"
               defaultSize={15}
               minSize={10}
               order={1}
             >
               <Sidebar
+                connected={connected}
                 selectedDatabase={selectedDatabase}
                 setSelectedDatabase={setSelectedDatabase}
                 selectedTable={selectedTable}

@@ -7,6 +7,7 @@ import DropdownIcon from "../../icons/arrow-dropdown.svg?component";
 import RefreshIcon from "../../icons/refresh.svg?component";
 
 const Sidebar = ({
+  connected,
   selectedDatabase,
   setSelectedDatabase,
   selectedTable,
@@ -34,7 +35,10 @@ const Sidebar = ({
           <RefreshIcon />
         </span>
       </div>
-      {openDbs &&
+      {!connected ? (
+        <div style={{ padding: "4px 17px" }}>Connecting...</div>
+      ) : (
+        openDbs &&
         (dbNames.length > 0 ? (
           dbNames.map((name) => (
             <Database
@@ -46,7 +50,8 @@ const Sidebar = ({
           ))
         ) : (
           <div style={{ padding: "4px 17px" }}>No databases found...</div>
-        ))}
+        ))
+      )}
     </>
   );
 };
