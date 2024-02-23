@@ -39,11 +39,14 @@ const Editor = ({
           <JsonViewer
             theme="rjv-default"
             name="array"
+            onAdd={(data) => !!data.name}
             onEdit={onEdit}
-            collapsed={true}
+            displayObjectSize
+            collapsed={1}
+            quotesOnKeys={false}
             enableClipboard={false}
-            displayObjectSize={false}
             displayDataTypes={false}
+            collapseStringsAfterLength={100}
             groupArraysAfterLength={50}
             src={selectedRows}
           />
