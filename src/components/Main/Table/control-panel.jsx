@@ -4,7 +4,7 @@ import AddIcon from "../../../icons/add.svg?component";
 import DeleteIcon from "../../../icons/delete.svg?component";
 import UploadIcon from "../../../icons/upload.svg?component";
 import DownloadIcon from "../../../icons/download.svg?component";
-import RefreshIcon from "../../../icons/refresh.svg?component";
+import SyncIcon from "../../../icons/sync.svg?component";
 
 import controlPanelStyles from "./Styles/control-panel.scss?inline";
 
@@ -25,7 +25,7 @@ const ControlPanel = ({
       <style>{controlPanelStyles}</style>
       <div className="idb-crud-table-control-panel">
         <div className="idb-crud-table-control-panel-actions">
-          <RefreshIcon />
+          <SyncIcon />
           <AddIcon />
           <DeleteIcon
             className={`${selectedItemsCount === 0 ? "disabled" : ""}`}

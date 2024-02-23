@@ -1,4 +1,4 @@
-import { useEffect, useState } from "preact/hooks";
+import { useCallback, useEffect, useState } from "preact/hooks";
 import dexieDatabase from "./dexie/dexie";
 import Drawer from "./components/drawer";
 
@@ -8,11 +8,15 @@ export const App = () => {
   const [openDrawer, setOpenDrawer] = useState(false);
   const [connected, setConnected] = useState(false);
 
-  useEffect(() => {
-    dexieDatabase.connect().then(() => {
-      setConnected(true);
-    });
+  const connectToDatabase = useCallback(async () => {
+    setConnected(false);
+    await dexieDatabase.connect();
+    setConnected(true);
   }, []);
+
+  useEffect(() => {
+    connectToDatabase();
+  }, [connectToDatabase]);
 
   const toggleDrawer = () => {
     setOpenDrawer(!openDrawer);
@@ -33,7 +37,11 @@ export const App = () => {
         >
           &lt;
         </button>
-        <Drawer open={openDrawer} setOpen={setOpenDrawer} />
+        <Drawer
+          open={openDrawer}
+          setOpen={setOpenDrawer}
+          connectToDatabase={connectToDatabase}
+        />
       </div>
     </>
   );

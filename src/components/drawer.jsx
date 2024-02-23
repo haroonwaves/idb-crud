@@ -7,7 +7,7 @@ import Sidebar from "./Sidebar/sidebar";
 
 import drawerStyles from "./styles/drawer.scss?inline";
 
-const Drawer = ({ open, setOpen }) => {
+const Drawer = ({ open, setOpen, connectToDatabase }) => {
   const idbCrudDrawerRef = createRef();
 
   const [selectedDatabase, setSelectedDatabase] = useState(null);
@@ -43,6 +43,7 @@ const Drawer = ({ open, setOpen }) => {
                 setSelectedDatabase={setSelectedDatabase}
                 selectedTable={selectedTable}
                 setSelectedTable={setSelectedTable}
+                connectToDatabase={connectToDatabase}
               />
             </Panel>
             <PanelResizeHandle

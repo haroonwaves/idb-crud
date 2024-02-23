@@ -1,15 +1,17 @@
 import { useState } from "preact/hooks";
 
+import dexieDatabase from "../../dexie/dexie";
 import Database from "./database";
 import DroprightIcon from "../../icons/arrow-dropright.svg?component";
 import DropdownIcon from "../../icons/arrow-dropdown.svg?component";
-import dexieDatabase from "../../dexie/dexie";
+import RefreshIcon from "../../icons/refresh.svg?component";
 
 const Sidebar = ({
   selectedDatabase,
   setSelectedDatabase,
   selectedTable,
   setSelectedTable,
+  connectToDatabase,
 }) => {
   const [openDbs, setOpenDbs] = useState(false);
 
@@ -17,15 +19,20 @@ const Sidebar = ({
 
   return (
     <>
-      <div style={{ display: "flex", alignItems: "center" }}>
-        <span>
-          {openDbs ? (
-            <DropdownIcon onClick={() => setOpenDbs(false)} />
-          ) : (
-            <DroprightIcon onClick={() => setOpenDbs(true)} />
-          )}
+      <div className="flex justify-between items-center px-1 pt-1">
+        <div className="flex items-center">
+          <span>
+            {openDbs ? (
+              <DropdownIcon onClick={() => setOpenDbs(false)} />
+            ) : (
+              <DroprightIcon onClick={() => setOpenDbs(true)} />
+            )}
+          </span>
+          <span>IndexedDB</span>
+        </div>
+        <span onClick={connectToDatabase}>
+          <RefreshIcon />
         </span>
-        <span>IndexedDB</span>
       </div>
       {openDbs &&
         (dbNames.length > 0 ? (
