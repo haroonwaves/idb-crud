@@ -80,12 +80,12 @@ function IdbCrudTable({
         // Don't reset column if filter is applied and no data is returned
       } else {
         setColumns(allColumns);
-        if (resetRef.current.selectedColumns)
+        if (resetRef.current.selectedColumns || columns.length === 0)
           setSelectedColumns(columnNames.slice(1));
       }
       return setData(data);
     },
-    [setColumns, setData, setSelectedColumns, filter]
+    [setColumns, setData, setSelectedColumns, filter, columns]
   );
 
   const onPageChange = useCallback(
@@ -193,7 +193,6 @@ function IdbCrudTable({
       sort.current = [sortBy, sortDirection];
 
       resetRef.current.rowSelection = true;
-      resetRef.current.count = true;
       onPageChange(0);
     },
     [sort, onPageChange]

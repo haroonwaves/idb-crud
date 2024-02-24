@@ -1,9 +1,10 @@
-import { useCallback } from "preact/hooks";
+import { useCallback, useEffect, useState } from "preact/hooks";
 import JsonViewer from "react-json-view";
 
 import { replace } from "../../../dexie/dexie";
 
 import editorStyles from "./Styles/editor.scss?inline";
+import createPlaceholderObject from "./create-placeholder-object";
 
 const Editor = ({
   selectedRows,
@@ -11,11 +12,17 @@ const Editor = ({
   selectedTable,
   onAfterEdit,
 }) => {
+  const [value, setValue] = useState(selectedRows);
+
+  useEffect(() => {
+    setValue(selectedRows);
+  }, [selectedRows]);
+
   const onEdit = useCallback(
     ({ existing_src, updated_src, namespace }) => {
       const existingRows = [];
       const updatedRows = [];
-      for (const index in namespace) {
+      for (const index of namespace) {
         const existingRow = existing_src[index];
         const updatedRow = updated_src[index];
         if (existingRow) existingRows.push(existingRow);
@@ -35,11 +42,16 @@ const Editor = ({
     <>
       <style>{editorStyles}</style>
       <div className="idb-crud-editor">
-        {selectedRows ? (
+        {value?.length > 0 ? (
           <JsonViewer
             theme="rjv-default"
             name="array"
-            onAdd={(data) => !!data.name}
+            onAdd={(data) => {
+              if (!data.name) {
+                setValue([...value, createPlaceholderObject(value[0])]);
+              }
+            }}
+            defaultValue={"placeholder"}
             onEdit={onEdit}
             displayObjectSize
             collapsed={1}
@@ -48,7 +60,7 @@ const Editor = ({
             displayDataTypes={false}
             collapseStringsAfterLength={100}
             groupArraysAfterLength={50}
-            src={selectedRows}
+            src={value}
           />
         ) : (
           <div className="idb-crud-text-center">Select a row to view</div>
