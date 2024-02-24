@@ -10,6 +10,7 @@ import { deleteData, getCount, getPagedData } from "../../../dexie/dexie";
 import calculateColumnNames from "./Utils/calculate-column-names";
 import LoadingSpinner from "../../Common/loading-spinner";
 import ControlPanel from "./control-panel";
+import createPlaceholderObject from "../Editor/create-placeholder-object";
 
 import tableStyles from "./Styles/table.scss?inline";
 
@@ -22,6 +23,7 @@ function IdbCrudTable({
   selectedDatabase,
   selectedTable,
   selectedRows,
+  setAddedRow,
   setSelectedRows,
   setRefreshAfterEdit,
   refreshAfterEdit,
@@ -80,12 +82,12 @@ function IdbCrudTable({
         // Don't reset column if filter is applied and no data is returned
       } else {
         setColumns(allColumns);
-        if (resetRef.current.selectedColumns || columns.length === 0)
+        if (resetRef.current.selectedColumns)
           setSelectedColumns(columnNames.slice(1));
       }
       return setData(data);
     },
-    [setColumns, setData, setSelectedColumns, filter, columns]
+    [setColumns, setData, setSelectedColumns, filter]
   );
 
   const onPageChange = useCallback(
@@ -148,6 +150,15 @@ function IdbCrudTable({
     ]
   );
 
+  const onAdd = useCallback(() => {
+    const firstItem = data?.[0];
+    setRowSelection([]);
+
+    if (firstItem) {
+      setAddedRow(createPlaceholderObject(firstItem));
+    }
+  }, [data, setAddedRow, setSelectedRows]);
+
   const onDelete = useCallback(() => {
     deleteData(selectedDatabase, selectedTable, selectedRows).then(() => {
       resetRef.current.rowSelection = true;
@@ -200,6 +211,7 @@ function IdbCrudTable({
 
   const syncData = useCallback(() => {
     resetRef.current.count = true;
+    resetRef.current.selectedColumns = true;
     onPageChange(currentPage);
   }, [currentPage, selectedDatabase, selectedTable]);
 
@@ -211,6 +223,7 @@ function IdbCrudTable({
     resetRef.current.sort = true;
 
     setLoadingTable(true);
+    setAddedRow(null);
     onPageChange(0);
   }, [selectedDatabase, selectedTable]);
 
@@ -219,6 +232,7 @@ function IdbCrudTable({
       (index) => data[index]
     );
     if (newSelectedRows?.length > 0) {
+      setAddedRow(null);
       setSelectedRows(newSelectedRows);
     } else {
       setSelectedRows(null);
@@ -258,6 +272,7 @@ function IdbCrudTable({
           onPageChange(page);
         }}
         onColumnsSelect={onColumnsSelect}
+        onAdd={onAdd}
         onDelete={onDelete}
         syncData={syncData}
       />

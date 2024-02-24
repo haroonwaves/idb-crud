@@ -14,6 +14,8 @@ const Editor = ({
 }) => {
   const [value, setValue] = useState(selectedRows);
 
+  const mode = Array.isArray(selectedRows) ? "Edit" : "Create";
+
   useEffect(() => {
     setValue(selectedRows);
   }, [selectedRows]);
@@ -22,11 +24,16 @@ const Editor = ({
     ({ existing_src, updated_src, namespace }) => {
       const existingRows = [];
       const updatedRows = [];
-      for (const index of namespace) {
-        const existingRow = existing_src[index];
-        const updatedRow = updated_src[index];
-        if (existingRow) existingRows.push(existingRow);
-        if (updatedRow) updatedRows.push(updatedRow);
+
+      if (mode === "Create") {
+        updatedRows.push(updated_src);
+      } else {
+        for (const index of namespace) {
+          const existingRow = existing_src[index];
+          const updatedRow = updated_src[index];
+          if (existingRow) existingRows.push(existingRow);
+          if (updatedRow) updatedRows.push(updatedRow);
+        }
       }
 
       replace(existingRows, updatedRows, selectedDatabase, selectedTable).then(
@@ -42,10 +49,10 @@ const Editor = ({
     <>
       <style>{editorStyles}</style>
       <div className="idb-crud-editor">
-        {value?.length > 0 ? (
+        {value ? (
           <JsonViewer
             theme="rjv-default"
-            name="array"
+            name={mode === "Edit" ? "selected_rows" : "new_record"}
             onAdd={(data) => {
               if (!data.name) {
                 setValue([...value, createPlaceholderObject(value[0])]);

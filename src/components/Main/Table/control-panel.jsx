@@ -17,6 +17,7 @@ const ControlPanel = ({
   itemsPerPage,
   onPageChange,
   onColumnsSelect,
+  onAdd,
   onDelete,
   syncData,
 }) => {
@@ -28,7 +29,7 @@ const ControlPanel = ({
       <div className="idb-crud-table-control-panel">
         <div className="idb-crud-table-control-panel-actions">
           <SyncIcon onClick={syncData} />
-          <AddIcon />
+          <AddIcon onClick={onAdd} />
           <DeleteIcon
             className={`${selectedItemsCount === 0 ? "disabled" : ""}`}
             onClick={selectedItemsCount > 0 ? onDelete : () => {}}

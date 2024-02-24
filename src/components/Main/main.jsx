@@ -14,6 +14,7 @@ const AppState = createContext(initialState);
 
 const Main = ({ selectedDatabase, selectedTable }) => {
   const [selectedRows, setSelectedRows] = useState(null);
+  const [addedRow, setAddedRow] = useState(null);
   const [refreshAfterEdit, setRefreshAfterEdit] = useState(false);
 
   const onAfterEdit = useCallback(() => {
@@ -32,6 +33,7 @@ const Main = ({ selectedDatabase, selectedTable }) => {
                 selectedRows={selectedRows}
                 refreshAfterEdit={refreshAfterEdit}
                 setSelectedRows={setSelectedRows}
+                setAddedRow={setAddedRow}
                 setRefreshAfterEdit={setRefreshAfterEdit}
               />
             ) : (
@@ -50,7 +52,7 @@ const Main = ({ selectedDatabase, selectedTable }) => {
           order={2}
         >
           <Editor
-            selectedRows={selectedRows}
+            selectedRows={addedRow || selectedRows}
             selectedDatabase={selectedDatabase}
             selectedTable={selectedTable}
             onAfterEdit={onAfterEdit}
