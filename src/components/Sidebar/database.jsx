@@ -4,7 +4,7 @@ import DroprightIcon from "../../icons/arrow-dropright.svg?component";
 import DropdownIcon from "../../icons/arrow-dropdown.svg?component";
 import dexieDatabase from "../../dexie/dexie";
 
-import databaseStyles from "./styles/database.scss?inline";
+import databaseStyles from "./Styles/database.scss?inline";
 
 const Database = ({
   dbName,
