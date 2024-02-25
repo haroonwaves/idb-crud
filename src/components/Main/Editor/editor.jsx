@@ -15,7 +15,7 @@ const Editor = ({
 }) => {
   const [value, setValue] = useState(selectedRows);
 
-  const mode = Array.isArray(selectedRows) ? "Edit" : "Create";
+  let mode = Array.isArray(selectedRows) ? "Edit" : "Create";
 
   useEffect(() => {
     setValue(selectedRows);
@@ -39,11 +39,15 @@ const Editor = ({
 
       replace(existingRows, updatedRows, selectedDatabase, selectedTable)
         .then(() => {
-          onAfterEdit();
           showToast({
             message: mode === "Edit" ? "Update success" : "Create success",
             type: "success",
           });
+          if (mode === "Create") {
+            mode = "Edit";
+          }
+
+          return onAfterEdit();
         })
         .catch(() =>
           showToast({

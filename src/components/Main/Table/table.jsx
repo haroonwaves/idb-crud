@@ -68,7 +68,7 @@ function IdbCrudTable({
           const primaryKeys = Array.isArray(primaryKey)
             ? [...primaryKey]
             : [primaryKey];
-          columnNames.push(primaryKeys.flat());
+          columnNames.push(...primaryKeys.flat());
         }
         if (secondaryKeys.length > 0) {
           columnNames.push(...secondaryKeys.flat().filter(Boolean));

@@ -36,7 +36,7 @@ const Drawer = ({ open, closeDrawer, connectToDatabase, connected }) => {
             className="idb-crud-drawer-close-btn"
             onClick={() => closeDrawer}
           >
-            <CrossIcon />
+            <CrossIcon onClick={closeDrawer} />
           </span>
         ) : null}
         <PanelGroup direction="horizontal">
