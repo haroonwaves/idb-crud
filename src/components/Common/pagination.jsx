@@ -44,13 +44,15 @@ const Pagination = ({
           />
           <ChevronRight
             className={`idb-crud-pagination-next ${
-              page === totalPages - 1 ? "disabled" : ""
+              page === totalPages - 1 || totalItems === 0 ? "disabled" : ""
             }`}
             onClick={() => handlePageClick(page + 1)}
           />
         </div>
         <div className="idb-crud-pagination-page-info">
-          {loading ? "Loading..." : `${fromItem} - ${toItem} of ${totalItems}`}
+          {loading
+            ? "Loading..."
+            : `${totalItems === 0 ? 0 : fromItem} - ${toItem} of ${totalItems}`}
         </div>
       </div>
     </>
