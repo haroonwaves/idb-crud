@@ -37,7 +37,12 @@ const Main = ({ selectedDatabase, selectedTable }) => {
                 setRefreshAfterEdit={setRefreshAfterEdit}
               />
             ) : (
-              <div className="idb-crud-text-center">Select a table to view</div>
+              <div
+                className="idb-crud-text-center"
+                style={{ color: "#94a3b8" }}
+              >
+                Select a table to view
+              </div>
             )}
           </Panel>
           <PanelResizeHandle

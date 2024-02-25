@@ -16,8 +16,8 @@
 
   &-toggler {
     height: 25px;
-    color: $secondary-medium;
-    border: solid 1px $secondary-medium;
+    color: $secondary-medium !important;
+    border: 1px solid $secondary-light;
     border-radius: 5px;
     padding: 0 5px;
     display: flex;

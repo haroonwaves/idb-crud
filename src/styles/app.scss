@@ -3,6 +3,7 @@
 #idb-crud-app {
   font-family: archivo, apple-system, BlinkMacSystemFont, sans-serif, "Segoe UI" !important;
   font-size: 14px !important;
+  color: #1e293b !important;
 
   * {
     box-sizing: border-box !important;
@@ -93,18 +94,18 @@
   }
 
   input[type="text"] {
-    border: 1px solid $secondary-medium;
+    border: 1px solid $secondary-light;
     outline: none;
     border-radius: 0.32rem;
     padding: 0 5px;
     font-weight: 400;
-    color: $secondary-dark;
+    color: $secondary-dark !important;
     min-width: 60px;
     width: 100%;
     height: 23px;
 
     &::placeholder {
-      color: $secondary-medium;
+      color: $secondary-medium !important;
       font-weight: 100;
     }
 

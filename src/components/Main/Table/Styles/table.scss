@@ -39,7 +39,7 @@
 
     &-head {
       background-color: #f9fafb;
-      color: #333;
+      color: #333 !important;
       text-align: center;
       padding: 10px 8px;
 
@@ -54,10 +54,10 @@
           cursor: pointer;
 
           &-icon {
-            color: lightgray;
+            color: lightgray !important;
 
             &.active {
-              color: $secondary-darker;
+              color: $secondary-darker !important;
             }
           }
         }

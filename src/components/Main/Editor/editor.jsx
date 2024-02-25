@@ -70,7 +70,9 @@ const Editor = ({
             src={value}
           />
         ) : (
-          <div className="idb-crud-text-center">Select a row to view</div>
+          <div className="idb-crud-text-center" style={{ color: "#94a3b8" }}>
+            Select a row to view
+          </div>
         )}
       </div>
     </>
