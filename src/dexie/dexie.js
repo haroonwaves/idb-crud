@@ -44,6 +44,15 @@ export async function getCount(dbName, tableName, query) {
   return dexieDatabase[dbName].table(tableName).where(query).count();
 }
 
+export function getIndexedColumns(dbName, tableName) {
+  const selectedTable = dexieDatabase[dbName].table(tableName);
+
+  return {
+    primaryKey: selectedTable.primaryKey,
+    secondaryKeys: selectedTable.secondaryKeys,
+  };
+}
+
 export async function replace(existingValues, newValues, dbName, tableName) {
   const selectedTable = dexieDatabase[dbName].table(tableName);
   const primaryKey = selectedTable.primaryKey;

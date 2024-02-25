@@ -6,7 +6,12 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
-import { deleteData, getCount, getPagedData } from "../../../dexie/dexie";
+import {
+  deleteData,
+  getCount,
+  getIndexedColumns,
+  getPagedData,
+} from "../../../dexie/dexie";
 import calculateColumnNames from "./Utils/calculate-column-names";
 import LoadingSpinner from "../../Common/loading-spinner";
 import ControlPanel from "./control-panel";
@@ -50,7 +55,18 @@ function IdbCrudTable({
 
   const setPagedData = useCallback(
     (data) => {
-      const columnNames = calculateColumnNames(data);
+      let columnNames = [];
+
+      if (data.length === 0) {
+        const { primaryKey, secondaryKeys = [] } = getIndexedColumns(
+          selectedDatabase,
+          selectedTable
+        );
+        columnNames.push(primaryKey, ...secondaryKeys);
+      } else {
+        columnNames = calculateColumnNames(data);
+      }
+
       if (columnNames.length > 0) columnNames.unshift("selection");
 
       const allColumns = columnNames.map((columnName) => {
@@ -82,12 +98,33 @@ function IdbCrudTable({
         // Don't reset column if filter is applied and no data is returned
       } else {
         setColumns(allColumns);
-        if (resetRef.current.selectedColumns)
+        if (
+          resetRef.current.selectedColumns ||
+          allColumns.length < columns.length
+        ) {
           setSelectedColumns(columnNames.slice(1));
+        } else if (allColumns.length > columns.length) {
+          console.log("GREATER THAN");
+          const existingColumns = columns.map(({ accessorKey }) => accessorKey);
+          const addedColumns = columnNames
+            .slice(1)
+            .filter((column) => !existingColumns.includes(column));
+
+          setSelectedColumns([...selectedColumns, ...addedColumns]);
+        }
       }
       return setData(data);
     },
-    [setColumns, setData, setSelectedColumns, filter]
+    [
+      setColumns,
+      setData,
+      setSelectedColumns,
+      selectedColumns,
+      filter,
+      columns,
+      selectedDatabase,
+      selectedTable,
+    ]
   );
 
   const onPageChange = useCallback(
@@ -156,6 +193,14 @@ function IdbCrudTable({
 
     if (firstItem) {
       setAddedRow(createPlaceholderObject(firstItem));
+    } else {
+      const newRow = {};
+      for (const { accessorKey } of columns) {
+        if (accessorKey) {
+          newRow[accessorKey] = "placeholder";
+        }
+      }
+      setAddedRow(newRow);
     }
   }, [data, setAddedRow, setSelectedRows]);
 
@@ -211,7 +256,6 @@ function IdbCrudTable({
 
   const syncData = useCallback(() => {
     resetRef.current.count = true;
-    resetRef.current.selectedColumns = true;
     onPageChange(currentPage);
   }, [currentPage, selectedDatabase, selectedTable]);
 
@@ -372,10 +416,10 @@ function IdbCrudTable({
                 );
               })}
             </tbody>
-            {columns.length === 0 && (
-              <div className="idb-crud-text-center">No content</div>
-            )}
           </table>
+        )}
+        {data.length === 0 && (
+          <div className="idb-crud-text-center !h-1/2">No content</div>
         )}
       </div>
     </>

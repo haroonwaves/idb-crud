@@ -42,7 +42,7 @@ const Editor = ({
         }
       );
     },
-    [selectedDatabase, selectedTable]
+    [selectedDatabase, selectedTable, mode]
   );
 
   return (
@@ -54,7 +54,7 @@ const Editor = ({
             theme="rjv-default"
             name={mode === "Edit" ? "selected_rows" : "new_record"}
             onAdd={(data) => {
-              if (!data.name) {
+              if (!data.name && mode === "Edit") {
                 setValue([...value, createPlaceholderObject(value[0])]);
               }
             }}
