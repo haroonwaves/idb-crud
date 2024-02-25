@@ -14,7 +14,7 @@ const Sidebar = ({
   setSelectedTable,
   connectToDatabase,
 }) => {
-  const [openDbs, setOpenDbs] = useState(false);
+  const [openDbs, setOpenDbs] = useState(true);
 
   const dbNames = dexieDatabase.dbNames();
 

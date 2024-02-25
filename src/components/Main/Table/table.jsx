@@ -62,7 +62,10 @@ function IdbCrudTable({
           selectedDatabase,
           selectedTable
         );
-        columnNames.push(primaryKey, ...secondaryKeys);
+
+        if (primaryKey) columnNames.push(primaryKey);
+        if (secondaryKeys.length > 0)
+          columnNames.push(...secondaryKeys.flat().filter(Boolean));
       } else {
         columnNames = calculateColumnNames(data);
       }
@@ -112,7 +115,9 @@ function IdbCrudTable({
           setSelectedColumns([...selectedColumns, ...addedColumns]);
         }
       }
-      return setData(data);
+      setData(data);
+
+      return data;
     },
     [
       setColumns,

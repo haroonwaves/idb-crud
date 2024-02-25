@@ -4,10 +4,11 @@ import { createRef } from "preact";
 
 import Main from "./Main/main";
 import Sidebar from "./Sidebar/sidebar";
+import CrossIcon from "../icons/cross.svg?component";
 
 import drawerStyles from "./styles/drawer.scss?inline";
 
-const Drawer = ({ open, setOpen, connectToDatabase, connected }) => {
+const Drawer = ({ open, closeDrawer, connectToDatabase, connected }) => {
   const idbCrudDrawerRef = createRef();
 
   const [selectedDatabase, setSelectedDatabase] = useState(null);
@@ -30,6 +31,14 @@ const Drawer = ({ open, setOpen, connectToDatabase, connected }) => {
         tabIndex={-1} // focusable
         // onBlur={() => setOpen(false)}
       >
+        {open ? (
+          <span
+            className="idb-crud-drawer-close-btn"
+            onClick={() => closeDrawer}
+          >
+            <CrossIcon />
+          </span>
+        ) : null}
         <PanelGroup direction="horizontal">
           <>
             <Panel
