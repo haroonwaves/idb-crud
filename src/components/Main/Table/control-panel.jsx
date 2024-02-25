@@ -7,6 +7,7 @@ import DownloadIcon from "../../../icons/download.svg?component";
 import SyncIcon from "../../../icons/sync.svg?component";
 
 import controlPanelStyles from "./Styles/control-panel.scss?inline";
+import Tooltip from "../../Common/Tooltip";
 
 const ControlPanel = ({
   columns,
@@ -28,14 +29,24 @@ const ControlPanel = ({
       <style>{controlPanelStyles}</style>
       <div className="idb-crud-table-control-panel">
         <div className="idb-crud-table-control-panel-actions">
-          <SyncIcon onClick={syncData} />
-          <AddIcon onClick={onAdd} />
-          <DeleteIcon
-            className={`${selectedItemsCount === 0 ? "disabled" : ""}`}
-            onClick={selectedItemsCount > 0 ? onDelete : () => {}}
-          />
-          <UploadIcon className="disabled" />
-          <DownloadIcon className="disabled" />
+          <Tooltip text="Refresh table">
+            <SyncIcon onClick={syncData} />
+          </Tooltip>
+          <Tooltip text="Add record">
+            <AddIcon onClick={onAdd} />
+          </Tooltip>
+          <Tooltip text="Delete record">
+            <DeleteIcon
+              className={`${selectedItemsCount === 0 ? "disabled" : ""}`}
+              onClick={selectedItemsCount > 0 ? onDelete : () => {}}
+            />
+          </Tooltip>
+          <Tooltip text="Upload">
+            <UploadIcon className="disabled" />
+          </Tooltip>
+          <Tooltip text="Download">
+            <DownloadIcon className="disabled" />
+          </Tooltip>
         </div>
         <Pagination
           loading={totalItems === null}

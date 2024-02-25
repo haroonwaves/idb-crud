@@ -3,6 +3,7 @@ import ChevronRight from "../../icons/chevron_right.svg?component";
 import ChevronLeft from "../../icons/chevron_left.svg?component";
 
 import paginationStyles from "./Style/pagination.scss?inline";
+import Tooltip from "./Tooltip";
 
 const Pagination = ({
   totalItems,
@@ -36,18 +37,22 @@ const Pagination = ({
       <style>{paginationStyles}</style>
       <div className="idb-crud-pagination">
         <div className="idb-crud-pagination-button-group">
-          <ChevronLeft
-            className={`idb-crud-pagination-previous ${
-              page === 0 ? "disabled" : ""
-            }`}
-            onClick={() => handlePageClick(page - 1)}
-          />
-          <ChevronRight
-            className={`idb-crud-pagination-next ${
-              page === totalPages - 1 || totalItems === 0 ? "disabled" : ""
-            }`}
-            onClick={() => handlePageClick(page + 1)}
-          />
+          <Tooltip text="Previous">
+            <ChevronLeft
+              className={`idb-crud-pagination-previous ${
+                page === 0 ? "disabled" : ""
+              }`}
+              onClick={() => handlePageClick(page - 1)}
+            />
+          </Tooltip>
+          <Tooltip text="Next">
+            <ChevronRight
+              className={`idb-crud-pagination-next ${
+                page === totalPages - 1 || totalItems === 0 ? "disabled" : ""
+              }`}
+              onClick={() => handlePageClick(page + 1)}
+            />
+          </Tooltip>
         </div>
         <div className="idb-crud-pagination-page-info">
           {loading

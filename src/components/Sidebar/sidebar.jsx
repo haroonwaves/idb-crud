@@ -5,6 +5,7 @@ import Database from "./database";
 import DroprightIcon from "../../icons/arrow-dropright.svg?component";
 import DropdownIcon from "../../icons/arrow-dropdown.svg?component";
 import RefreshIcon from "../../icons/refresh.svg?component";
+import Tooltip from "../Common/Tooltip";
 
 const Sidebar = ({
   connected,
@@ -31,9 +32,9 @@ const Sidebar = ({
           </span>
           <span>IndexedDB</span>
         </div>
-        <span onClick={connectToDatabase}>
-          <RefreshIcon />
-        </span>
+        <Tooltip text="Refresh database" position="left">
+          <RefreshIcon onClick={connectToDatabase} />
+        </Tooltip>
       </div>
       {!connected ? (
         <div style={{ padding: "4px 17px" }}>Connecting...</div>

@@ -6,6 +6,7 @@ import ChevronDownIcon from "../../icons/chevron_down.svg?component";
 import CrossIcon from "../../icons/cross-small.svg?component";
 
 import multiSelectStyles from "./Style/multi-select.scss?inline";
+import Tooltip from "./Tooltip";
 
 const MultiSelect = ({
   options,
@@ -71,17 +72,20 @@ const MultiSelect = ({
               : options.length - selected.length + ` Unselected`}{" "}
           </div>
           <div className="idb-crud-multi-select-toggler-icon-container">
-            <span
+            <Tooltip
               className={`idb-crud-select-toggler-icon-reset ${
                 options.length !== selected.length ? "show" : ""
               }`}
-              onClick={reset}
+              text="Reset"
             >
-              <CrossIcon />
-            </span>
-            <span className="idb-crud-select-toggler-icon-chevron">
+              <CrossIcon onClick={reset} />
+            </Tooltip>
+            <Tooltip
+              className="idb-crud-select-toggler-icon-chevron"
+              text="Toggle filter"
+            >
               <ChevronDownIcon />
-            </span>
+            </Tooltip>
           </div>
         </div>
         <ul className="idb-crud-multi-select-options">
