@@ -18,6 +18,7 @@ import ControlPanel from "./control-panel";
 import createPlaceholderObject from "../Editor/create-placeholder-object";
 
 import tableStyles from "./Styles/table.scss?inline";
+import { showToast } from "../../../Toast/toast-manager";
 
 const columnHelper = createColumnHelper();
 
@@ -209,11 +210,14 @@ function IdbCrudTable({
   }, [data, setAddedRow, setSelectedRows]);
 
   const onDelete = useCallback(() => {
-    deleteData(selectedDatabase, selectedTable, selectedRows).then(() => {
-      resetRef.current.rowSelection = true;
-      resetRef.current.count = true;
-      onPageChange(currentPage);
-    });
+    deleteData(selectedDatabase, selectedTable, selectedRows)
+      .then(() => {
+        resetRef.current.rowSelection = true;
+        resetRef.current.count = true;
+        onPageChange(currentPage);
+        showToast({ message: "Delete success", type: "success" });
+      })
+      .catch(() => showToast({ message: "Delete failed", type: "failure" }));
   }, [
     selectedDatabase,
     selectedTable,

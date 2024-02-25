@@ -9,7 +9,7 @@ function Toast({ id, message, type }) {
   useEffect(() => {
     const timer = setTimeout(() => {
       hideToast(id);
-    }, 300); // auto-hide after 3 seconds
+    }, 3000); // auto-hide after 3 seconds
 
     return () => clearTimeout(timer);
   }, [id]);
