@@ -5,6 +5,7 @@ import { replace } from "../../../dexie/dexie";
 
 import editorStyles from "./Styles/editor.scss?inline";
 import createPlaceholderObject from "./create-placeholder-object";
+import { showToast } from "../../../Toast/toast-manager";
 
 const Editor = ({
   selectedRows,
@@ -36,11 +37,20 @@ const Editor = ({
         }
       }
 
-      replace(existingRows, updatedRows, selectedDatabase, selectedTable).then(
-        () => {
+      replace(existingRows, updatedRows, selectedDatabase, selectedTable)
+        .then(() => {
           onAfterEdit();
-        }
-      );
+          showToast({
+            message: mode === "Edit" ? "Update success" : "Create success",
+            type: "success",
+          });
+        })
+        .catch(() =>
+          showToast({
+            message: mode === "Edit" ? "Update failed" : "Create failed",
+            type: "failure",
+          })
+        );
     },
     [selectedDatabase, selectedTable, mode]
   );

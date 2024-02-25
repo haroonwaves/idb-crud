@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "preact/hooks";
 import dexieDatabase from "./dexie/dexie";
 import Drawer from "./components/drawer";
+import ToastContainer from "./components/Common/toast-container";
 
 export const App = () => {
   const [openDrawer, setOpenDrawer] = useState(false);
@@ -36,6 +37,7 @@ export const App = () => {
   return (
     <>
       <div id="idb-crud-app">
+        <ToastContainer />
         <Drawer
           connected={connected}
           open={openDrawer}
