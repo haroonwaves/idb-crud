@@ -104,7 +104,6 @@ function IdbCrudTable({
         ) {
           setSelectedColumns(columnNames.slice(1));
         } else if (allColumns.length > columns.length) {
-          console.log("GREATER THAN");
           const existingColumns = columns.map(({ accessorKey }) => accessorKey);
           const addedColumns = columnNames
             .slice(1)
