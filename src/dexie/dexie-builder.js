@@ -13,7 +13,7 @@ export class DexieBuilder {
   table(tableName) {
     this.#selectedTable = this.#dexieInstance.table(tableName);
     this.#collection = this.#selectedTable.toCollection();
-    this.primaryKey = this.#selectedTable.schema.primKey.keyPath;
+    this.primaryKey = this.#selectedTable.schema.primKey.keyPath; // Primary key can be array
     this.secondaryKeys = this.#selectedTable.schema.indexes.map(
       (index) => index.keyPath
     );
@@ -26,9 +26,17 @@ export class DexieBuilder {
 
     if (keysOfQuery.length === 0) return this;
 
-    const areKeysIndexed = Object.keys(queryObject).every(
-      (key) => this.primaryKey === key || this.secondaryKeys.includes(key)
-    );
+    const areKeysIndexed = Object.keys(queryObject).every((key) => {
+      const isSecondaryKey = this.secondaryKeys.includes(key);
+      let isPrimaryKey = false;
+
+      if (Array.isArray(this.primaryKey)) {
+        isPrimaryKey = this.primaryKey.includes(key);
+      } else {
+        isPrimaryKey = this.primaryKey === key;
+      }
+      return isPrimaryKey || isSecondaryKey;
+    });
 
     if (areKeysIndexed) {
       this.#collection = this.#selectedTable.where(queryObject);
@@ -72,7 +80,12 @@ export class DexieBuilder {
 
   async update(updatedFields) {
     const primaryKeyFromUpdatedFields = Object.keys(updatedFields).some(
-      (key) => this.primaryKey === key
+      (key) => {
+        if (Array.isArray(this.primaryKey)) {
+          return this.primaryKey.includes(key);
+        }
+        return this.primaryKey === key;
+      }
     );
 
     if (primaryKeyFromUpdatedFields) {

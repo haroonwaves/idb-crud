@@ -31,7 +31,10 @@ export async function getPagedData(
   const primaryKey = selectedTable.primaryKey;
 
   const result = await selectedTable
-    .orderBy(sortBy ?? primaryKey, sortDirection)
+    .orderBy(
+      sortBy ?? Array.isArray(primaryKey) ? primaryKey[0] : primaryKey,
+      sortDirection
+    )
     .where(query)
     .offset(offset)
     .limit(pageSize)
@@ -55,7 +58,9 @@ export function getIndexedColumns(dbName, tableName) {
 
 export async function replace(existingValues, newValues, dbName, tableName) {
   const selectedTable = dexieDatabase[dbName].table(tableName);
-  const primaryKey = selectedTable.primaryKey;
+  const primaryKey = Array.isArray(selectedTable.primaryKey)
+    ? selectedTable.primaryKey[0]
+    : selectedTable.primaryKey;
 
   for (const oldValue of existingValues) {
     const primaryKeyValue = oldValue[primaryKey];
@@ -67,7 +72,9 @@ export async function replace(existingValues, newValues, dbName, tableName) {
 
 export async function deleteData(dbName, tableName, values) {
   const selectedTable = dexieDatabase[dbName].table(tableName);
-  const primaryKey = selectedTable.primaryKey;
+  const primaryKey = Array.isArray(selectedTable.primaryKey)
+    ? selectedTable.primaryKey[0]
+    : selectedTable.primaryKey;
 
   const promises = [];
 

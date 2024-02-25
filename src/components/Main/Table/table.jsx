@@ -64,11 +64,17 @@ function IdbCrudTable({
           selectedTable
         );
 
-        if (primaryKey) columnNames.push(primaryKey);
-        if (secondaryKeys.length > 0)
+        if (primaryKey) {
+          const primaryKeys = Array.isArray(primaryKey)
+            ? [...primaryKey]
+            : [primaryKey];
+          columnNames.push(primaryKeys.flat());
+        }
+        if (secondaryKeys.length > 0) {
           columnNames.push(...secondaryKeys.flat().filter(Boolean));
+        }
       } else {
-        columnNames = calculateColumnNames(data);
+        columnNames = calculateColumnNames(data).flat();
       }
 
       if (columnNames.length > 0) columnNames.unshift("selection");
