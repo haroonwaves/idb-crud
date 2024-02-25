@@ -3,7 +3,6 @@
   "name": "idb crud",
   "version": "1.0",
   "action": {
-    "default_popup": "index.html",
     "default_icon": {
       "16": "media/appicon16.png",
       "32": "media/appicon32.png",
@@ -21,5 +20,8 @@
         "<all_urls>"
       ]
     }
-  ]
+  ],
+  "background": {
+    "service_worker": "src/background.js"
+  }
 }

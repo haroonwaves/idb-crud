@@ -12,6 +12,12 @@ export const App = () => {
     setConnected(true);
   }, []);
 
+  chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    if (request.action === "icon_clicked") {
+      setOpenDrawer(!openDrawer);
+    }
+  });
+
   useEffect(() => {
     connectToDatabase();
   }, [connectToDatabase]);
@@ -23,13 +29,6 @@ export const App = () => {
   return (
     <>
       <div id="idb-crud-app">
-        <button
-          className="idb-crud-drawer-toggler"
-          type="button"
-          onClick={toggleDrawer}
-        >
-          &lt;
-        </button>
         <Drawer
           connected={connected}
           open={openDrawer}
