@@ -32,7 +32,7 @@ export async function getPagedData(
 
   const result = await selectedTable
     .orderBy(
-      sortBy ?? Array.isArray(primaryKey) ? primaryKey[0] : primaryKey,
+      sortBy ?? (Array.isArray(primaryKey) ? primaryKey[0] : primaryKey),
       sortDirection
     )
     .where(query)
