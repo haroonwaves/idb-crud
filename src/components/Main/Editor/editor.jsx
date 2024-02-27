@@ -14,11 +14,11 @@ const Editor = ({
   onAfterEdit,
 }) => {
   const [value, setValue] = useState(selectedRows);
-
-  let mode = Array.isArray(selectedRows) ? "Edit" : "Create";
+  const [mode, setMode] = useState("");
 
   useEffect(() => {
     setValue(selectedRows);
+    setMode(Array.isArray(selectedRows) ? "Edit" : "Create");
   }, [selectedRows]);
 
   const onEdit = useCallback(
@@ -44,7 +44,8 @@ const Editor = ({
             type: "success",
           });
           if (mode === "Create") {
-            mode = "Edit";
+            setMode("Edit");
+            setValue([updated_src]);
           }
 
           return onAfterEdit();
@@ -56,7 +57,7 @@ const Editor = ({
           })
         );
     },
-    [selectedDatabase, selectedTable, mode]
+    [selectedDatabase, selectedTable, mode, setMode]
   );
 
   return (
