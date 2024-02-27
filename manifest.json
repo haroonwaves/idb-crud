@@ -10,7 +10,9 @@
       "128": "media/appicon128.png"
     }
   },
-  "permissions": [],
+  "permissions": [
+    "activeTab"
+  ],
   "content_scripts": [
     {
       "js": [
