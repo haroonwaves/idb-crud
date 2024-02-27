@@ -271,7 +271,7 @@ function IdbCrudTable({
   const syncData = useCallback(() => {
     resetRef.current.count = true;
     onPageChange(currentPage);
-  }, [currentPage, selectedDatabase, selectedTable]);
+  }, [currentPage, selectedDatabase, selectedTable, columns]);
 
   useEffect(() => {
     resetRef.current.selectedColumns = true;
