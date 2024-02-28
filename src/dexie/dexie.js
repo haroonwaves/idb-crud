@@ -63,8 +63,9 @@ export async function replace(existingValues, newValues, dbName, tableName) {
     : selectedTable.primaryKey;
 
   for (const oldValue of existingValues) {
-    const primaryKeyValue = oldValue[primaryKey];
-    await selectedTable.where({ [primaryKey]: primaryKeyValue }).delete();
+    const key = primaryKey || Object.keys(oldValue)[0];
+    const value = oldValue[key];
+    await selectedTable.where({ [key]: value }).delete();
   }
 
   await selectedTable.insert(newValues);
@@ -79,9 +80,8 @@ export async function deleteData(dbName, tableName, values) {
   const promises = [];
 
   for (const value of values) {
-    const promise = selectedTable
-      .where({ [primaryKey]: value[primaryKey] })
-      .delete();
+    const key = primaryKey || Object.keys(value)[0];
+    const promise = selectedTable.where({ [key]: value[key] }).delete();
     promises.push(promise);
   }
 
