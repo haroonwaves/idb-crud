@@ -1,6 +1,7 @@
 {
   "manifest_version": 3,
-  "name": "idb crud",
+  "name": "idb crud - (IndexedDB Manager)",
+  "description": "idb crud enhance your indexedDb management",
   "version": "0.2",
   "action": {
     "default_icon": {
