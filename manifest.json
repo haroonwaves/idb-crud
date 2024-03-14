@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
-  "name": "idb crud - (IndexedDB Manager)",
-  "description": "idb crud enhance your indexedDb management",
+  "name": "idb crud - IndexedDB Manager",
+  "description": "Enhance your indexedDb management with idb crud chrome extension",
   "version": "0.2",
   "action": {
     "default_icon": {
