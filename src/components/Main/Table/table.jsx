@@ -16,10 +16,11 @@ import calculateColumnNames from "./Utils/calculate-column-names";
 import LoadingSpinner from "../../Common/loading-spinner";
 import ControlPanel from "./control-panel";
 import createPlaceholderObject from "../Editor/create-placeholder-object";
-
-import tableStyles from "./Styles/table.scss?inline";
 import { showToast } from "../../../Toast/toast-manager";
 import { parseUserInput } from "./Utils/parse-user-input";
+import CrossIcon from "../../../icons/cross-small.svg?component";
+
+import tableStyles from "./Styles/table.scss?inline";
 
 const columnHelper = createColumnHelper();
 
@@ -247,7 +248,7 @@ function IdbCrudTable({
     if (filter.current[key] && value === "") {
       delete filter.current[key];
     } else {
-      filter.current[key] = parseUserInput(value);
+      filter.current[key] = parseUserInput(value.trim());
     }
 
     searchTimeOutId = setTimeout(() => {
@@ -394,13 +395,25 @@ function IdbCrudTable({
                               )}
                             </div>
                             {index > 0 && (
-                              <input
-                                onChange={(e) =>
-                                  handleFilter(header.id, e.target.value)
-                                }
-                                type="text"
-                                placeholder="Search..."
-                              />
+                              <div className="relative flex items-center">
+                                <input
+                                  className="pr-3"
+                                  onChange={(e) =>
+                                    handleFilter(header.id, e.target.value)
+                                  }
+                                  type="text"
+                                  placeholder="Search..."
+                                  value={filter.current[header.id] ?? ""}
+                                />
+                                {filter.current[header.id] && (
+                                  <CrossIcon
+                                    className="absolute right-2 cursor-pointer"
+                                    onClick={() => {
+                                      handleFilter(header.id, "");
+                                    }}
+                                  />
+                                )}
+                              </div>
                             )}
                           </div>
                         )}
