@@ -19,6 +19,7 @@ import createPlaceholderObject from "../Editor/create-placeholder-object";
 
 import tableStyles from "./Styles/table.scss?inline";
 import { showToast } from "../../../Toast/toast-manager";
+import { parseUserInput } from "./Utils/parse-user-input";
 
 const columnHelper = createColumnHelper();
 
@@ -246,7 +247,7 @@ function IdbCrudTable({
     if (filter.current[key] && value === "") {
       delete filter.current[key];
     } else {
-      filter.current[key] = value;
+      filter.current[key] = parseUserInput(value);
     }
 
     searchTimeOutId = setTimeout(() => {
