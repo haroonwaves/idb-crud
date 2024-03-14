@@ -395,25 +395,13 @@ function IdbCrudTable({
                               )}
                             </div>
                             {index > 0 && (
-                              <div className="relative flex items-center">
-                                <input
-                                  className="pr-3"
-                                  onChange={(e) =>
-                                    handleFilter(header.id, e.target.value)
-                                  }
-                                  type="text"
-                                  placeholder="Search..."
-                                  value={filter.current[header.id] ?? ""}
-                                />
-                                {filter.current[header.id] && (
-                                  <CrossIcon
-                                    className="absolute right-2 cursor-pointer"
-                                    onClick={() => {
-                                      handleFilter(header.id, "");
-                                    }}
-                                  />
-                                )}
-                              </div>
+                              <input
+                                onChange={(e) =>
+                                  handleFilter(header.id, e.target.value)
+                                }
+                                type="text"
+                                placeholder="Search..."
+                              />
                             )}
                           </div>
                         )}
