@@ -64,17 +64,17 @@
     display: flex;
     align-content: center;
     justify-content: center;
-    padding: 0.1rem;
+    padding: 1.6px;
     border: 1px solid $secondary-medium;
-    border-radius: 0.32rem;
+    border-radius: 5px;
     cursor: pointer;
-    width: 0.95rem;
-    height: 0.95rem;
+    width: 15px;
+    height: 15px;
 
     &::before {
       content: "";
-      width: 0.65rem;
-      height: 0.65rem;
+      width: 10.5px;
+      height: 10.5px;
       clip-path: polygon(14% 44%, 0 65%, 50% 100%, 100% 16%, 80% 0%, 43% 62%);
       transform: scale(0);
       background-color: $secondary-lighter;
@@ -96,7 +96,7 @@
   input[type="text"] {
     border: 1px solid $secondary-light;
     outline: none;
-    border-radius: 0.32rem;
+    border-radius: 5px;
     padding: 0 5px;
     font-weight: 400;
     color: $secondary-dark !important;
