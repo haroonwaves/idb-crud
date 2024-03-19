@@ -17,8 +17,10 @@ const Drawer = ({ open, closeDrawer, connectToDatabase, connected }) => {
   useEffect(() => {
     if (open) {
       idbCrudDrawerRef.current.focus();
+      document.body.style.overflow = "hidden";
     } else {
       idbCrudDrawerRef.current.blur();
+      document.body.style.overflow = "auto";
     }
   }, [open]);
 
