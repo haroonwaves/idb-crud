@@ -98,11 +98,24 @@ function IdbCrudTable({
         return columnHelper.accessor(columnName, {
           cell: (info) => {
             const value = info.getValue();
+            const maxLength = 100;
+
+            // Check if the value is an object or a boolean and convert to string
             if (typeof value === "object" || typeof value === "boolean") {
-              return JSON.stringify(value);
+              const stringValue = JSON.stringify(value);
+              // Truncate the string if it exceeds the maximum length
+              return stringValue.length > maxLength
+                ? stringValue.substring(0, maxLength) + "..."
+                : stringValue;
             }
 
-            return value;
+            // For non-object/non-boolean values, convert to string and then check length
+            const stringValue = String(value);
+
+            // Truncate the string if it exceeds the maximum length
+            return stringValue.length > maxLength
+              ? stringValue.substring(0, maxLength) + "..."
+              : stringValue;
           },
         });
       });
