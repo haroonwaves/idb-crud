@@ -15,13 +15,16 @@ const Database = ({
   const [openDb, setOpenDb] = useState(false);
 
   useEffect(() => {
-    const db = dexieDatabase[dbName];
+    const db = dexieDatabase.select(dbName);
     if (!db.isOpen()) {
       db.open();
     }
   }, [dbName]);
 
-  const tables = dexieDatabase[dbName].allTables().map((table) => table.name);
+  const tables = dexieDatabase
+    .select(dbName)
+    .allTables()
+    .map((table) => table.name);
 
   return (
     <>
