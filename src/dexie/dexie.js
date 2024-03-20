@@ -2,18 +2,25 @@ import Dexie from "dexie";
 
 import { DexieBuilder } from "./dexie-builder";
 
-const dexieDatabaseMethods = {
-  dbNames: () => Object.keys(dexieDatabase),
+const dexieInstances = {};
+
+const dexieDatabase = {
+  dbNames: () => Object.keys(dexieInstances),
   connect: async () => {
     const databaseNames = await Dexie.getDatabaseNames();
 
     for (const name of databaseNames) {
-      dexieDatabase[name] = new DexieBuilder(new Dexie(name));
+      dexieInstances[name] = new Dexie(name);
     }
   },
-};
+  select: (dbName) => {
+    if (dbName in dexieInstances) {
+      return new DexieBuilder(dexieInstances[dbName]);
+    }
 
-const dexieDatabase = Object.create(dexieDatabaseMethods);
+    throw new Error(`Database ${dbName} not found`);
+  },
+};
 
 export default dexieDatabase;
 
@@ -27,9 +34,9 @@ export async function getPagedData(
   sortDirection = "desc"
 ) {
   const offset = page * pageSize;
-  const selectedTable = dexieDatabase[dbName].table(tableName);
+  const selectedTable = dexieDatabase.select(dbName).table(tableName);
   const primaryKey = selectedTable.primaryKey;
-
+  const t1 = performance.now();
   const result = await selectedTable
     .orderBy(
       sortBy ?? (Array.isArray(primaryKey) ? primaryKey[0] : primaryKey),
@@ -39,16 +46,16 @@ export async function getPagedData(
     .offset(offset)
     .limit(pageSize)
     .toArray();
-
+  console.log("getPagedData", performance.now() - t1);
   return result;
 }
 
 export async function getCount(dbName, tableName, query) {
-  return dexieDatabase[dbName].table(tableName).where(query).count();
+  return dexieDatabase.select(dbName).table(tableName).where(query).count();
 }
 
 export function getIndexedColumns(dbName, tableName) {
-  const selectedTable = dexieDatabase[dbName].table(tableName);
+  const selectedTable = dexieDatabase.select(dbName).table(tableName);
 
   return {
     primaryKey: selectedTable.primaryKey,
@@ -57,7 +64,7 @@ export function getIndexedColumns(dbName, tableName) {
 }
 
 export async function replace(existingValues, newValues, dbName, tableName) {
-  const selectedTable = dexieDatabase[dbName].table(tableName);
+  const selectedTable = dexieDatabase.select(dbName).table(tableName);
   const primaryKey = Array.isArray(selectedTable.primaryKey)
     ? selectedTable.primaryKey[0]
     : selectedTable.primaryKey;
@@ -72,7 +79,7 @@ export async function replace(existingValues, newValues, dbName, tableName) {
 }
 
 export async function deleteData(dbName, tableName, values) {
-  const selectedTable = dexieDatabase[dbName].table(tableName);
+  const selectedTable = dexieDatabase.select(dbName).table(tableName);
   const primaryKey = Array.isArray(selectedTable.primaryKey)
     ? selectedTable.primaryKey[0]
     : selectedTable.primaryKey;
