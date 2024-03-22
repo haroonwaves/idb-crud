@@ -13,7 +13,7 @@ export const App = () => {
     setConnected(true);
   }, []);
 
-  chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  chrome.runtime.onMessage.addListener((request) => {
     if (request.action === "icon_clicked") {
       if (openDrawer) {
         closeDrawer();
@@ -24,14 +24,11 @@ export const App = () => {
   });
 
   useEffect(() => {
-    if (openDrawer) {
-      connectToDatabase();
-    }
-  }, [connectToDatabase, openDrawer]);
+    connectToDatabase();
+  }, [connectToDatabase]);
 
   const closeDrawer = () => {
     setOpenDrawer(false);
-    setConnected(false);
   };
 
   return (
