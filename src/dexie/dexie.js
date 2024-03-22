@@ -46,7 +46,7 @@ export async function getPagedData(
     .offset(offset)
     .limit(pageSize)
     .toArray();
-  console.log("getPagedData", performance.now() - t1);
+
   return result;
 }
 
