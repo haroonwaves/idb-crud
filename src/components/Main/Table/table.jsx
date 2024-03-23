@@ -109,7 +109,7 @@ function IdbCrudTable({
                 : stringValue;
             }
 
-            // For non-object/non-boolean values, convert to string and then check length
+            // For non-object/non-boolean values, convert to string.
             const stringValue = String(value);
 
             // Truncate the string if it exceeds the maximum length
@@ -433,14 +433,27 @@ function IdbCrudTable({
 
                 return (
                   <tr className="idb-crud-table-row" key={row.id}>
-                    {visibleCells.map((cell) => (
-                      <td className="idb-crud-table-data" key={cell.id}>
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </td>
-                    ))}
+                    {visibleCells.map((cell) => {
+                      const cellValue = flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      );
+                      const filterValue = filter.current[cell.column.id];
+
+                      return (
+                        <td
+                          className={`idb-crud-table-data ${
+                            filterValue &&
+                            filterValue === cellValue.props.renderValue()
+                              ? "font-semibold"
+                              : ""
+                          }`}
+                          key={cell.id}
+                        >
+                          {cellValue}
+                        </td>
+                      );
+                    })}
                   </tr>
                 );
               })}
