@@ -1,5 +1,5 @@
 import { render } from "preact";
-import { App } from "../src/app";
+import { App } from "./app";
 
 import tailwind from "./index.css?inline";
 import appStyles from "./styles/app.scss?inline";

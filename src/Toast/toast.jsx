@@ -30,8 +30,8 @@ function Toast({ id, message, type }) {
         gap: 5,
       }}
     >
-      <spam>{message}</spam>
-      <spam>
+      <span>{message}</span>
+      <span>
         {type === "success" ? (
           <SuccessImage />
         ) : type === "failure" ? (
@@ -41,7 +41,7 @@ function Toast({ id, message, type }) {
         ) : (
           ""
         )}
-      </spam>
+      </span>
     </div>
   );
 }
