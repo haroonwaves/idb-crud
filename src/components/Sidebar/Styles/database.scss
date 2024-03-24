@@ -9,9 +9,10 @@
     height: 27px;
     display: flex;
     align-items: center;
-    padding: 0 5px 0 40px;
+    padding: 0 5px 0 50px;
 
     &.selected {
+      color: $primary-darker;
       background-color: $primary-lighter;
     }
 
