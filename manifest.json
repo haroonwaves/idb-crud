@@ -1,30 +1,30 @@
 {
-  "manifest_version": 3,
-  "name": "idb crud - IndexedDB Manager",
-  "description": "Enhance your indexedDb management with idb crud chrome extension",
-  "version": "0.3.0",
-  "action": {
-    "default_icon": {
-      "16": "media/appicon16.png",
-      "32": "media/appicon32.png",
-      "48": "media/appicon48.png",
-      "128": "media/appicon128.png"
-    }
-  },
-  "permissions": [
-    "activeTab"
-  ],
-  "content_scripts": [
-    {
-      "js": [
-        "src/content.jsx"
-      ],
-      "matches": [
-        "<all_urls>"
-      ]
-    }
-  ],
-  "background": {
-    "service_worker": "src/background.js"
-  }
+	"manifest_version": 3,
+	"name": "idb crud - IndexedDB Manager",
+	"description": "Enhance your indexedDb management with idb crud chrome extension",
+	"version": "0.3.1",
+	"action": {
+		"default_icon": {
+			"16": "media/appicon16.png",
+			"32": "media/appicon32.png",
+			"48": "media/appicon48.png",
+			"128": "media/appicon128.png"
+		}
+	},
+	"permissions": [
+		"activeTab"
+	],
+	"content_scripts": [
+		{
+			"js": [
+				"src/content.jsx"
+			],
+			"matches": [
+				"<all_urls>"
+			]
+		}
+	],
+	"background": {
+		"service_worker": "src/background.js"
+	}
 }
