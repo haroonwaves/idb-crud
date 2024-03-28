@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "preact/hooks";
 import dexieDatabase from "./dexie/dexie";
 import Drawer from "./components/drawer";
 import ToastContainer from "./components/Common/toast-container";
+import chromeStorage from "./PersistentStorage/ChromeStorage/store.js";
 
 export const App = () => {
   const [openDrawer, setOpenDrawer] = useState(false);
@@ -24,6 +25,7 @@ export const App = () => {
   });
 
   useEffect(() => {
+    chromeStorage.registerUser();
     connectToDatabase();
   }, [connectToDatabase]);
 
