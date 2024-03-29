@@ -13,7 +13,7 @@ const Sidebar = ({
   setSelectedDatabase,
   selectedTable,
   setSelectedTable,
-  connectToDatabase,
+  refreshDatabase,
 }) => {
   const [openDbs, setOpenDbs] = useState(true);
 
@@ -33,7 +33,7 @@ const Sidebar = ({
           <span>IndexedDB</span>
         </div>
         <Tooltip text="Refresh database" position="left">
-          <RefreshIcon onClick={connectToDatabase} />
+          <RefreshIcon onClick={refreshDatabase} />
         </Tooltip>
       </div>
       {!connected ? (
@@ -44,6 +44,7 @@ const Sidebar = ({
           dbNames.map((name) => (
             <Database
               dbName={name}
+              selectedDatabase={selectedDatabase}
               setSelectedDatabase={setSelectedDatabase}
               selectedTable={selectedTable}
               setSelectedTable={setSelectedTable}

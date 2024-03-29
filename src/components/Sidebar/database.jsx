@@ -8,6 +8,7 @@ import databaseStyles from "./Styles/database.scss?inline";
 
 const Database = ({
   dbName,
+  selectedDatabase,
   setSelectedDatabase,
   selectedTable,
   setSelectedTable,
@@ -20,6 +21,12 @@ const Database = ({
       db.open();
     }
   }, [dbName]);
+
+  useEffect(() => {
+    if (selectedTable && selectedDatabase === dbName) {
+      setOpenDb(true);
+    }
+  }, []);
 
   const tables = dexieDatabase
     .select(dbName)
