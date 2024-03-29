@@ -14,6 +14,12 @@ const Drawer = ({ open, closeDrawer, connectToDatabase, connected }) => {
   const [selectedDatabase, setSelectedDatabase] = useState(null);
   const [selectedTable, setSelectedTable] = useState(null);
 
+  const refreshDatabase = () => {
+    connectToDatabase();
+    setSelectedDatabase(null);
+    setSelectedTable(null);
+  };
+
   useEffect(() => {
     if (open) {
       idbCrudDrawerRef.current.focus();
@@ -34,43 +40,43 @@ const Drawer = ({ open, closeDrawer, connectToDatabase, connected }) => {
         // onBlur={() => setOpen(false)}
       >
         {open ? (
-          <span
-            className="idb-crud-drawer-close-btn"
-            onClick={() => closeDrawer}
-          >
+          <span className="idb-crud-drawer-close-btn">
             <CrossIcon onClick={closeDrawer} />
           </span>
         ) : null}
-        <PanelGroup direction="horizontal">
-          <>
-            <Panel
-              className="!overflow-y-auto !overflow-x-hidden !text-nowrap"
-              id="idb-crud-side-panel"
-              defaultSize={15}
-              minSize={10}
-              order={1}
-            >
-              <Sidebar
-                connected={connected}
+
+        {open ? (
+          <PanelGroup direction="horizontal">
+            <>
+              <Panel
+                className="!overflow-y-auto !overflow-x-hidden !text-nowrap"
+                id="idb-crud-side-panel"
+                defaultSize={15}
+                minSize={10}
+                order={1}
+              >
+                <Sidebar
+                  connected={connected}
+                  selectedDatabase={selectedDatabase}
+                  setSelectedDatabase={setSelectedDatabase}
+                  selectedTable={selectedTable}
+                  setSelectedTable={setSelectedTable}
+                  refreshDatabase={refreshDatabase}
+                />
+              </Panel>
+              <PanelResizeHandle
+                className="idb-crud-panel-resizer"
+                style={styles.resizeHandler}
+              />
+            </>
+            <Panel id="idb-crud-main-panel" minSize={80} order={2}>
+              <Main
                 selectedDatabase={selectedDatabase}
-                setSelectedDatabase={setSelectedDatabase}
                 selectedTable={selectedTable}
-                setSelectedTable={setSelectedTable}
-                connectToDatabase={connectToDatabase}
               />
             </Panel>
-            <PanelResizeHandle
-              className="idb-crud-panel-resizer"
-              style={styles.resizeHandler}
-            />
-          </>
-          <Panel id="idb-crud-main-panel" minSize={80} order={2}>
-            <Main
-              selectedDatabase={selectedDatabase}
-              selectedTable={selectedTable}
-            />
-          </Panel>
-        </PanelGroup>
+          </PanelGroup>
+        ) : null}
       </div>
     </>
   );
