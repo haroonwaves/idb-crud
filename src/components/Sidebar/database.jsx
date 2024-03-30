@@ -23,7 +23,7 @@ const Database = ({
   }, [dbName]);
 
   useEffect(() => {
-    if (selectedTable && selectedDatabase === dbName) {
+    if (selectedDatabase === dbName) {
       setOpenDb(true);
     }
   }, []);

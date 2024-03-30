@@ -8,7 +8,13 @@ import CrossIcon from "../icons/cross.svg?component";
 
 import drawerStyles from "./styles/drawer.scss?inline";
 
-const Drawer = ({ open, closeDrawer, connectToDatabase, connected }) => {
+const Drawer = ({
+  open,
+  setOpen,
+  closeDrawerRef,
+  connectToDatabase,
+  connected,
+}) => {
   const idbCrudDrawerRef = createRef();
 
   const [selectedDatabase, setSelectedDatabase] = useState(null);
@@ -30,6 +36,13 @@ const Drawer = ({ open, closeDrawer, connectToDatabase, connected }) => {
     }
   }, [open]);
 
+  useEffect(() => {
+    closeDrawerRef.current = () => {
+      setSelectedTable(null);
+      setOpen(false);
+    };
+  }, []);
+
   return (
     <>
       <style>{drawerStyles}</style>
@@ -41,7 +54,7 @@ const Drawer = ({ open, closeDrawer, connectToDatabase, connected }) => {
       >
         {open ? (
           <span className="idb-crud-drawer-close-btn">
-            <CrossIcon onClick={closeDrawer} />
+            <CrossIcon onClick={closeDrawerRef.current} />
           </span>
         ) : null}
 
