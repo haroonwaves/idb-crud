@@ -1,5 +1,5 @@
 const defaultSettings = {
-  joinDate: Date.now(),
+  joinedDate: Date.now(),
   lastReviewRequestDate: null,
   hasReviewed: false,
 };
@@ -63,6 +63,7 @@ const chromeStorage = {
   registerUser,
   set,
   get,
+  update,
 };
 
 export default chromeStorage;

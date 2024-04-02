@@ -2,11 +2,12 @@ import { useEffect, useRef } from "preact/hooks";
 import Button from "./button";
 
 const modalSize = {
-  "ex-small": 18,
-  small: 22,
-  medium: 26,
-  large: 30,
-  "ex-large": 50,
+  "ex-small": "10%",
+  small: "20%",
+  medium: "30%",
+  large: "40%",
+  "ex-large": "50%",
+  default: "fit-content",
 };
 
 export default function Modal({
@@ -14,7 +15,7 @@ export default function Modal({
   onClose = () => {},
   onClick = () => {},
   closeOnBlur = true,
-  size = "large", // ex-small || small || medium || large || ex-large
+  size = "default", // ex-small || small || medium || large || ex-large
   backgroundEffect = null, // null || shadow || blur
   hideFooter = false,
   header,
@@ -35,7 +36,8 @@ export default function Modal({
   if (!show) return null;
 
   const addBackgroundBlur = backgroundEffect === "blur";
-  const width = modalSize[size] || "large";
+
+  const maxWidth = modalSize[size];
 
   return (
     <>
@@ -63,20 +65,18 @@ export default function Modal({
           tabIndex={-1}
           onBlur={onBlur}
           style={{
-            maxWidth: `${width}%`,
+            maxWidth: maxWidth,
           }}
         >
-          <div className="relative bg-white rounded-lg shadow-lg dark:bg-gray-700">
+          <div className="relative bg-white rounded-lg shadow-lg">
             {header && (
-              <div className="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-                  {header}
-                </h3>
+              <div className="flex items-center justify-between p-3 md:p-4 border-b rounded-t">
+                <h4 className="text-xl font-semibold">{header}</h4>
               </div>
             )}
             <div className="p-4 md:p-5 space-y-4">{children}</div>
             {!hideFooter && (
-              <div className="flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600 gap-5">
+              <div className="flex items-center p-4 md:p-5 border-t rounded-b gap-5">
                 <Button text={"OK"} onClick={onClick} />
                 <Button text={"CLOSE"} type={"secondary"} onClick={onClose} />
               </div>

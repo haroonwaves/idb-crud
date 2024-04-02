@@ -1,16 +1,8 @@
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
-import { createContext } from "preact";
 import { useCallback, useState } from "preact/hooks";
-
 import Table from "./Table/table";
 import Editor from "./Editor/editor";
-
-const initialState = {
-  selectedDatabase: null,
-  selectedTable: null,
-};
-
-const AppState = createContext(initialState);
+import ReviewModal from "./review-modal";
 
 const Main = ({ selectedDatabase, selectedTable }) => {
   const [selectedRows, setSelectedRows] = useState(null);
@@ -22,7 +14,8 @@ const Main = ({ selectedDatabase, selectedTable }) => {
   }, [setRefreshAfterEdit]);
 
   return (
-    <AppState.Provider value={initialState}>
+    <>
+      <ReviewModal />
       <PanelGroup direction="vertical">
         <>
           <Panel id="idb-crud-table-panel" minSize={30} order={1}>
@@ -64,7 +57,7 @@ const Main = ({ selectedDatabase, selectedTable }) => {
           />
         </Panel>
       </PanelGroup>
-    </AppState.Provider>
+    </>
   );
 };
 
