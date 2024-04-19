@@ -18,7 +18,7 @@ import ControlPanel from "./control-panel";
 import createPlaceholderObject from "../Editor/create-placeholder-object";
 import { showToast } from "../../../Toast/toast-manager";
 import { parseUserInput } from "./Utils/parse-user-input";
-import CrossIcon from "../../../icons/cross-small.svg?component";
+import { getKeyType } from "./Utils/util";
 
 import tableStyles from "./Styles/table.scss?inline";
 
@@ -363,63 +363,77 @@ function IdbCrudTable({
 
                 return (
                   <tr className="idb-crud-table-row" key={headerGroup.id}>
-                    {visibleHeaders.map((header, index) => (
-                      <th className="idb-crud-table-head" key={header.id}>
-                        {header.isPlaceholder ? null : (
-                          <div
-                            style={{
-                              display: "flex",
-                              flexDirection: "column",
-                              alignItems: "center",
-                              gap: "7px",
-                            }}
-                          >
-                            <div className="idb-crud-table-head-name">
-                              {flexRender(
-                                header.column.columnDef.header,
-                                header.getContext()
-                              )}
-                              {header.id === "selection" ? null : (
-                                <div
-                                  className="idb-crud-table-head-name-sort"
-                                  onClick={() => handleSort(header.id)}
-                                >
+                    {visibleHeaders.map((header, index) => {
+                      const sortDirection =
+                        sort.current[0] === header.id && sort.current[1];
+                      const keyType = getKeyType(
+                        selectedDatabase,
+                        selectedTable,
+                        header.id
+                      );
+
+                      return (
+                        <th className="idb-crud-table-head" key={header.id}>
+                          {header.isPlaceholder ? null : (
+                            <div
+                              style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center",
+                                gap: "7px",
+                              }}
+                            >
+                              <div className="idb-crud-table-head-name">
+                                {header.id === "selection" ||
+                                !keyType ? null : (
                                   <div
-                                    className={`idb-crud-table-head-name-sort-icon ${
-                                      sort.current[0] === header.id &&
-                                      sort.current[1] === "desc"
-                                        ? "active"
-                                        : ""
-                                    }`}
+                                    className="text-secondary-medium"
+                                    title={keyType}
                                   >
-                                    ↓
+                                    &#9432;
                                   </div>
+                                )}
+
+                                {flexRender(
+                                  header.column.columnDef.header,
+                                  header.getContext()
+                                )}
+                                {header.id === "selection" ? null : (
                                   <div
-                                    className={`idb-crud-table-head-name-sort-icon ${
-                                      sort.current[0] === header.id &&
-                                      sort.current[1] === "asc"
-                                        ? "active"
-                                        : ""
-                                    }`}
+                                    className="idb-crud-table-head-name-sort"
+                                    onClick={() => handleSort(header.id)}
                                   >
-                                    ↑
+                                    <div
+                                      className={`idb-crud-table-head-name-sort-icon ${
+                                        sortDirection === "desc" ? "active" : ""
+                                      }`}
+                                    >
+                                      ↓
+                                    </div>
+                                    <div
+                                      className={`idb-crud-table-head-name-sort-icon ${
+                                        sortDirection === "asc" ? "active" : ""
+                                      }`}
+                                    >
+                                      ↑
+                                    </div>
                                   </div>
-                                </div>
+                                )}
+                              </div>
+                              {index > 0 && (
+                                <input
+                                  onChange={(e) =>
+                                    handleFilter(header.id, e.target.value)
+                                  }
+                                  type="text"
+                                  placeholder="Search..."
+                                />
                               )}
                             </div>
-                            {index > 0 && (
-                              <input
-                                onChange={(e) =>
-                                  handleFilter(header.id, e.target.value)
-                                }
-                                type="text"
-                                placeholder="Search..."
-                              />
-                            )}
-                          </div>
-                        )}
-                      </th>
-                    ))}
+                          )}
+                        </th>
+                      );
+                    })}
                   </tr>
                 );
               })}

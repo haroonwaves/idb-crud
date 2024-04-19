@@ -192,4 +192,8 @@ export class DexieBuilder {
   allTables() {
     return this.#dexieInstance.tables;
   }
+
+  schema() {
+    return this.#selectedTable.schema;
+  }
 }
