@@ -120,8 +120,8 @@
 
   /* width */
   ::-webkit-scrollbar {
-    width: 7px !important;
-    height: 7px !important;
+    width: 5px !important;
+    height: 5px !important;
   }
 
   /* Track */
@@ -132,13 +132,8 @@
 
   /* Handle */
   ::-webkit-scrollbar-thumb {
-    background: $secondary-light !important;
-    border-radius: 10px !important;
-  }
-
-  /* Handle on hover */
-  ::-webkit-scrollbar-thumb:hover {
     background: $secondary-medium !important;
+    border-radius: 10px !important;
   }
 
   -webkit-user-select: none !important;

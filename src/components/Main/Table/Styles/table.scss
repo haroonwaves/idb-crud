@@ -38,7 +38,7 @@
     }
 
     &-head {
-      background-color: #f9fafb;
+      background-color: transparent;
       color: #333 !important;
       text-align: center;
       padding: 10px 8px;
@@ -75,10 +75,6 @@
 
       &:last-child {
         border-bottom: 1px solid $secondary-light;
-      }
-
-      &:hover {
-        background-color: $secondary-lighter;
       }
     }
 

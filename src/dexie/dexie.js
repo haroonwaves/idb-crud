@@ -36,7 +36,7 @@ export async function getPagedData(
   const offset = page * pageSize;
   const selectedTable = dexieDatabase.select(dbName).table(tableName);
   const primaryKey = selectedTable.primaryKey;
-  const t1 = performance.now();
+
   const result = await selectedTable
     .orderBy(
       sortBy ?? (Array.isArray(primaryKey) ? primaryKey[0] : primaryKey),
