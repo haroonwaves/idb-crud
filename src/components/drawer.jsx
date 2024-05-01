@@ -8,6 +8,30 @@ import CrossIcon from "../icons/cross.svg?component";
 
 import drawerStyles from "./styles/drawer.scss?inline";
 
+function createOverlay() {
+  const overlay = document.createElement("div");
+  overlay.style.position = "fixed";
+  overlay.style.top = "0";
+  overlay.style.left = "0";
+  overlay.style.width = "100%";
+  overlay.style.height = "100%";
+  overlay.style.backgroundColor = "rgba(0, 0, 0, 0.5)"; // Semi-transparent black overlay
+  overlay.style.zIndex = "9999";
+  overlay.id = "idb-crud-overlay";
+
+  document.body.appendChild(overlay);
+  document.body.classList.add("idb-crud-drawer-open");
+}
+
+function removeOverlay() {
+  const overlay = document.getElementById("idb-crud-overlay");
+  if (overlay) {
+    overlay.parentNode.removeChild(overlay);
+  }
+
+  document.body.classList.remove("idb-crud-drawer-open");
+}
+
 const Drawer = ({
   open,
   setOpen,
@@ -29,10 +53,14 @@ const Drawer = ({
   useEffect(() => {
     if (open) {
       idbCrudDrawerRef.current.focus();
-      document.body.style.overflow = "hidden";
+      setTimeout(() => {
+        createOverlay();
+      }, 200);
     } else {
       idbCrudDrawerRef.current.blur();
-      document.body.style.overflow = "auto";
+      setTimeout(() => {
+        removeOverlay();
+      }, 200);
     }
   }, [open]);
 
