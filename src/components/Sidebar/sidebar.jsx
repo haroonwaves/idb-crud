@@ -7,14 +7,7 @@ import DropdownIcon from "../../icons/arrow-dropdown.svg?component";
 import RefreshIcon from "../../icons/refresh.svg?component";
 import Tooltip from "../Common/Tooltip";
 
-const Sidebar = ({
-  connected,
-  selectedDatabase,
-  setSelectedDatabase,
-  selectedTable,
-  setSelectedTable,
-  refreshDatabase,
-}) => {
+const Sidebar = ({ connected, refreshDatabase }) => {
   const [openDbs, setOpenDbs] = useState(true);
 
   const dbNames = dexieDatabase.dbNames();
@@ -41,15 +34,7 @@ const Sidebar = ({
       ) : (
         openDbs &&
         (dbNames.length > 0 ? (
-          dbNames.map((name) => (
-            <Database
-              dbName={name}
-              selectedDatabase={selectedDatabase}
-              setSelectedDatabase={setSelectedDatabase}
-              selectedTable={selectedTable}
-              setSelectedTable={setSelectedTable}
-            />
-          ))
+          dbNames.map((name) => <Database dbName={name} />)
         ) : (
           <div style={{ padding: "4px 17px" }}>No databases found...</div>
         ))

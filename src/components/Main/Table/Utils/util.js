@@ -1,6 +1,10 @@
+import appState from "../../../../AppState/appSate";
 import dexieDatabase from "../../../../dexie/dexie";
 
-export function getKeyType(dbName, tableName, key) {
+export function getKeyType(key) {
+  const dbName = appState.selectedDatabase.value;
+  const tableName = appState.selectedTable.value;
+
   const tableSchema = dexieDatabase.select(dbName).table(tableName).schema();
   const primaryKey = tableSchema.primKey.keyPath;
   const isPrimaryKey = isKeyMatch(primaryKey, key);

@@ -1,5 +1,6 @@
 import Pagination from "../../Common/pagination";
 import MultiSelect from "../../Common/multi-select";
+import Tooltip from "../../Common/Tooltip";
 import AddIcon from "../../../icons/add.svg?component";
 import DeleteIcon from "../../../icons/delete.svg?component";
 import UploadIcon from "../../../icons/upload.svg?component";
@@ -7,7 +8,6 @@ import DownloadIcon from "../../../icons/download.svg?component";
 import SyncIcon from "../../../icons/sync.svg?component";
 
 import controlPanelStyles from "./Styles/control-panel.scss?inline";
-import Tooltip from "../../Common/Tooltip";
 
 const ControlPanel = ({
   columns,

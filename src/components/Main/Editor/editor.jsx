@@ -7,12 +7,7 @@ import editorStyles from "./Styles/editor.scss?inline";
 import createPlaceholderObject from "./create-placeholder-object";
 import { showToast } from "../../../Toast/toast-manager";
 
-const Editor = ({
-  selectedRows,
-  selectedDatabase,
-  selectedTable,
-  onAfterEdit,
-}) => {
+const Editor = ({ selectedRows, onAfterEdit }) => {
   const [value, setValue] = useState(selectedRows);
   const [mode, setMode] = useState("");
 
@@ -37,7 +32,7 @@ const Editor = ({
         }
       }
 
-      replace(existingRows, updatedRows, selectedDatabase, selectedTable)
+      replace(existingRows, updatedRows)
         .then(() => {
           showToast({
             message: mode === "Edit" ? "Update success" : "Create success",
@@ -57,7 +52,7 @@ const Editor = ({
           })
         );
     },
-    [selectedDatabase, selectedTable, mode, setMode]
+    [mode, setMode]
   );
 
   return (

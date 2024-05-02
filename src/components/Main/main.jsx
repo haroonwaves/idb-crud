@@ -3,11 +3,15 @@ import { useCallback, useState } from "preact/hooks";
 import Table from "./Table/table";
 import Editor from "./Editor/editor";
 import ReviewModal from "./review-modal";
+import appState from "../../AppState/appSate";
 
-const Main = ({ selectedDatabase, selectedTable }) => {
+const Main = () => {
   const [selectedRows, setSelectedRows] = useState(null);
   const [addedRow, setAddedRow] = useState(null);
   const [refreshAfterEdit, setRefreshAfterEdit] = useState(false);
+
+  const selectedDatabase = appState.selectedDatabase.value;
+  const selectedTable = appState.selectedTable.value;
 
   const onAfterEdit = useCallback(() => {
     setRefreshAfterEdit(true);
@@ -21,8 +25,6 @@ const Main = ({ selectedDatabase, selectedTable }) => {
           <Panel id="idb-crud-table-panel" minSize={30} order={1}>
             {selectedTable && selectedDatabase ? (
               <Table
-                selectedDatabase={selectedDatabase}
-                selectedTable={selectedTable}
                 selectedRows={selectedRows}
                 refreshAfterEdit={refreshAfterEdit}
                 setSelectedRows={setSelectedRows}
@@ -51,8 +53,6 @@ const Main = ({ selectedDatabase, selectedTable }) => {
         >
           <Editor
             selectedRows={addedRow || selectedRows}
-            selectedDatabase={selectedDatabase}
-            selectedTable={selectedTable}
             onAfterEdit={onAfterEdit}
           />
         </Panel>

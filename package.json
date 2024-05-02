@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@honkhonk/vite-plugin-svgr": "^1.1.0",
+    "@preact/signals": "^1.2.3",
     "@tanstack/react-table": "^8.12.0",
     "autoprefixer": "^10.4.17",
     "dexie": "^3.2.5",

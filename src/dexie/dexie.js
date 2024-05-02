@@ -1,6 +1,7 @@
 import Dexie from "dexie";
 
 import { DexieBuilder } from "./dexie-builder";
+import appState from "../AppState/appSate";
 
 const dexieInstances = {};
 
@@ -25,14 +26,15 @@ const dexieDatabase = {
 export default dexieDatabase;
 
 export async function getPagedData(
-  dbName,
-  tableName,
   query,
   page,
   pageSize = 20,
   sortBy = undefined,
   sortDirection = "desc"
 ) {
+  const dbName = appState.selectedDatabase.value;
+  const tableName = appState.selectedTable.value;
+
   const offset = page * pageSize;
   const selectedTable = dexieDatabase.select(dbName).table(tableName);
   const primaryKey = selectedTable.primaryKey;
@@ -50,11 +52,17 @@ export async function getPagedData(
   return result;
 }
 
-export async function getCount(dbName, tableName, query) {
+export async function getCount(query) {
+  const dbName = appState.selectedDatabase.value;
+  const tableName = appState.selectedTable.value;
+
   return dexieDatabase.select(dbName).table(tableName).where(query).count();
 }
 
-export function getIndexedColumns(dbName, tableName) {
+export function getIndexedColumns() {
+  const dbName = appState.selectedDatabase.value;
+  const tableName = appState.selectedTable.value;
+
   const selectedTable = dexieDatabase.select(dbName).table(tableName);
 
   return {
@@ -63,7 +71,10 @@ export function getIndexedColumns(dbName, tableName) {
   };
 }
 
-export async function replace(existingValues, newValues, dbName, tableName) {
+export async function replace(existingValues, newValues) {
+  const dbName = appState.selectedDatabase.value;
+  const tableName = appState.selectedTable.value;
+
   const selectedTable = dexieDatabase.select(dbName).table(tableName);
   const primaryKey = Array.isArray(selectedTable.primaryKey)
     ? selectedTable.primaryKey[0]
@@ -78,7 +89,10 @@ export async function replace(existingValues, newValues, dbName, tableName) {
   await selectedTable.insert(newValues);
 }
 
-export async function deleteData(dbName, tableName, values) {
+export async function deleteData(values) {
+  const dbName = appState.selectedDatabase.value;
+  const tableName = appState.selectedTable.value;
+
   const selectedTable = dexieDatabase.select(dbName).table(tableName);
   const primaryKey = Array.isArray(selectedTable.primaryKey)
     ? selectedTable.primaryKey[0]
