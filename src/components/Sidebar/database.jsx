@@ -5,15 +5,13 @@ import DropdownIcon from "../../icons/arrow-dropdown.svg?component";
 import dexieDatabase from "../../dexie/dexie";
 
 import databaseStyles from "./Styles/database.scss?inline";
+import appState from "../../AppState/appSate";
 
-const Database = ({
-  dbName,
-  selectedDatabase,
-  setSelectedDatabase,
-  selectedTable,
-  setSelectedTable,
-}) => {
+const Database = ({ dbName }) => {
   const [openDb, setOpenDb] = useState(false);
+
+  const selectedDatabase = appState.selectedDatabase.value;
+  const selectedTable = appState.selectedTable.value;
 
   useEffect(() => {
     const db = dexieDatabase.select(dbName);
@@ -58,8 +56,8 @@ const Database = ({
                 selectedTable === table ? "selected" : ""
               }`}
               onClick={() => {
-                setSelectedDatabase(dbName);
-                setSelectedTable(table);
+                appState.selectedDatabase.value = dbName;
+                appState.selectedTable.value = table;
               }}
             >
               {table}

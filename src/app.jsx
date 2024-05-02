@@ -3,12 +3,11 @@ import dexieDatabase from "./dexie/dexie";
 import Drawer from "./components/drawer";
 import ToastContainer from "./components/Common/toast-container";
 import chromeStorage from "./PersistentStorage/ChromeStorage/store.js";
+import appState from "./AppState/appSate.js";
 
 export const App = () => {
   const [openDrawer, setOpenDrawer] = useState(false);
   const [connected, setConnected] = useState(false);
-
-  const closeDrawerRef = useRef(null);
 
   const connectToDatabase = useCallback(async () => {
     setConnected(false);
@@ -16,10 +15,21 @@ export const App = () => {
     setConnected(true);
   }, []);
 
+  const refreshDatabase = useCallback(() => {
+    connectToDatabase();
+    appState.selectedDatabase.value = "";
+    appState.selectedTable.value = "";
+  }, [connectToDatabase]);
+
+  const closeDrawer = useCallback(() => {
+    appState.selectedTable.value = "";
+    setOpenDrawer(false);
+  }, []);
+
   chrome.runtime.onMessage.addListener((request) => {
     if (request.action === "icon_clicked") {
       if (openDrawer) {
-        closeDrawerRef.current && closeDrawerRef.current();
+        closeDrawer();
       } else {
         setOpenDrawer(true);
       }
@@ -37,10 +47,9 @@ export const App = () => {
         <ToastContainer />
         <Drawer
           connected={connected}
-          open={openDrawer}
-          setOpen={setOpenDrawer}
-          closeDrawerRef={closeDrawerRef}
-          connectToDatabase={connectToDatabase}
+          isOpen={openDrawer}
+          refreshDatabase={refreshDatabase}
+          closeDrawer={closeDrawer}
         />
       </div>
     </>

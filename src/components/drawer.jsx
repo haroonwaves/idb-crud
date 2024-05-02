@@ -7,6 +7,7 @@ import Sidebar from "./Sidebar/sidebar";
 import CrossIcon from "../icons/cross.svg?component";
 
 import drawerStyles from "./styles/drawer.scss?inline";
+import appState from "../AppState/appSate";
 
 function createOverlay() {
   const overlay = document.createElement("div");
@@ -32,26 +33,11 @@ function removeOverlay() {
   document.body.classList.remove("idb-crud-drawer-open");
 }
 
-const Drawer = ({
-  open,
-  setOpen,
-  closeDrawerRef,
-  connectToDatabase,
-  connected,
-}) => {
+const Drawer = ({ isOpen, connected, refreshDatabase, closeDrawer }) => {
   const idbCrudDrawerRef = createRef();
 
-  const [selectedDatabase, setSelectedDatabase] = useState(null);
-  const [selectedTable, setSelectedTable] = useState(null);
-
-  const refreshDatabase = () => {
-    connectToDatabase();
-    setSelectedDatabase(null);
-    setSelectedTable(null);
-  };
-
   useEffect(() => {
-    if (open) {
+    if (isOpen) {
       idbCrudDrawerRef.current.focus();
       setTimeout(() => {
         createOverlay();
@@ -62,31 +48,24 @@ const Drawer = ({
         removeOverlay();
       }, 200);
     }
-  }, [open]);
-
-  useEffect(() => {
-    closeDrawerRef.current = () => {
-      setSelectedTable(null);
-      setOpen(false);
-    };
-  }, []);
+  }, [isOpen]);
 
   return (
     <>
       <style>{drawerStyles}</style>
       <div
         ref={idbCrudDrawerRef}
-        className={`idb-crud-drawer ${open ? "open" : ""}`}
+        className={`idb-crud-drawer ${isOpen ? "open" : ""}`}
         tabIndex={-1} // focusable
         // onBlur={() => setOpen(false)}
       >
-        {open ? (
+        {isOpen ? (
           <span className="idb-crud-drawer-close-btn">
-            <CrossIcon onClick={closeDrawerRef.current} />
+            <CrossIcon onClick={closeDrawer} />
           </span>
         ) : null}
 
-        {open ? (
+        {isOpen ? (
           <PanelGroup direction="horizontal">
             <>
               <Panel
@@ -98,10 +77,6 @@ const Drawer = ({
               >
                 <Sidebar
                   connected={connected}
-                  selectedDatabase={selectedDatabase}
-                  setSelectedDatabase={setSelectedDatabase}
-                  selectedTable={selectedTable}
-                  setSelectedTable={setSelectedTable}
                   refreshDatabase={refreshDatabase}
                 />
               </Panel>
@@ -111,10 +86,7 @@ const Drawer = ({
               />
             </>
             <Panel id="idb-crud-main-panel" minSize={80} order={2}>
-              <Main
-                selectedDatabase={selectedDatabase}
-                selectedTable={selectedTable}
-              />
+              <Main />
             </Panel>
           </PanelGroup>
         ) : null}

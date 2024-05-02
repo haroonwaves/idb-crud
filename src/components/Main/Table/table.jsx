@@ -16,6 +16,7 @@ import calculateColumnNames from "./Utils/calculate-column-names";
 import LoadingSpinner from "../../Common/loading-spinner";
 import ControlPanel from "./control-panel";
 import createPlaceholderObject from "../Editor/create-placeholder-object";
+import appState from "../../../AppState/appSate";
 import { showToast } from "../../../Toast/toast-manager";
 import { parseUserInput } from "./Utils/parse-user-input";
 import { getKeyType } from "./Utils/util";
@@ -28,14 +29,15 @@ const itemsPerPage = 20;
 let searchTimeOutId = null;
 
 function IdbCrudTable({
-  selectedDatabase,
-  selectedTable,
   selectedRows,
   setAddedRow,
   setSelectedRows,
   setRefreshAfterEdit,
   refreshAfterEdit,
 }) {
+  const selectedDatabase = appState.selectedDatabase.value;
+  const selectedTable = appState.selectedTable.value;
+
   const [data, setData] = useState([]);
   const [columns, setColumns] = useState([]);
   const [selectedColumns, setSelectedColumns] = useState([]);
@@ -61,10 +63,7 @@ function IdbCrudTable({
       let columnNames = [];
 
       if (data.length === 0) {
-        const { primaryKey, secondaryKeys = [] } = getIndexedColumns(
-          selectedDatabase,
-          selectedTable
-        );
+        const { primaryKey, secondaryKeys = [] } = getIndexedColumns();
 
         if (primaryKey) {
           const primaryKeys = Array.isArray(primaryKey)
@@ -141,16 +140,7 @@ function IdbCrudTable({
 
       return data;
     },
-    [
-      setColumns,
-      setData,
-      setSelectedColumns,
-      selectedColumns,
-      filter,
-      columns,
-      selectedDatabase,
-      selectedTable,
-    ]
+    [setColumns, setData, setSelectedColumns, selectedColumns, filter, columns]
   );
 
   const onPageChange = useCallback(
@@ -175,8 +165,6 @@ function IdbCrudTable({
       }
 
       getPagedData(
-        selectedDatabase,
-        selectedTable,
         filter.current,
         page,
         itemsPerPage,
@@ -187,9 +175,7 @@ function IdbCrudTable({
         .then(() => {
           setLoadingTable(false);
           if (resetRef.current.count) {
-            getCount(selectedDatabase, selectedTable, filter.current).then(
-              setTotalCount
-            );
+            getCount(filter.current).then(setTotalCount);
           }
 
           resetRef.current.selectedColumns = false;
@@ -201,8 +187,6 @@ function IdbCrudTable({
     },
     [
       setSelectedRows,
-      selectedTable,
-      selectedDatabase,
       totalCount,
       sort,
       filter,
@@ -231,7 +215,7 @@ function IdbCrudTable({
   }, [data, setAddedRow, setSelectedRows]);
 
   const onDelete = useCallback(() => {
-    deleteData(selectedDatabase, selectedTable, selectedRows)
+    deleteData(selectedRows)
       .then(() => {
         resetRef.current.rowSelection = true;
         resetRef.current.count = true;
@@ -239,13 +223,7 @@ function IdbCrudTable({
         showToast({ message: "Delete success", type: "success" });
       })
       .catch(() => showToast({ message: "Delete failed", type: "failure" }));
-  }, [
-    selectedDatabase,
-    selectedTable,
-    selectedRows,
-    currentPage,
-    onPageChange,
-  ]);
+  }, [selectedRows, currentPage, onPageChange]);
 
   const onColumnsSelect = useCallback(
     (selectedColumns) => {
@@ -286,7 +264,7 @@ function IdbCrudTable({
   const syncData = useCallback(() => {
     resetRef.current.count = true;
     onPageChange(currentPage);
-  }, [currentPage, selectedDatabase, selectedTable, columns]);
+  }, [currentPage, columns]);
 
   useEffect(() => {
     resetRef.current.selectedColumns = true;
@@ -366,11 +344,7 @@ function IdbCrudTable({
                     {visibleHeaders.map((header, index) => {
                       const sortDirection =
                         sort.current[0] === header.id && sort.current[1];
-                      const keyType = getKeyType(
-                        selectedDatabase,
-                        selectedTable,
-                        header.id
-                      );
+                      const keyType = getKeyType(header.id);
 
                       return (
                         <th className="idb-crud-table-head" key={header.id}>
