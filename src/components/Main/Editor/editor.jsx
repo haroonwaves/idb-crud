@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "preact/hooks";
+import { useCallback, useEffect, useMemo, useState } from "preact/hooks";
 import JsonViewer from "react-json-view";
 
 import { replace } from "../../../dexie/dexie";
@@ -6,15 +6,27 @@ import { replace } from "../../../dexie/dexie";
 import editorStyles from "./Styles/editor.scss?inline";
 import createPlaceholderObject from "./create-placeholder-object";
 import { showToast } from "../../../Toast/toast-manager";
+import getSelectedValues from "../../../Utils/get-selected-values";
+import appState from "../../../AppState/appSate";
 
-const Editor = ({ selectedRows, onAfterEdit }) => {
-  const [value, setValue] = useState(selectedRows);
+const Editor = ({ addedRow, onAfterEdit }) => {
+  const selectedRows = appState.selectedRows.value;
+  const selectedValues = useMemo(() => getSelectedValues(), [selectedRows]);
+
+  const [value, setValue] = useState(null);
   const [mode, setMode] = useState("");
 
   useEffect(() => {
-    setValue(selectedRows);
-    setMode(Array.isArray(selectedRows) ? "Edit" : "Create");
-  }, [selectedRows]);
+    if (addedRow) {
+      setValue(addedRow);
+      setMode("Create");
+    } else if (selectedValues.length) {
+      setValue(selectedValues);
+      setMode("Edit");
+    } else {
+      setValue(null);
+    }
+  }, [addedRow, selectedValues]);
 
   const onEdit = useCallback(
     ({ existing_src, updated_src, namespace }) => {
