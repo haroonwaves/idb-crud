@@ -6,7 +6,6 @@ import ReviewModal from "./review-modal";
 import appState from "../../AppState/appSate";
 
 const Main = () => {
-  const [selectedRows, setSelectedRows] = useState(null);
   const [addedRow, setAddedRow] = useState(null);
   const [refreshAfterEdit, setRefreshAfterEdit] = useState(false);
 
@@ -25,9 +24,7 @@ const Main = () => {
           <Panel id="idb-crud-table-panel" minSize={30} order={1}>
             {selectedTable && selectedDatabase ? (
               <Table
-                selectedRows={selectedRows}
                 refreshAfterEdit={refreshAfterEdit}
-                setSelectedRows={setSelectedRows}
                 setAddedRow={setAddedRow}
                 setRefreshAfterEdit={setRefreshAfterEdit}
               />
@@ -51,10 +48,7 @@ const Main = () => {
           minSize={10}
           order={2}
         >
-          <Editor
-            selectedRows={addedRow || selectedRows}
-            onAfterEdit={onAfterEdit}
-          />
+          <Editor addedRow={addedRow} onAfterEdit={onAfterEdit} />
         </Panel>
       </PanelGroup>
     </>

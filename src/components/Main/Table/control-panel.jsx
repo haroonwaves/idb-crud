@@ -8,11 +8,11 @@ import DownloadIcon from "../../../icons/download.svg?component";
 import SyncIcon from "../../../icons/sync.svg?component";
 
 import controlPanelStyles from "./Styles/control-panel.scss?inline";
+import appState from "../../../AppState/appSate";
 
 const ControlPanel = ({
   columns,
   selectedColumns,
-  selectedItems,
   totalItems,
   currentPage,
   itemsPerPage,
@@ -22,7 +22,7 @@ const ControlPanel = ({
   onDelete,
   syncData,
 }) => {
-  const selectedItemsCount = selectedItems?.length ?? 0;
+  const selectedRowsCount = appState.selectedRows.value.length;
 
   return (
     <>
@@ -37,8 +37,8 @@ const ControlPanel = ({
           </Tooltip>
           <Tooltip text="Delete record">
             <DeleteIcon
-              className={`${selectedItemsCount === 0 ? "disabled" : ""}`}
-              onClick={selectedItemsCount > 0 ? onDelete : () => {}}
+              className={`${selectedRowsCount === 0 ? "disabled" : ""}`}
+              onClick={selectedRowsCount > 0 ? onDelete : () => {}}
             />
           </Tooltip>
           <Tooltip text="Upload">

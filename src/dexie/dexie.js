@@ -2,6 +2,7 @@ import Dexie from "dexie";
 
 import { DexieBuilder } from "./dexie-builder";
 import appState from "../AppState/appSate";
+import getSelectedValues from "../Utils/get-selected-values";
 
 const dexieInstances = {};
 
@@ -28,7 +29,7 @@ export default dexieDatabase;
 export async function getPagedData(
   query,
   page,
-  pageSize = 20,
+  pageSize,
   sortBy = undefined,
   sortDirection = "desc"
 ) {
@@ -89,9 +90,10 @@ export async function replace(existingValues, newValues) {
   await selectedTable.insert(newValues);
 }
 
-export async function deleteData(values) {
+export async function deleteData() {
   const dbName = appState.selectedDatabase.value;
   const tableName = appState.selectedTable.value;
+  const selectedValues = getSelectedValues();
 
   const selectedTable = dexieDatabase.select(dbName).table(tableName);
   const primaryKey = Array.isArray(selectedTable.primaryKey)
@@ -100,7 +102,7 @@ export async function deleteData(values) {
 
   const promises = [];
 
-  for (const value of values) {
+  for (const value of selectedValues) {
     const key = primaryKey || Object.keys(value)[0];
     const promise = selectedTable.where({ [key]: value[key] }).delete();
     promises.push(promise);

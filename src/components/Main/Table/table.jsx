@@ -28,20 +28,13 @@ const columnHelper = createColumnHelper();
 const itemsPerPage = 20;
 let searchTimeOutId = null;
 
-function IdbCrudTable({
-  selectedRows,
-  setAddedRow,
-  setSelectedRows,
-  setRefreshAfterEdit,
-  refreshAfterEdit,
-}) {
+function IdbCrudTable({ setAddedRow, setRefreshAfterEdit, refreshAfterEdit }) {
   const selectedDatabase = appState.selectedDatabase.value;
   const selectedTable = appState.selectedTable.value;
+  const selectedRows = appState.selectedRows.value;
 
-  const [data, setData] = useState([]);
   const [columns, setColumns] = useState([]);
   const [selectedColumns, setSelectedColumns] = useState([]);
-  const [rowSelection, setRowSelection] = useState({});
   const [totalCount, setTotalCount] = useState(null);
   const [currentPage, setCurrentPage] = useState(0);
 
@@ -54,7 +47,7 @@ function IdbCrudTable({
     selectedColumns: false,
     filter: false,
     sort: false,
-    rowSelection: false,
+    selectedRows: false,
     count: false,
   });
 
@@ -136,20 +129,19 @@ function IdbCrudTable({
           setSelectedColumns([...selectedColumns, ...addedColumns]);
         }
       }
-      setData(data);
+      appState.tableData.value = data;
 
       return data;
     },
-    [setColumns, setData, setSelectedColumns, selectedColumns, filter, columns]
+    [setColumns, setSelectedColumns, selectedColumns, filter, columns]
   );
 
   const onPageChange = useCallback(
     (page) => {
       setCurrentPage(page);
 
-      if (resetRef.current.rowSelection) {
-        setRowSelection({});
-        setSelectedRows(null);
+      if (resetRef.current.selectedRows && selectedRows.length > 0) {
+        appState.selectedRows.value = [];
       }
 
       if (resetRef.current.filter) {
@@ -180,26 +172,26 @@ function IdbCrudTable({
 
           resetRef.current.selectedColumns = false;
           resetRef.current.filter = false;
-          resetRef.current.rowSelection = false;
+          resetRef.current.selectedRows = false;
           resetRef.current.count = false;
           resetRef.current.sort = false;
         });
     },
     [
-      setSelectedRows,
       totalCount,
       sort,
       filter,
+      selectedRows,
       setTotalCount,
       setPagedData,
       setLoadingTable,
-      setRowSelection,
     ]
   );
 
   const onAdd = useCallback(() => {
-    const firstItem = data?.[0];
-    setRowSelection([]);
+    const firstItem = appState.tableData.value[0];
+
+    if (selectedRows.length > 0) appState.selectedRows.value = [];
 
     if (firstItem) {
       setAddedRow(createPlaceholderObject(firstItem));
@@ -212,18 +204,18 @@ function IdbCrudTable({
       }
       setAddedRow(newRow);
     }
-  }, [data, setAddedRow, setSelectedRows]);
+  }, [setAddedRow, selectedRows]);
 
   const onDelete = useCallback(() => {
-    deleteData(selectedRows)
+    deleteData()
       .then(() => {
-        resetRef.current.rowSelection = true;
+        resetRef.current.selectedRows = true;
         resetRef.current.count = true;
         onPageChange(currentPage);
         showToast({ message: "Delete success", type: "success" });
       })
       .catch(() => showToast({ message: "Delete failed", type: "failure" }));
-  }, [selectedRows, currentPage, onPageChange]);
+  }, [currentPage, onPageChange]);
 
   const onColumnsSelect = useCallback(
     (selectedColumns) => {
@@ -243,7 +235,7 @@ function IdbCrudTable({
     }
 
     searchTimeOutId = setTimeout(() => {
-      resetRef.current.rowSelection = true;
+      resetRef.current.selectedRows = true;
       resetRef.current.count = true;
       onPageChange(0);
       setLoadingData(false);
@@ -255,7 +247,7 @@ function IdbCrudTable({
       const sortDirection = sort.current[1] === "asc" ? "desc" : "asc";
       sort.current = [sortBy, sortDirection];
 
-      resetRef.current.rowSelection = true;
+      resetRef.current.selectedRows = true;
       onPageChange(0);
     },
     [sort, onPageChange]
@@ -269,7 +261,7 @@ function IdbCrudTable({
   useEffect(() => {
     resetRef.current.selectedColumns = true;
     resetRef.current.filter = true;
-    resetRef.current.rowSelection = true;
+    resetRef.current.selectedRows = true;
     resetRef.current.count = true;
     resetRef.current.sort = true;
 
@@ -279,18 +271,6 @@ function IdbCrudTable({
   }, [selectedDatabase, selectedTable]);
 
   useEffect(() => {
-    const newSelectedRows = Object.keys(rowSelection).map(
-      (index) => data[index]
-    );
-    if (newSelectedRows?.length > 0) {
-      setAddedRow(null);
-      setSelectedRows(newSelectedRows);
-    } else {
-      setSelectedRows(null);
-    }
-  }, [rowSelection]);
-
-  useEffect(() => {
     if (refreshAfterEdit) {
       onPageChange(currentPage);
       setRefreshAfterEdit(false);
@@ -298,13 +278,25 @@ function IdbCrudTable({
   }, [refreshAfterEdit]);
 
   const table = useReactTable({
-    data,
+    data: appState.tableData.value,
     columns,
     state: {
-      rowSelection,
+      rowSelection: selectedRows.reduce((acc, value) => {
+        acc[value] = true;
+        return acc;
+      }, {}),
     },
     enableRowSelection: true,
-    onRowSelectionChange: setRowSelection,
+    onRowSelectionChange: (fn) => {
+      const prevRowSelection = selectedRows.reduce((acc, value) => {
+        acc[value] = true;
+        return acc;
+      }, {});
+      const newRowSelection = fn(prevRowSelection);
+
+      appState.selectedRows.value = Object.keys(newRowSelection);
+      setAddedRow(null);
+    },
     getCoreRowModel: getCoreRowModel(),
   });
 
@@ -314,12 +306,11 @@ function IdbCrudTable({
       <ControlPanel
         columns={columns}
         selectedColumns={selectedColumns}
-        selectedItems={selectedRows}
         totalItems={totalCount}
         currentPage={currentPage}
         itemsPerPage={itemsPerPage}
         onPageChange={(page) => {
-          resetRef.current.rowSelection = true;
+          resetRef.current.selectedRows = true;
           onPageChange(page);
         }}
         onColumnsSelect={onColumnsSelect}
@@ -448,7 +439,7 @@ function IdbCrudTable({
             </tbody>
           </table>
         )}
-        {data.length === 0 && (
+        {appState.tableData.value.length === 0 && (
           <div className="idb-crud-text-center !h-1/2">No content</div>
         )}
       </div>
