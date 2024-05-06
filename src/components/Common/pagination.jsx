@@ -4,16 +4,14 @@ import ChevronLeft from "../../icons/chevron_left.svg?component";
 
 import paginationStyles from "./Style/pagination.scss?inline";
 import Tooltip from "./Tooltip";
+import appState from "../../AppState/appSate";
 
-const Pagination = ({
-  totalItems,
-  itemsPerPage,
-  onPageChange,
-  loading,
-  currentPage,
-}) => {
-  const [page, setPage] = useState(currentPage);
+const Pagination = ({ totalItems, onPageChange, loading }) => {
+  const currentPage = appState.query.value.page;
+  const itemsPerPage = 20;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+  const [page, setPage] = useState();
 
   useEffect(() => {
     setPage(currentPage);
