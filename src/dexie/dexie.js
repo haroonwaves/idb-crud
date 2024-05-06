@@ -2,7 +2,6 @@ import Dexie from "dexie";
 
 import { DexieBuilder } from "./dexie-builder";
 import appState from "../AppState/appSate";
-import getSelectedValues from "../Utils/get-selected-values";
 
 const dexieInstances = {};
 
@@ -26,36 +25,10 @@ const dexieDatabase = {
 
 export default dexieDatabase;
 
-export async function getPagedData(
-  query,
-  page,
-  pageSize,
-  sortBy = undefined,
-  sortDirection = "desc"
-) {
+export async function getCount() {
   const dbName = appState.selectedDatabase.value;
   const tableName = appState.selectedTable.value;
-
-  const offset = page * pageSize;
-  const selectedTable = dexieDatabase.select(dbName).table(tableName);
-  const primaryKey = selectedTable.primaryKey;
-
-  const result = await selectedTable
-    .orderBy(
-      sortBy ?? (Array.isArray(primaryKey) ? primaryKey[0] : primaryKey),
-      sortDirection
-    )
-    .where(query)
-    .offset(offset)
-    .limit(pageSize)
-    .toArray();
-
-  return result;
-}
-
-export async function getCount(query) {
-  const dbName = appState.selectedDatabase.value;
-  const tableName = appState.selectedTable.value;
+  const query = appState.query.value.filter;
 
   return dexieDatabase.select(dbName).table(tableName).where(query).count();
 }
@@ -65,48 +38,13 @@ export function getIndexedColumns() {
   const tableName = appState.selectedTable.value;
 
   const selectedTable = dexieDatabase.select(dbName).table(tableName);
+  const primaryKey = selectedTable.primaryKey ?? [];
+  const secondaryKeys = selectedTable.secondaryKeys ?? [];
 
   return {
-    primaryKey: selectedTable.primaryKey,
-    secondaryKeys: selectedTable.secondaryKeys,
+    primaryKeys: Array.isArray(primaryKey)
+      ? [...primaryKey].flat()
+      : [primaryKey],
+    secondaryKeys: secondaryKeys.flat().filter(Boolean),
   };
-}
-
-export async function replace(existingValues, newValues) {
-  const dbName = appState.selectedDatabase.value;
-  const tableName = appState.selectedTable.value;
-
-  const selectedTable = dexieDatabase.select(dbName).table(tableName);
-  const primaryKey = Array.isArray(selectedTable.primaryKey)
-    ? selectedTable.primaryKey[0]
-    : selectedTable.primaryKey;
-
-  for (const oldValue of existingValues) {
-    const key = primaryKey || Object.keys(oldValue)[0];
-    const value = oldValue[key];
-    await selectedTable.where({ [key]: value }).delete();
-  }
-
-  await selectedTable.insert(newValues);
-}
-
-export async function deleteData() {
-  const dbName = appState.selectedDatabase.value;
-  const tableName = appState.selectedTable.value;
-  const selectedValues = getSelectedValues();
-
-  const selectedTable = dexieDatabase.select(dbName).table(tableName);
-  const primaryKey = Array.isArray(selectedTable.primaryKey)
-    ? selectedTable.primaryKey[0]
-    : selectedTable.primaryKey;
-
-  const promises = [];
-
-  for (const value of selectedValues) {
-    const key = primaryKey || Object.keys(value)[0];
-    const promise = selectedTable.where({ [key]: value[key] }).delete();
-    promises.push(promise);
-  }
-
-  await Promise.all(promises);
 }

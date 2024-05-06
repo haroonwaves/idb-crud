@@ -1,6 +1,10 @@
 import Pagination from "../../Common/pagination";
 import MultiSelect from "../../Common/multi-select";
 import Tooltip from "../../Common/Tooltip";
+import appState from "../../../AppState/appSate";
+import { onDelete } from "./QueryHealper/on-delete";
+import { onAdd } from "./QueryHealper/on-add";
+import loadData from "./QueryHealper/load-data";
 import AddIcon from "../../../icons/add.svg?component";
 import DeleteIcon from "../../../icons/delete.svg?component";
 import UploadIcon from "../../../icons/upload.svg?component";
@@ -8,20 +12,8 @@ import DownloadIcon from "../../../icons/download.svg?component";
 import SyncIcon from "../../../icons/sync.svg?component";
 
 import controlPanelStyles from "./Styles/control-panel.scss?inline";
-import appState from "../../../AppState/appSate";
 
-const ControlPanel = ({
-  columns,
-  selectedColumns,
-  totalItems,
-  currentPage,
-  itemsPerPage,
-  onPageChange,
-  onColumnsSelect,
-  onAdd,
-  onDelete,
-  syncData,
-}) => {
+const ControlPanel = ({ columns, totalItems }) => {
   const selectedRowsCount = appState.selectedRows.value.length;
 
   return (
@@ -30,7 +22,7 @@ const ControlPanel = ({
       <div className="idb-crud-table-control-panel">
         <div className="idb-crud-table-control-panel-actions">
           <Tooltip text="Refresh table">
-            <SyncIcon onClick={syncData} />
+            <SyncIcon onClick={loadData} />
           </Tooltip>
           <Tooltip text="Add record">
             <AddIcon onClick={onAdd} />
@@ -50,10 +42,14 @@ const ControlPanel = ({
         </div>
         <Pagination
           loading={totalItems === null}
-          currentPage={currentPage}
           totalItems={totalItems}
-          itemsPerPage={itemsPerPage}
-          onPageChange={onPageChange}
+          onPageChange={(page) => {
+            if (appState.selectedRows.value.length > 0) {
+              appState.selectedRows.value = [];
+            }
+            appState.query.value.page = page;
+            loadData();
+          }}
         />
         <MultiSelect
           placeHolder={"Filter columns"}
@@ -61,8 +57,10 @@ const ControlPanel = ({
             id: column.accessorKey,
             value: column.accessorKey,
           }))}
-          selectedColumns={selectedColumns}
-          onSelect={onColumnsSelect}
+          selectedColumns={appState.selectedColumns.value}
+          onSelect={(selectedColumns) =>
+            (appState.selectedColumns.value = selectedColumns)
+          }
         />
       </div>
     </>

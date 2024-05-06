@@ -1,71 +1,25 @@
-import { useCallback, useEffect, useMemo, useState } from "preact/hooks";
+import { useEffect, useMemo, useState } from "preact/hooks";
 import JsonViewer from "react-json-view";
 
-import { replace } from "../../../dexie/dexie";
-
 import editorStyles from "./Styles/editor.scss?inline";
-import createPlaceholderObject from "./create-placeholder-object";
-import { showToast } from "../../../Toast/toast-manager";
+import createPlaceholderObject from "../Utils/create-placeholder-object";
 import getSelectedValues from "../../../Utils/get-selected-values";
 import appState from "../../../AppState/appSate";
+import onEdit from "./QueryHelper/on-edit";
 
-const Editor = ({ addedRow, onAfterEdit }) => {
+const Editor = () => {
   const selectedRows = appState.selectedRows.value;
   const selectedValues = useMemo(() => getSelectedValues(), [selectedRows]);
 
   const [value, setValue] = useState(null);
-  const [mode, setMode] = useState("");
 
   useEffect(() => {
-    if (addedRow) {
-      setValue(addedRow);
-      setMode("Create");
-    } else if (selectedValues.length) {
+    if (selectedValues.length) {
       setValue(selectedValues);
-      setMode("Edit");
     } else {
       setValue(null);
     }
-  }, [addedRow, selectedValues]);
-
-  const onEdit = useCallback(
-    ({ existing_src, updated_src, namespace }) => {
-      const existingRows = [];
-      const updatedRows = [];
-
-      if (mode === "Create") {
-        updatedRows.push(updated_src);
-      } else {
-        for (const index of namespace) {
-          const existingRow = existing_src[index];
-          const updatedRow = updated_src[index];
-          if (existingRow) existingRows.push(existingRow);
-          if (updatedRow) updatedRows.push(updatedRow);
-        }
-      }
-
-      replace(existingRows, updatedRows)
-        .then(() => {
-          showToast({
-            message: mode === "Edit" ? "Update success" : "Create success",
-            type: "success",
-          });
-          if (mode === "Create") {
-            setMode("Edit");
-            setValue([updated_src]);
-          }
-
-          return onAfterEdit();
-        })
-        .catch(() =>
-          showToast({
-            message: mode === "Edit" ? "Update failed" : "Create failed",
-            type: "failure",
-          })
-        );
-    },
-    [mode, setMode]
-  );
+  }, [selectedValues]);
 
   return (
     <>
@@ -74,11 +28,10 @@ const Editor = ({ addedRow, onAfterEdit }) => {
         {value ? (
           <JsonViewer
             theme="rjv-default"
-            name={mode === "Edit" ? "selected_rows" : "new_record"}
+            name={"selected_rows"}
             onAdd={(data) => {
-              if (!data.name && mode === "Edit") {
+              if (!data.name)
                 setValue([...value, createPlaceholderObject(value[0])]);
-              }
             }}
             defaultValue={"placeholder"}
             onEdit={onEdit}
