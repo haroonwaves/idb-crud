@@ -1,9 +1,10 @@
 import appState from "../../../../AppState/appSate";
-import { showToast } from "../../../../Toast/toast-manager";
+import { showToast, updateToast } from "../../../../Toast/toast-manager";
 import dexieDatabase from "../../../../dexie/dexie";
 
 export default async function exportData() {
   try {
+    const id = showToast({ message: "Exporting", type: "loading" });
     const selectedDatabase = appState.selectedDatabase.value;
     const selectedTable = appState.selectedTable.value;
 
@@ -25,9 +26,9 @@ export default async function exportData() {
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
 
-    showToast({ message: "Export success", type: "success" });
+    updateToast({ id, message: "Export success", type: "success" });
   } catch (error) {
-    showToast({ message: "Export failed", type: "failure" });
+    updateToast({ id, message: "Export failed", type: "failure" });
     throw error;
   }
 }
