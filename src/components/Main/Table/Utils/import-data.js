@@ -1,9 +1,11 @@
 import appState from "../../../../AppState/appSate";
-import { showToast } from "../../../../Toast/toast-manager";
+import { showToast, updateToast } from "../../../../Toast/toast-manager";
 import dexieDatabase from "../../../../dexie/dexie";
 import loadData from "../QueryHealper/load-data";
 
 export default async function importData() {
+  const id = showToast({ message: "Importing", type: "loading" });
+
   const fileInput = document.createElement("input");
   fileInput.type = "file";
   fileInput.accept = ".json";
@@ -14,18 +16,19 @@ export default async function importData() {
     if (file) {
       try {
         await uploadDataToIndexedDb(file);
-        showToast({ message: "Import success", type: "success" });
         await loadData(true);
+        updateToast({ id, message: "Import success", type: "success" });
       } catch (error) {
         if (error.name === "DataError") {
-          showToast({
+          updateToast({
+            id,
             message: "Invalid data",
             type: "failure",
           });
           return;
         }
 
-        showToast({ message: "Import failed", type: "failure" });
+        updateToast({ id, message: "Import failed", type: "failure" });
         throw error;
       } finally {
         document.body.removeChild(fileInput);

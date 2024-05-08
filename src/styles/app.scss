@@ -33,7 +33,7 @@
     align-items: center;
   }
 
-  svg:not(.react-json-view svg) {
+  svg:not(.react-json-view svg, .ignore-default-style) {
     background-color: transparent;
     border-radius: 50%;
     cursor: pointer;
