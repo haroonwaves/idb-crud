@@ -50,6 +50,7 @@ export default async function loadData(shouldLoadCount = false) {
     const { primaryKeys, secondaryKeys } = getIndexedColumns();
     if (primaryKeys.length > 0) newColumnNames.push(...primaryKeys);
     if (secondaryKeys.length > 0) newColumnNames.push(...secondaryKeys);
+    newColumnNames.unshift("selection");
     existingColumnNames = newColumnNames;
   } else {
     newColumnNames = calculateColumnNames(newData).flat();
