@@ -5,10 +5,12 @@ import appState from "../../../AppState/appSate";
 import { onDelete } from "./QueryHealper/on-delete";
 import { onAdd } from "./QueryHealper/on-add";
 import loadData from "./QueryHealper/load-data";
+import exportData from "./Utils/export-data";
+import importData from "./Utils/import-data";
 import AddIcon from "../../../icons/add.svg?component";
 import DeleteIcon from "../../../icons/delete.svg?component";
-import UploadIcon from "../../../icons/upload.svg?component";
-import DownloadIcon from "../../../icons/download.svg?component";
+import ExportIcon from "../../../icons/export.svg?component";
+import ImportIcon from "../../../icons/import.svg?component";
 import SyncIcon from "../../../icons/sync.svg?component";
 
 import controlPanelStyles from "./Styles/control-panel.scss?inline";
@@ -24,6 +26,12 @@ const ControlPanel = ({ columns, totalItems }) => {
           <Tooltip text="Refresh table">
             <SyncIcon onClick={loadData} />
           </Tooltip>
+          <Tooltip text="Export">
+            <ExportIcon onClick={exportData} />
+          </Tooltip>
+          <Tooltip text="Import">
+            <ImportIcon onClick={importData} />
+          </Tooltip>
           <Tooltip text="Add record">
             <AddIcon onClick={onAdd} />
           </Tooltip>
@@ -32,12 +40,6 @@ const ControlPanel = ({ columns, totalItems }) => {
               className={`${selectedRowsCount === 0 ? "disabled" : ""}`}
               onClick={selectedRowsCount > 0 ? onDelete : () => {}}
             />
-          </Tooltip>
-          <Tooltip text="Upload">
-            <UploadIcon className="disabled" />
-          </Tooltip>
-          <Tooltip text="Download">
-            <DownloadIcon className="disabled" />
           </Tooltip>
         </div>
         <Pagination
