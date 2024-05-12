@@ -4,10 +4,10 @@ import { createRef } from "preact";
 
 import Main from "./Main/main";
 import Sidebar from "./Sidebar/sidebar";
+import Overlay from "./Common/overlay";
 import CrossIcon from "../icons/cross.svg?component";
 
 import drawerStyles from "./styles/drawer.scss?inline";
-import appState from "../AppState/appSate";
 
 function createOverlay() {
   const overlay = document.createElement("div");
@@ -66,29 +66,32 @@ const Drawer = ({ isOpen, connected, refreshDatabase, closeDrawer }) => {
         ) : null}
 
         {isOpen ? (
-          <PanelGroup direction="horizontal">
-            <>
-              <Panel
-                className="!overflow-y-auto !overflow-x-hidden !text-nowrap"
-                id="idb-crud-side-panel"
-                defaultSize={15}
-                minSize={10}
-                order={1}
-              >
-                <Sidebar
-                  connected={connected}
-                  refreshDatabase={refreshDatabase}
+          <>
+            <Overlay type="app" />
+            <PanelGroup direction="horizontal">
+              <>
+                <Panel
+                  className="!overflow-y-auto !overflow-x-hidden !text-nowrap"
+                  id="idb-crud-side-panel"
+                  defaultSize={15}
+                  minSize={10}
+                  order={1}
+                >
+                  <Sidebar
+                    connected={connected}
+                    refreshDatabase={refreshDatabase}
+                  />
+                </Panel>
+                <PanelResizeHandle
+                  className="idb-crud-panel-resizer"
+                  style={styles.resizeHandler}
                 />
+              </>
+              <Panel id="idb-crud-main-panel" minSize={80} order={2}>
+                <Main />
               </Panel>
-              <PanelResizeHandle
-                className="idb-crud-panel-resizer"
-                style={styles.resizeHandler}
-              />
-            </>
-            <Panel id="idb-crud-main-panel" minSize={80} order={2}>
-              <Main />
-            </Panel>
-          </PanelGroup>
+            </PanelGroup>
+          </>
         ) : null}
       </div>
     </>
