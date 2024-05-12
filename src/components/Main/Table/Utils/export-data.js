@@ -22,8 +22,9 @@ export default async function exportData() {
       .table(selectedTable)
       .toArray();
 
-    const jsonData = JSON.stringify(data, null, 2);
-    const blob = new Blob([jsonData], { type: "application/json" });
+    const jsonStream = createJSONStream(data);
+    const arrayBuffer = await streamToArrayBuffer(jsonStream);
+    const blob = new Blob([arrayBuffer], { type: "application/json" });
     url = URL.createObjectURL(blob);
 
     link.href = url;
@@ -40,4 +41,63 @@ export default async function exportData() {
     URL.revokeObjectURL(url);
     enableUserInteraction("app");
   }
+}
+
+function createJSONStream(data) {
+  const jsonStream = new ReadableStream({
+    start(controller) {
+      const encoder = new TextEncoder();
+      controller.enqueue(encoder.encode("[\n"));
+
+      data.forEach((item, index) => {
+        let jsonString = JSON.stringify(item, null, 2);
+
+        // Add additional indentation to each line except the first and last
+        jsonString = jsonString
+          .split("\n")
+          .map((line) => {
+            return "  " + line;
+          })
+          .join("\n");
+
+        if (index < data.length - 1) {
+          jsonString += ",";
+        }
+
+        jsonString += "\n"; // Add newline after each object
+        controller.enqueue(encoder.encode(jsonString));
+      });
+
+      controller.enqueue(encoder.encode("]"));
+      controller.close();
+    },
+  });
+
+  return jsonStream;
+}
+
+async function streamToArrayBuffer(stream) {
+  const reader = stream.getReader();
+  const chunks = [];
+  let totalLength = 0;
+
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) {
+      break;
+    }
+    chunks.push(value);
+    totalLength += value.length;
+  }
+
+  const arrayBuffer = new ArrayBuffer(totalLength);
+  const uint8Array = new Uint8Array(arrayBuffer);
+  let position = 0;
+
+  for (const chunk of chunks) {
+    uint8Array.set(chunk, position);
+    position += chunk.length;
+  }
+
+  return arrayBuffer;
 }
