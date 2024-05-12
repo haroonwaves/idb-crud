@@ -1,10 +1,14 @@
 import appState from "../../../../AppState/appSate";
 import { showToast, updateToast } from "../../../../Toast/toast-manager";
 import dexieDatabase from "../../../../dexie/dexie";
+import {
+  disableUserInteraction,
+  enableUserInteraction,
+} from "../../../Common/overlay";
 import loadData from "../QueryHealper/load-data";
 
 export default async function importData() {
-  const id = showToast({ message: "Importing", type: "loading" });
+  disableUserInteraction("app");
 
   const fileInput = document.createElement("input");
   fileInput.type = "file";
@@ -12,6 +16,7 @@ export default async function importData() {
   fileInput.style.display = "none";
 
   fileInput.onchange = async (event) => {
+    const id = showToast({ message: "Importing", type: "loading" });
     const file = event.target.files[0];
     if (file) {
       try {
@@ -31,9 +36,15 @@ export default async function importData() {
         updateToast({ id, message: "Import failed", type: "failure" });
         throw error;
       } finally {
-        document.body.removeChild(fileInput);
+        if (document.contains(fileInput)) document.body.removeChild(fileInput);
+        enableUserInteraction("app");
       }
     }
+  };
+
+  fileInput.oncancel = () => {
+    if (document.contains(fileInput)) document.body.removeChild(fileInput);
+    enableUserInteraction("app");
   };
 
   document.body.appendChild(fileInput);

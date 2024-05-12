@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "preact/hooks";
+import { useCallback, useEffect, useState } from "preact/hooks";
 import dexieDatabase from "./dexie/dexie";
 import Drawer from "./components/drawer";
 import ToastContainer from "./components/Common/toast-container";
