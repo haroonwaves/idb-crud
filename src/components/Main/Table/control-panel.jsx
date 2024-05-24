@@ -26,11 +26,11 @@ const ControlPanel = ({ columns, totalItems }) => {
           <Tooltip text="Refresh table">
             <SyncIcon onClick={loadData} />
           </Tooltip>
-          <Tooltip text="Import">
-            <ImportIcon onClick={importData} />
-          </Tooltip>
           <Tooltip text="Export">
             <ExportIcon onClick={exportData} />
+          </Tooltip>
+          <Tooltip text="Import">
+            <ImportIcon onClick={importData} />
           </Tooltip>
           <Tooltip text="Add record">
             <AddIcon onClick={onAdd} />
