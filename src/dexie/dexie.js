@@ -43,8 +43,8 @@ export function getIndexedColumns() {
 
   return {
     primaryKeys: Array.isArray(primaryKey)
-      ? [...primaryKey].flat()
-      : [primaryKey],
+      ? [...primaryKey].flat().filter(Boolean)
+      : [primaryKey].filter(Boolean),
     secondaryKeys: secondaryKeys.flat().filter(Boolean),
   };
 }
