@@ -1,3 +1,6 @@
+![idb-crud screenshot](https://github.com/usmanharoon98/idb-crud/assets/84678818/3ec3b76e-f7c2-43b4-9b32-60e22fda1a1d)
+
+
 # idb-crud - IndexedDB Manager
 
 This intuitive Chrome extension for IndexedDB provides an easy-to-use drawer interface, enabling users to effortlessly interact with any website's IndexedDB. It offers efficient and secure access to IndexedDB, making it an ideal tool for developers who need quick database interactions. Simplify your web-based database tasks with IDB CRUD – your one-stop solution for on-the-go IndexedDB management.
