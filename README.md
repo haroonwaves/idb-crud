@@ -4,11 +4,22 @@ This intuitive Chrome extension for IndexedDB provides an easy-to-use drawer int
 
 # Key Features
 
-1. Table format viewing
-2. Comprehensive create, read, update and delete operations
-3. Advanced sorting and filtering
-4. Customizable column visibility
-5. Data export and import
+- Table format viewing
+- Comprehensive create, read, update and delete operations
+- Advanced sorting and filtering
+- Customizable column visibility
+- Data export and import
+
+# Build with
+
+- [Preact](https://preactjs.com/)
+- [CRXJS](https://crxjs.dev/vite-plugin)
+- [Dexie](https://dexie.org/)
+- [Tailwind](https://tailwindcss.com/)
+- [@preact/signals](https://preactjs.com/guide/v10/signals/)
+- [TanStack Table](https://tanstack.com/table/)
+- [react-json-view](https://github.com/mac-s-g/react-json-view)
+- [react-resizable-panels](https://github.com/bvaughn/react-resizable-panels)
 
 # Installation
 
@@ -24,9 +35,9 @@ To install the idb-crud IndexedDB Manager, follow these steps:
 
 Fork the Project
 
-1. Create your Feature Branch (git checkout -b feature/AmazingFeature)
-2. Commit your Changes (git commit -m 'Add some AmazingFeature')
-3. Push to the Branch (git push origin feature/AmazingFeature)
+1. Create your Feature Branch (git checkout -b feature/YOUR-BRANCH-NAME)
+2. Commit your Changes (git commit -m 'Add FEATURE-NAME')
+3. Push to the Branch (git push origin feature/YOUR-BRANCH-NAME)
 4. Open a Pull Request
 
 # License
