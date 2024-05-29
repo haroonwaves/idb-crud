@@ -38,9 +38,9 @@ To install the idb-crud IndexedDB Manager, follow these steps:
 
 Fork the Project
 
-1. Create your Feature Branch (git checkout -b feature/YOUR-BRANCH-NAME)
-2. Commit your Changes (git commit -m 'Add FEATURE-NAME')
-3. Push to the Branch (git push origin feature/YOUR-BRANCH-NAME)
+1. Create your Feature Branch `git checkout -b feature/YOUR-BRANCH-NAME`
+2. Commit your Changes `git commit -m 'Add FEATURE-NAME'`
+3. Push to the Branch `git push origin feature/YOUR-BRANCH-NAME`
 4. Open a Pull Request
 
 # License
