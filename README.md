@@ -1,4 +1,4 @@
-![idb-crud screenshot](https://github.com/usmanharoon98/idb-crud/assets/84678818/c2dbb388-8fa8-461e-8711-d5d4cb4ace53)
+![idb-crud](https://github.com/usmanharoon98/idb-crud/assets/84678818/43257921-d28a-498f-9840-9f18d86d0273)
 
 
 # idb-crud - IndexedDB Manager
