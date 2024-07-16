@@ -35,12 +35,12 @@ const Database = ({ dbName }) => {
     <>
       <style>{databaseStyles}</style>
 
-      <div className="idb-crud-database">
+      <div className="idb-crud-database pt-[3px]">
         <div
           className="idb-crud-db-name"
           style={{ display: "flex", alignItems: "center" }}
         >
-          <span>
+          <span className="mr-[3px]">
             {openDb ? (
               <DropdownIcon onClick={() => setOpenDb(false)} />
             ) : (

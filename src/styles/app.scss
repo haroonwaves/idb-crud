@@ -39,13 +39,13 @@
     cursor: pointer;
 
     path {
-      fill: $secondary-medium;
+      stroke: $secondary-medium;
     }
 
     &.disabled {
       cursor: auto;
       path {
-        fill: $secondary-light;
+        stroke: $secondary-light;
       }
     }
 
@@ -53,7 +53,7 @@
       background-color: $primary-lighter;
       padding: 2px;
       path {
-        fill: $secondary-dark;
+        stroke: $secondary-dark;
       }
     }
   }
