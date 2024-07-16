@@ -14,9 +14,9 @@ const Sidebar = ({ connected, refreshDatabase }) => {
 
   return (
     <>
-      <div className="flex justify-between items-center px-1 pt-1">
+      <div className="flex justify-between items-center px-1 pt-2">
         <div className="flex items-center">
-          <span>
+          <span className="mr-[3px]">
             {openDbs ? (
               <DropdownIcon onClick={() => setOpenDbs(false)} />
             ) : (

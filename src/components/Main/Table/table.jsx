@@ -12,6 +12,7 @@ import { getKeyType } from "./Utils/util";
 import { onSort } from "./QueryHealper/on-sort";
 import loadData from "./QueryHealper/load-data";
 import { onFilter } from "./QueryHealper/on-filter";
+import InfoIcon from "../../../icons/info.svg?component";
 
 import tableStyles from "./Styles/table.scss?inline";
 
@@ -105,12 +106,9 @@ function IdbCrudTable({ selectedDatabase, selectedTable }) {
                               <div className="idb-crud-table-head-name">
                                 {header.id === "selection" ||
                                 !keyType ? null : (
-                                  <div
-                                    className="text-secondary-medium"
-                                    title={keyType}
-                                  >
-                                    &#9432;
-                                  </div>
+                                  <span title={keyType}>
+                                    <InfoIcon className="ignore-default-style" />
+                                  </span>
                                 )}
 
                                 {flexRender(
