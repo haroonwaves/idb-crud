@@ -40,6 +40,7 @@
     &-head {
       background-color: transparent;
       color: #333 !important;
+      font-weight: 500;
       text-align: center;
       padding: 10px 8px;
 
@@ -50,14 +51,19 @@
 
         &-sort {
           display: flex;
-          gap: 1px;
           cursor: pointer;
 
           &-icon {
-            color: lightgray !important;
+            margin-right: -4px;
+            path {
+              stroke: $secondary-medium;
+            }
 
             &.active {
-              color: $secondary-darker !important;
+              path {
+                stroke: $secondary-dark;
+                stroke-width: 1.3;
+              }
             }
           }
         }

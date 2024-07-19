@@ -13,6 +13,8 @@ import { onSort } from "./QueryHealper/on-sort";
 import loadData from "./QueryHealper/load-data";
 import { onFilter } from "./QueryHealper/on-filter";
 import InfoIcon from "../../../icons/info.svg?component";
+import ArrowUpAltIcon from "../../../icons/arrow-up-alt.svg?component";
+import ArrowDownAltIcon from "../../../icons/arrow-down-alt.svg?component";
 
 import tableStyles from "./Styles/table.scss?inline";
 
@@ -120,20 +122,16 @@ function IdbCrudTable({ selectedDatabase, selectedTable }) {
                                     className="idb-crud-table-head-name-sort"
                                     onClick={() => onSort(header.id)}
                                   >
-                                    <div
-                                      className={`idb-crud-table-head-name-sort-icon ${
+                                    <ArrowDownAltIcon
+                                      className={`idb-crud-table-head-name-sort-icon ignore-default-style ${
                                         sortDirection === "desc" ? "active" : ""
                                       }`}
-                                    >
-                                      ↓
-                                    </div>
-                                    <div
-                                      className={`idb-crud-table-head-name-sort-icon ${
+                                    />
+                                    <ArrowUpAltIcon
+                                      className={`idb-crud-table-head-name-sort-icon ignore-default-style ${
                                         sortDirection === "asc" ? "active" : ""
                                       }`}
-                                    >
-                                      ↑
-                                    </div>
+                                    />
                                   </div>
                                 )}
                               </div>
