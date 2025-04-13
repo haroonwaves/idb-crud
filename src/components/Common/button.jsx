@@ -7,7 +7,7 @@ export default function Button({ text, onClick, isDisabled, type }) {
 
   return (
     <button
-      className={`${colors} inline-block rounded px-4 py-1 focus:outline-none focus:ring active:text-stone-500`}
+      className={`${colors} inline-block rounded-sm px-4 py-1 focus:outline-hidden focus:ring-3 active:text-stone-500`}
       type="button"
       onClick={onClick}
       onMouseDown={(e) => e.preventDefault()}

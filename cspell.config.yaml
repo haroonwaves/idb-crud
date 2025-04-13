@@ -1,0 +1,21 @@
+version: '0.2'
+language: en
+allowCompoundWords: true
+useGitignore: true
+gitignoreRoot: '.' # Prevent searching for .gitignore files past root
+
+ignorePaths:
+  - '**/*.{png,jpg,jpeg,gif,svg}'
+  - '**/*.min.*'
+
+words:
+  - crxjs
+  - sonarjs
+  - dexie
+
+dictionaries:
+  - css
+  - html
+  - node
+  - npm
+  - typescript

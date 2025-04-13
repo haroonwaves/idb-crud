@@ -192,7 +192,7 @@ function IdbCrudTable({ selectedDatabase, selectedTable }) {
           </table>
         )}
         {appState.tableData.value.length === 0 && (
-          <div className="idb-crud-text-center !h-1/2">No content</div>
+          <div className="idb-crud-text-center h-1/2!">No content</div>
         )}
       </div>
     </>

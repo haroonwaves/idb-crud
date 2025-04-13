@@ -1,3 +1,32 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@theme {
+  --color-primary-lighter: #dbeafe;
+  --color-primary-light: #bfdbfe;
+  --color-primary-medium: #60a5fa;
+  --color-primary-dark: #2563eb;
+  --color-primary-darker: #1e40af;
+  --color-secondary-lighter: #f3f4f6;
+  --color-secondary-light: #e5e7eb;
+  --color-secondary-medium: #9ca3af;
+  --color-secondary-dark: #4b5563;
+  --color-secondary-darker: #1f2937;
+}
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
