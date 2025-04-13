@@ -19,7 +19,7 @@ export default [
 		],
 	},
 	{
-		files: ['**/*.js'],
+		files: ['**/*.js', '**/*.jsx'],
 		languageOptions: {
 			ecmaVersion: 2024,
 		},

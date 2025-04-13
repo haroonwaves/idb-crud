@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'preact/hooks';
-import dexieDatabase from './dexie/dexie';
-import Drawer from './components/drawer';
-import ToastContainer from './components/Common/toast-container';
+import dexieDatabase from './dexie/dexie.js';
+import Drawer from './components/drawer.jsx';
+import ToastContainer from './components/Common/toast-container.jsx';
 import chromeStorage from './PersistentStorage/ChromeStorage/store.js';
 import appState from './AppState/appSate.js';
 

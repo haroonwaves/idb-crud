@@ -9,7 +9,7 @@ export default defineConfig({
 	plugins: [svgr(), preact(), crx({ manifest })],
 	resolve: {
 		alias: {
-			'@': '/src',
+			'@': process.cwd(),
 		},
 	},
 });
