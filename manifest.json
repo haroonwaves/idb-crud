@@ -14,11 +14,11 @@
 	"permissions": ["activeTab", "storage"],
 	"content_scripts": [
 		{
-			"js": ["src/content.jsx"],
+			"js": ["src/Content.tsx"],
 			"matches": ["<all_urls>"]
 		}
 	],
 	"background": {
-		"service_worker": "src/background.js"
+		"service_worker": "src/background.ts"
 	}
 }
