@@ -1,3 +1,4 @@
+import { Panels } from '@/src/components/panels/Panels';
 import { Drawer } from '@/src/components/ui/Drawer';
 import { useState } from 'preact/hooks';
 
@@ -14,7 +15,7 @@ export function App() {
 	return (
 		<div id="idb-crud-app">
 			<Drawer open={openDrawer} onClose={() => setOpenDrawer(false)}>
-				<div className="h-full w-full">Hello</div>
+				<Panels />
 			</Drawer>
 		</div>
 	);

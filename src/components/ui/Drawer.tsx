@@ -1,4 +1,27 @@
-import React from 'preact/compat';
+import React, { createRef, useEffect } from 'preact/compat';
+import { X } from 'lucide-react';
+
+function createOverlay() {
+	const overlay = document.createElement('div');
+	overlay.style.position = 'fixed';
+	overlay.style.top = '0';
+	overlay.style.left = '0';
+	overlay.style.width = '100%';
+	overlay.style.height = '100%';
+	overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)'; // Semi-transparent black overlay
+	overlay.style.zIndex = '9999';
+	overlay.id = 'idb-crud-overlay';
+
+	document.body.appendChild(overlay);
+	document.body.classList.add('idb-crud-drawer-open');
+}
+
+function removeOverlay() {
+	const overlay = document.getElementById('idb-crud-overlay');
+	if (overlay?.parentNode) overlay.parentNode.removeChild(overlay);
+
+	document.body.classList.remove('idb-crud-drawer-open');
+}
 
 export function Drawer({
 	children,
@@ -9,30 +32,36 @@ export function Drawer({
 	open: boolean;
 	onClose: () => void;
 }) {
+	const idbCrudDrawerRef = createRef();
+
+	useEffect(() => {
+		if (open) {
+			idbCrudDrawerRef.current.focus();
+			setTimeout(() => {
+				createOverlay();
+			}, 200);
+		} else {
+			idbCrudDrawerRef.current.blur();
+			setTimeout(() => {
+				removeOverlay();
+			}, 200);
+		}
+	}, [open]);
+
 	return (
 		<div
+			ref={idbCrudDrawerRef}
 			className={`fixed top-0 right-0 h-full ${
-				open ? 'w-[90%]' : 'w-0'
+				open ? 'w-[95%]' : 'w-0'
 			} transform bg-white shadow-lg transition-all duration-500 ease-in-out`}
 		>
 			<button
 				onClick={onClose}
-				className="absolute top-2 -left-8 flex h-8 w-8 items-center justify-center rounded-full bg-white shadow-md"
+				className={`absolute top-2 -left-8 flex h-8 w-8 items-center justify-center rounded-full bg-white shadow-md ${
+					open ? 'opacity-100' : 'opacity-0'
+				}`}
 			>
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					width="24"
-					height="24"
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="currentColor"
-					stroke-width="2"
-					stroke-linecap="round"
-					stroke-linejoin="round"
-				>
-					<path d="M18 6 6 18" />
-					<path d="m6 6 12 12" />
-				</svg>
+				<X size={20} />
 			</button>
 			{children}
 		</div>
