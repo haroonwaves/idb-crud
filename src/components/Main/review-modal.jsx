@@ -42,7 +42,7 @@ const ReviewModal = () => {
       onClose={() => setShowReviewModal(false)}
       closeOnBlur={false}
       size={"medium"}
-      backgroundEffect={"shadow"}
+      backgroundEffect={"shadow-sm"}
       header={"We'd Love Your Feedback!"}
       hideFooter
     >

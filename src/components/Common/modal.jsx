@@ -35,7 +35,7 @@ export default function Modal({
 
   if (!show) return null;
 
-  const addBackgroundBlur = backgroundEffect === "blur";
+  const addBackgroundBlur = backgroundEffect === "blur-sm";
 
   const maxWidth = modalSize[size];
 
@@ -45,7 +45,7 @@ export default function Modal({
         <div
           width={"100%"}
           className={`fixed inset-0 bg-black bg-opacity-30 z-40 ${
-            addBackgroundBlur ? "backdrop-filter backdrop-blur-sm" : ""
+            addBackgroundBlur ? "backdrop-filter backdrop-blur-xs" : ""
           }`}
         ></div>
       )}
@@ -60,7 +60,7 @@ export default function Modal({
         }}
       >
         <div
-          className={`relative p-4 max-w-2xl max-h-full focus:outline-none focus:ring-2 focus:ring-transparent focus:border-transparent`}
+          className={`relative p-4 max-w-2xl max-h-full focus:outline-hidden focus:ring-2 focus:ring-transparent focus:border-transparent`}
           ref={modalRef}
           tabIndex={-1}
           onBlur={onBlur}
