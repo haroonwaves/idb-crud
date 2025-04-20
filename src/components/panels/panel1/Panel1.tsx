@@ -32,7 +32,7 @@ export function Panel1() {
 			</button>
 			{open &&
 				(dbNames.length > 0 ? (
-					<div className="ml-4 flex flex-col border-l">
+					<div className="ml-4 flex flex-col">
 						{dbNames.map((dbName) => (
 							<Database key={dbName} dbName={dbName} />
 						))}

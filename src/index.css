@@ -14,7 +14,7 @@
 }
 
 #idb-crud-app {
-	position: absolute;
+	position: relative;
 	z-index: 99999999999999999999999 !important;
 
 	font-family: 'Archivo', apple-system, BlinkMacSystemFont, sans-serif, 'Segoe UI' !important;
@@ -51,6 +51,7 @@
 	--color-accent-foreground: var(--accent-foreground);
 	--color-destructive: var(--destructive);
 	--color-border: var(--border);
+	--tw-border-style: solid;
 	--color-input: var(--input);
 	--color-ring: var(--ring);
 	--color-chart-1: var(--chart-1);
