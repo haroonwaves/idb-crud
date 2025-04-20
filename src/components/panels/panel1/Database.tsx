@@ -41,7 +41,7 @@ export function Database({ dbName }: DatabaseProps) {
 				<span className="overflow-hidden text-ellipsis whitespace-nowrap">{dbName}</span>
 			</button>
 			{open && (
-				<div className="ml-6 flex flex-col border-l">
+				<div className="ml-6 flex flex-col">
 					{tables.map((table) => (
 						<Table key={table} table={table} dbName={dbName} />
 					))}

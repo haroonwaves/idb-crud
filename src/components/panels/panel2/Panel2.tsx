@@ -1,4 +1,6 @@
 import { signals } from '@/src/state/signals';
+import { DataTable } from '@/src/components/dataTable/DataTable';
+import { columns, payments } from '@/src/components/dataTable/data';
 
 export function Panel2() {
 	const selectedDatabase = signals.selectedDatabase.value;
@@ -12,5 +14,9 @@ export function Panel2() {
 		);
 	}
 
-	return <div className="p-2">Panel2</div>;
+	return (
+		<div className="p-4">
+			<DataTable columns={columns} data={payments} />
+		</div>
+	);
 }
