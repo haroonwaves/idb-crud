@@ -15,7 +15,7 @@ interface ColumnToggleProps<TData> {
 	table: Table<TData>;
 }
 
-export function ColumnToggle<TData>({ table }: ColumnToggleProps<TData>) {
+export function ColumnToggle<TData>({ table }: Readonly<ColumnToggleProps<TData>>) {
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild triggerId={`column-toggle`}>

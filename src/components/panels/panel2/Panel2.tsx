@@ -27,10 +27,10 @@ const selectCheckboxColumn = {
 	enableHiding: false,
 };
 
-function constructColumns(tableData: any[]) {
+function constructColumns(tableData: object[]) {
 	const uniqueColumns = new Set<string>();
 
-	tableData.forEach((row) => {
+	tableData.forEach((row: object) => {
 		Object.keys(row).forEach((key) => {
 			uniqueColumns.add(key);
 		});
@@ -59,7 +59,7 @@ export function Panel2() {
 
 	const computedData = computed(() => {
 		const tableData = state.database.table.data.rows.value;
-		const columns = constructColumns(tableData);
+		const columns = constructColumns(tableData as object[]);
 
 		return { columns, rows: tableData };
 	});

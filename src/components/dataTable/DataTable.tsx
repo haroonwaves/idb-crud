@@ -33,7 +33,7 @@ export function DataTable<TData, TValue>({
 	columns,
 	data,
 	totalRows,
-}: DataTableProps<TData, TValue>) {
+}: Readonly<DataTableProps<TData, TValue>>) {
 	const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
 	const [rowSelection, setRowSelection] = React.useState({});
 

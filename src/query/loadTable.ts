@@ -55,17 +55,17 @@ async function loadTableData() {
 }
 
 state.database.table.selected.subscribe((table) => {
-	if (table) loadTableData();
+	if (table) void loadTableData();
 });
 
 state.database.table.query.sort.subscribe((sort) => {
-	if (sort) loadTableData();
+	if (sort) void loadTableData();
 });
 
 state.database.table.query.filter.subscribe((filter) => {
-	if (filter) loadTableData();
+	if (filter) void loadTableData();
 });
 
 state.database.table.query.pagination.subscribe((pagination) => {
-	if (pagination) loadTableData();
+	if (pagination) void loadTableData();
 });
