@@ -18,7 +18,7 @@ export function Panel1() {
 	return (
 		<div className="select-none">
 			<button
-				className={`flex w-full items-center ${open ? 'opacity-50' : ''}`}
+				className={`flex w-full items-center ${open ? 'text-gray-400' : ''}`}
 				onClick={() => setOpen(!open)}
 			>
 				<div className="mr-1 h-5 w-5 transition-transform duration-200">
