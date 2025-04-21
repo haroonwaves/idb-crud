@@ -5,6 +5,10 @@ import sonarjs from 'eslint-plugin-sonarjs';
 import cspellPlugin from '@cspell/eslint-plugin';
 import jsx11y from 'eslint-plugin-jsx-a11y';
 import importPlugin from 'eslint-plugin-import';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export default [
 	{
@@ -16,6 +20,7 @@ export default [
 			'node_modules/**/*',
 			'dist/**/*',
 			'coverage/**/*',
+			'src_old/**/*',
 		],
 	},
 	{
@@ -30,8 +35,8 @@ export default [
 			ecmaVersion: 2024,
 			parser: tseslintParser,
 			parserOptions: {
-				project: ['./tsconfig.json', './tsconfig.node.json'],
-				tsconfigRootDir: import.meta.dirname,
+				project: ['./tsconfig.app.json', './tsconfig.node.json'],
+				tsconfigRootDir: __dirname,
 			},
 		},
 		plugins: {

@@ -8,7 +8,7 @@ export function Panel1() {
 	const [isConnected, setIsConnected] = useState(false);
 
 	useEffect(() => {
-		dexieDb.connect().then(() => setIsConnected(true));
+		void dexieDb.connect().then(() => setIsConnected(true));
 	}, []);
 
 	if (!isConnected) return <div className="text-muted-foreground ml-6 text-sm">Connecting...</div>;

@@ -12,13 +12,13 @@ function createOverlay() {
 	overlay.style.zIndex = '9999';
 	overlay.id = 'idb-crud-overlay';
 
-	document.body.appendChild(overlay);
+	document.body.append(overlay);
 	document.body.classList.add('idb-crud-drawer-open');
 }
 
 function removeOverlay() {
 	const overlay = document.getElementById('idb-crud-overlay');
-	if (overlay?.parentNode) overlay.parentNode.removeChild(overlay);
+	if (overlay?.parentNode) overlay.parentNode.removeChild(overlay); // eslint-disable-line unicorn/prefer-dom-node-remove
 
 	document.body.classList.remove('idb-crud-drawer-open');
 }
@@ -27,14 +27,15 @@ export function Drawer({
 	children,
 	open,
 	onClose,
-}: {
+}: Readonly<{
 	children: React.ReactNode;
 	open: boolean;
 	onClose: () => void;
-}) {
+}>) {
 	const idbCrudDrawerRef = createRef();
 
 	useEffect(() => {
+		// eslint-disable-next-line sonarjs/no-selector-parameter
 		if (open) {
 			idbCrudDrawerRef.current.focus();
 			setTimeout(() => {

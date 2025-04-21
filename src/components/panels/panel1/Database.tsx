@@ -7,7 +7,7 @@ type DatabaseProps = {
 	dbName: string;
 };
 
-export function Database({ dbName }: DatabaseProps) {
+export function Database({ dbName }: Readonly<DatabaseProps>) {
 	const [open, setOpen] = useState(false);
 	const [tables, setTables] = useState<string[]>([]);
 
@@ -20,7 +20,7 @@ export function Database({ dbName }: DatabaseProps) {
 	}
 
 	useEffect(() => {
-		openDatabase();
+		void openDatabase();
 	}, [dbName]);
 
 	return (

@@ -20,7 +20,7 @@ export function ColumnHeader<TData, TValue>({
 	column,
 	title,
 	className,
-}: ColumnHeaderProps<TData, TValue>) {
+}: Readonly<ColumnHeaderProps<TData, TValue>>) {
 	if (!column.getCanSort()) {
 		return <div className={cn(className)}>{title}</div>;
 	}
@@ -31,13 +31,12 @@ export function ColumnHeader<TData, TValue>({
 				<DropdownMenuTrigger asChild triggerId={`column-${column.id}`}>
 					<Button variant="ghost" size="sm" className="data-[state=open]:bg-accent -ml-3 h-8">
 						<span>{title}</span>
-						{column.getIsSorted() === 'desc' ? (
-							<ArrowDown />
-						) : column.getIsSorted() === 'asc' ? (
-							<ArrowUp />
-						) : (
-							<ChevronsUpDown />
-						)}
+						{(() => {
+							const sortDirection = column.getIsSorted();
+							if (sortDirection === 'desc') return <ArrowDown />;
+							else if (sortDirection === 'asc') return <ArrowUp />;
+							else return <ChevronsUpDown />;
+						})()}
 					</Button>
 				</DropdownMenuTrigger>
 				<DropdownMenuContent align="start" triggerId={`column-${column.id}`}>

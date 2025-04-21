@@ -5,7 +5,7 @@ type TableProps = {
 	dbName: string;
 };
 
-export function Table({ table, dbName }: TableProps) {
+export function Table({ table, dbName }: Readonly<TableProps>) {
 	const selectedDatabase = state.database.selected.value;
 	const selectedTable = state.database.table.selected.value;
 

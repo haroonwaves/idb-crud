@@ -4,11 +4,13 @@
 	"version": "2.0",
 	"type": "module",
 	"scripts": {
-		"start": "vite",
+		"dev": "vite",
 		"build": "vite build",
 		"preview": "vite preview",
-		"lint": "eslint . --ext .ts,.tsx",
-		"lint:fix": "eslint . --ext .ts,.tsx --fix"
+		"format": "prettier --write \"src/**/*.{ts,tsx,css}\"",
+		"lint:fix": "eslint . --ext .ts,.tsx --fix",
+		"typecheck": "tsc --noEmit --project tsconfig.app.json && tsc --noEmit --project tsconfig.node.json",
+		"validate": "npm run typecheck && eslint . && prettier --check \"src/**/*.{ts,tsx,css}\""
 	},
 	"dependencies": {
 		"@preact/signals": "^1.2.3",
