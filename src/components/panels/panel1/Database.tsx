@@ -26,8 +26,8 @@ export function Database({ dbName }: DatabaseProps) {
 	return (
 		<>
 			<button
-				className={`hover:bg-accent flex w-full items-center rounded-md p-1 ${
-					open ? 'opacity-60' : ''
+				className={`hover:bg-accent/60 flex w-full items-center rounded-md p-1 ${
+					open ? 'text-gray-400' : ''
 				}`}
 				onClick={() => setOpen(!open)}
 			>
