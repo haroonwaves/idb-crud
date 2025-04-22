@@ -4,6 +4,7 @@ import {
 	flexRender,
 	getCoreRowModel,
 	PaginationState,
+	RowSelectionState,
 	SortingState,
 	Updater,
 	useReactTable,
@@ -35,27 +36,33 @@ export function DataTable<TData, TValue>({
 	totalRows,
 }: Readonly<DataTableProps<TData, TValue>>) {
 	const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
-	const [rowSelection, setRowSelection] = React.useState({});
 
-	const sorting = state.database.table.query.sort.value;
-	const columnFilters = state.database.table.query.filter.value;
-	const pagination = state.database.table.query.pagination.value;
+	const sorting = state.dataTable.query.sort.value;
+	const columnFilters = state.dataTable.query.filter.value;
+	const pagination = state.dataTable.query.pagination.value;
+	const rowSelection = state.dataTable.selectedRows.value;
 
 	function handleSorting(updaterOrValue: Updater<SortingState>) {
 		const value = typeof updaterOrValue === 'function' ? updaterOrValue(sorting) : updaterOrValue;
-		state.database.table.query.sort.value = value;
+		state.dataTable.query.sort.value = value;
 	}
 
 	function handleColumnFilters(updaterOrValue: Updater<ColumnFiltersState>) {
 		const value =
 			typeof updaterOrValue === 'function' ? updaterOrValue(columnFilters) : updaterOrValue;
-		state.database.table.query.filter.value = value;
+		state.dataTable.query.filter.value = value;
 	}
 
 	function handlePagination(updaterOrValue: Updater<PaginationState>) {
 		const value =
 			typeof updaterOrValue === 'function' ? updaterOrValue(pagination) : updaterOrValue;
-		state.database.table.query.pagination.value = value;
+		state.dataTable.query.pagination.value = value;
+	}
+
+	function handleRowSelection(updaterOrValue: Updater<RowSelectionState>) {
+		const value =
+			typeof updaterOrValue === 'function' ? updaterOrValue(rowSelection) : updaterOrValue;
+		state.dataTable.selectedRows.value = value;
 	}
 
 	const table = useReactTable({
@@ -68,7 +75,7 @@ export function DataTable<TData, TValue>({
 
 		getCoreRowModel: getCoreRowModel(),
 		onColumnVisibilityChange: setColumnVisibility,
-		onRowSelectionChange: setRowSelection,
+		onRowSelectionChange: handleRowSelection,
 		onSortingChange: handleSorting,
 		onColumnFiltersChange: handleColumnFilters,
 		onPaginationChange: handlePagination,
@@ -86,7 +93,7 @@ export function DataTable<TData, TValue>({
 
 	return (
 		<>
-			<div className="flex items-center py-4">
+			<div className="flex items-center pb-4">
 				<Input
 					placeholder="Filter threadId..."
 					value={(table.getColumn('threadId')?.getFilterValue() as string) ?? ''}
