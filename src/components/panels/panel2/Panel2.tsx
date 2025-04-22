@@ -53,13 +53,13 @@ function constructColumns(tableData: object[]) {
 
 export function Panel2() {
 	const selectedDatabase = state.database.selected.value;
-	const selectedTabel = state.database.table.selected.value;
+	const selectedTabel = state.database.table.value;
 
-	const totalRows = state.database.table.data.total.value;
+	const totalRows = state.dataTable.totalRows.value;
 
 	const computedData = computed(() => {
-		const tableData = state.database.table.data.rows.value;
-		const columns = constructColumns(tableData as object[]);
+		const tableData = state.dataTable.rows.value;
+		const columns = constructColumns(tableData);
 
 		return { columns, rows: tableData };
 	});
@@ -75,9 +75,5 @@ export function Panel2() {
 		);
 	}
 
-	return (
-		<div className="p-4">
-			<DataTable columns={columns} data={rows} totalRows={totalRows} />
-		</div>
-	);
+	return <DataTable columns={columns} data={rows} totalRows={totalRows} />;
 }

@@ -1,7 +1,7 @@
 import { Panels } from '@/src/components/panels/Panels';
 import { Drawer } from '@/src/components/ui/Drawer';
 import { useState } from 'preact/hooks';
-import '@/src/query/loadTable';
+import '@/src/state/subscribers';
 
 export function App() {
 	const [openDrawer, setOpenDrawer] = useState(false);

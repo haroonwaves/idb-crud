@@ -7,7 +7,7 @@ type TableProps = {
 
 export function Table({ table, dbName }: Readonly<TableProps>) {
 	const selectedDatabase = state.database.selected.value;
-	const selectedTable = state.database.table.selected.value;
+	const selectedTable = state.database.table.value;
 
 	const isSelected = selectedTable === table && selectedDatabase === dbName;
 
@@ -19,7 +19,7 @@ export function Table({ table, dbName }: Readonly<TableProps>) {
 			key={table}
 			onClick={() => {
 				state.database.selected.value = dbName;
-				state.database.table.selected.value = table;
+				state.database.table.value = table;
 			}}
 		>
 			{table}
