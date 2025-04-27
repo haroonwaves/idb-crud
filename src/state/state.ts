@@ -7,7 +7,7 @@ import {
 } from '@tanstack/react-table';
 
 const database = {
-	type: signal('indexedDb'),
+	type: signal(''),
 	selected: signal(''),
 	table: signal(''),
 };

@@ -124,7 +124,7 @@
 			async function initializeDatabase() {
 				try {
 					const db = await openDatabase();
-					// await insertMessages(db, 100, 100);
+					// await insertMessages(db, 1000000, 10000);
 					document.getElementById('status').textContent = 'Database populated successfully!';
 				} catch (error) {
 					console.error('Error:', error);
