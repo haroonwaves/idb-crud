@@ -19,10 +19,11 @@ import {
 	TableRow,
 } from '@/src/components/ui/Table';
 import React from 'preact/compat';
-import { Input } from '@/src/components/ui/Input';
 import { Pagination } from '@/src/components/dataTable/Pagination';
 import { ColumnToggle } from '@/src/components/dataTable/ColumnToggle';
 import { state } from '@/src/state/state';
+import { FilterBy } from '@/src/components/dataTable/FilterBy';
+import { ActionButtons } from '@/src/components/dataTable/ActionButtons';
 
 interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[];
@@ -93,15 +94,9 @@ export function DataTable<TData, TValue>({
 
 	return (
 		<>
-			<div className="flex items-center pb-4">
-				<Input
-					placeholder="Filter threadId..."
-					value={(table.getColumn('threadId')?.getFilterValue() as string) ?? ''}
-					onChange={(event) =>
-						table.getColumn('threadId')?.setFilterValue((event.target as HTMLInputElement).value)
-					}
-					className="max-w-sm"
-				/>
+			<div className="flex items-center justify-between pb-4">
+				<FilterBy table={table} columns={columns.slice(1)} />
+				<ActionButtons />
 				<ColumnToggle table={table} />
 			</div>
 			<div className="rounded-md border">

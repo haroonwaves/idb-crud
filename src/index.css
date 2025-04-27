@@ -6,7 +6,7 @@
 @custom-variant dark (&:is(.dark *));
 
 :host {
-	all: initial;
+	all: initial !important;
 }
 
 :host * {

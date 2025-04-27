@@ -1,45 +1,79 @@
 import { Database } from '@/src/components/panels/panel1/Database';
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from '@/src/components/ui/Select';
 import { dexieDb } from '@/src/databases/indexedDb/dexie';
-import { ChevronRight } from 'lucide-react';
+import { state } from '@/src/state/state';
 import { useEffect, useState } from 'preact/hooks';
 
+const dbTypes = [
+	{
+		label: 'IndexedDB',
+		value: 'indexedDb',
+	},
+	{
+		label: 'LocalStorage',
+		value: 'localStorage',
+	},
+	{
+		label: 'SessionStorage',
+		value: 'sessionStorage',
+	},
+];
+
+function getDbNames() {
+	if (state.database.type.value === 'indexedDb') return dexieDb.dbNames();
+	if (state.database.type.value === 'localStorage') return ['localstorage'];
+	if (state.database.type.value === 'sessionStorage') return ['sessionstorage'];
+	return [];
+}
+
 export function Panel1() {
-	const [open, setOpen] = useState(true);
 	const [isConnected, setIsConnected] = useState(false);
+	const selectedDb = state.database.type.value;
 
 	useEffect(() => {
 		void dexieDb.connect().then(() => setIsConnected(true));
 	}, []);
 
-	if (!isConnected) return <div className="text-muted-foreground ml-6 text-sm">Connecting...</div>;
+	if (!isConnected) {
+		return <div className="text-muted-foreground text-center text-sm">Connecting...</div>;
+	}
 
-	const dbNames = dexieDb.dbNames();
+	const dbNames = getDbNames();
 
 	return (
 		<div className="select-none">
-			<button
-				className={`flex w-full items-center ${open ? 'text-gray-400' : ''}`}
-				onClick={() => setOpen(!open)}
+			<Select
+				value={selectedDb}
+				onValueChange={(value: string) => (state.database.type.value = value)}
 			>
-				<div className="mr-1 h-5 w-5 transition-transform duration-200">
-					<ChevronRight
-						className={`h-5 w-5 ${open ? 'rotate-90' : ''}`}
-						fill="currentColor"
-						stroke={null}
-					/>
-				</div>
-				<span className="font-medium">IndexedDB</span>
-			</button>
-			{open &&
-				(dbNames.length > 0 ? (
-					<div className="ml-4 flex flex-col">
-						{dbNames.map((dbName) => (
-							<Database key={dbName} dbName={dbName} />
+				<SelectTrigger className="mb-2 w-full">
+					<SelectValue placeholder="Select a database" />
+					<SelectContent>
+						{dbTypes.map((dbType) => (
+							<SelectItem key={dbType.value} value={dbType.value}>
+								{dbType.label}
+							</SelectItem>
 						))}
-					</div>
-				) : (
-					<p className="text-muted-foreground ml-6 text-sm">No databases found</p>
-				))}
+					</SelectContent>
+				</SelectTrigger>
+			</Select>
+			{dbNames.length > 0 ? (
+				<div className="flex flex-col">
+					{dbNames.map((dbName) => (
+						<Database key={dbName} dbName={dbName} />
+					))}
+				</div>
+			) : (
+				<p className="text-muted-foreground text-center text-sm">
+					{selectedDb ? 'No databases found' : ''}
+				</p>
+			)}
 		</div>
 	);
 }

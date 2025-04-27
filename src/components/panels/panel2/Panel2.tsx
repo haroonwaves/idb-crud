@@ -69,9 +69,9 @@ export function Panel2() {
 
 	if (!selectedDatabase || !selectedTabel) {
 		return (
-			<div className="flex h-full items-center justify-center p-6">
-				<p className="font-semibold">Select a table to start</p>
-			</div>
+			<p className="text-muted-foreground flex h-full items-center justify-center text-center text-sm">
+				Select a table to start
+			</p>
 		);
 	}
 
