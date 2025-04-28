@@ -18,7 +18,7 @@ import {
 	TableHeader,
 	TableRow,
 } from '@/src/components/ui/Table';
-import React from 'preact/compat';
+import React, { useEffect } from 'preact/compat';
 import { Pagination } from '@/src/components/dataTable/Pagination';
 import { ColumnToggle } from '@/src/components/dataTable/ColumnToggle';
 import { state } from '@/src/state/state';
@@ -37,11 +37,11 @@ export function DataTable<TData, TValue>({
 	totalRows,
 }: Readonly<DataTableProps<TData, TValue>>) {
 	const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
+	const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
 
 	const sorting = state.dataTable.query.sort.value;
 	const columnFilters = state.dataTable.query.filter.value;
 	const pagination = state.dataTable.query.pagination.value;
-	const rowSelection = state.dataTable.selectedRows.value;
 
 	function handleSorting(updaterOrValue: Updater<SortingState>) {
 		const value = typeof updaterOrValue === 'function' ? updaterOrValue(sorting) : updaterOrValue;
@@ -63,8 +63,15 @@ export function DataTable<TData, TValue>({
 	function handleRowSelection(updaterOrValue: Updater<RowSelectionState>) {
 		const value =
 			typeof updaterOrValue === 'function' ? updaterOrValue(rowSelection) : updaterOrValue;
-		state.dataTable.selectedRows.value = value;
+		setRowSelection(value);
 	}
+
+	useEffect(() => {
+		const selectedRows = Object.keys(rowSelection)
+			.map((key: string) => data[Number(key)])
+			.filter((row) => row != undefined);
+		state.dataTable.selectedRows.value = selectedRows;
+	}, [rowSelection, data]);
 
 	const table = useReactTable({
 		data,
@@ -93,52 +100,54 @@ export function DataTable<TData, TValue>({
 	});
 
 	return (
-		<>
+		<div className="flex h-full flex-col">
 			<div className="flex items-center justify-between pb-4">
 				<FilterBy table={table} columns={columns.slice(1)} />
 				<ActionButtons />
 				<ColumnToggle table={table} />
 			</div>
-			<div className="rounded-md border">
-				<Table>
-					<TableHeader>
-						{table.getHeaderGroups().map((headerGroup) => (
-							<TableRow key={headerGroup.id}>
-								{headerGroup.headers.map((header) => {
-									return (
-										<TableHead key={header.id}>
-											{header.isPlaceholder
-												? null
-												: flexRender(header.column.columnDef.header, header.getContext())}
-										</TableHead>
-									);
-								})}
-							</TableRow>
-						))}
-					</TableHeader>
-					<TableBody>
-						{table.getRowModel().rows?.length ? (
-							table.getRowModel().rows.map((row) => (
-								<TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
-									{row.getVisibleCells().map((cell) => (
-										<TableCell key={cell.id}>
-											{flexRender(cell.column.columnDef.cell, cell.getContext())}
-										</TableCell>
-									))}
+			<div className="flex-1 overflow-auto">
+				<div className="rounded-md border">
+					<Table>
+						<TableHeader>
+							{table.getHeaderGroups().map((headerGroup) => (
+								<TableRow key={headerGroup.id}>
+									{headerGroup.headers.map((header) => {
+										return (
+											<TableHead key={header.id}>
+												{header.isPlaceholder
+													? null
+													: flexRender(header.column.columnDef.header, header.getContext())}
+											</TableHead>
+										);
+									})}
 								</TableRow>
-							))
-						) : (
-							<TableRow>
-								<TableCell colSpan={columns.length} className="h-24 text-center">
-									No results.
-								</TableCell>
-							</TableRow>
-						)}
-					</TableBody>
-				</Table>
+							))}
+						</TableHeader>
+						<TableBody>
+							{table.getRowModel().rows?.length ? (
+								table.getRowModel().rows.map((row) => (
+									<TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
+										{row.getVisibleCells().map((cell) => (
+											<TableCell key={cell.id}>
+												{flexRender(cell.column.columnDef.cell, cell.getContext())}
+											</TableCell>
+										))}
+									</TableRow>
+								))
+							) : (
+								<TableRow>
+									<TableCell colSpan={columns.length} className="h-24 text-center">
+										No results.
+									</TableCell>
+								</TableRow>
+							)}
+						</TableBody>
+					</Table>
+				</div>
 			</div>
 
 			<Pagination table={table} />
-		</>
+		</div>
 	);
 }

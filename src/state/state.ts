@@ -1,10 +1,5 @@
 import { signal } from '@preact/signals';
-import {
-	ColumnFiltersState,
-	PaginationState,
-	RowSelectionState,
-	SortingState,
-} from '@tanstack/react-table';
+import { ColumnFiltersState, PaginationState, SortingState } from '@tanstack/react-table';
 
 const database = {
 	type: signal(''),
@@ -14,11 +9,10 @@ const database = {
 
 const dataTable = {
 	rows: signal<object[]>([]),
+	selectedRows: signal<object[]>([]),
 	columns: signal<string[]>([]),
 
 	totalRows: signal(0),
-	selectedRows: signal<RowSelectionState>({}),
-
 	isLoading: signal(false),
 
 	query: {

@@ -27,17 +27,7 @@ const selectCheckboxColumn = {
 	enableHiding: false,
 };
 
-function constructColumns(tableData: object[]) {
-	const uniqueColumns = new Set<string>();
-
-	tableData.forEach((row: object) => {
-		Object.keys(row).forEach((key) => {
-			uniqueColumns.add(key);
-		});
-	});
-
-	const columns = [...uniqueColumns];
-
+function constructColumns(columns: string[]) {
 	const columnDefs: ColumnDef<any>[] = columns.map((columnName) => {
 		return {
 			id: columnName,
@@ -55,25 +45,20 @@ export function Panel2() {
 	const selectedDatabase = state.database.selected.value;
 	const selectedTabel = state.database.table.value;
 
+	const rows = state.dataTable.rows.value;
 	const totalRows = state.dataTable.totalRows.value;
 
-	const computedData = computed(() => {
-		const tableData = state.dataTable.rows.value;
-		const columns = constructColumns(tableData);
-
-		return { columns, rows: tableData };
+	const computedColumns = computed(() => {
+		return constructColumns(state.dataTable.columns.value);
 	});
-
-	const columns = computedData.value.columns;
-	const rows = computedData.value.rows;
 
 	if (!selectedDatabase || !selectedTabel) {
 		return (
 			<p className="text-muted-foreground flex h-full items-center justify-center text-center text-sm">
-				Select a table to start
+				Select a database to view
 			</p>
 		);
 	}
 
-	return <DataTable columns={columns} data={rows} totalRows={totalRows} />;
+	return <DataTable columns={computedColumns.value} data={rows} totalRows={totalRows} />;
 }

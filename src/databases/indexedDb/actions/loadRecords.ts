@@ -67,7 +67,15 @@ function createOptimizedCollection(
 		collection = sort.desc ? table.orderBy(sortField).reverse() : table.orderBy(sortField);
 	} else if (filterField && !needsMemoryFilter && filterValue) {
 		// Case 3: Only filter is indexed
+		// const isNumeric = /^-?\d+(\.\d+)?(e[+-]?\d+)?$/i.test(filterValue);
+		// if (isNumeric) {
+		// 	const numericValue = Number.parseFloat(filterValue);
+		// 	collection = Number.isNaN(numericValue)
+		// 		? table.toCollection()
+		// 		: table.where(filterField).anyOf([numericValue, filterValue]); // This is a hack to get the correct value
+		// } else {
 		collection = table.where(filterField).startsWith(filterValue);
+		// }
 	} else {
 		// Case 4: Neither is indexed
 		collection = table.toCollection();
@@ -76,7 +84,7 @@ function createOptimizedCollection(
 	return { collection, needsMemorySort, needsMemoryFilter };
 }
 
-export async function loadFromIndexedDb() {
+export async function loadRecords() {
 	const selectedDatabase = state.database.selected.value;
 	const db = dexieDb.select(selectedDatabase);
 
@@ -98,7 +106,7 @@ export async function loadFromIndexedDb() {
 	const total = await processedCollection.count();
 
 	if (needsMemorySort && sort) {
-		let items: any[];
+		let items: object[];
 
 		if (sort.desc) processedCollection = processedCollection.reverse();
 		items = await processedCollection.sortBy(sort.id);
@@ -112,10 +120,10 @@ export async function loadFromIndexedDb() {
 		};
 	}
 
-	const rows = await processedCollection
+	const rows = (await processedCollection
 		.offset(pageIndex * pageSize)
 		.limit(pageSize)
-		.toArray();
+		.toArray()) as object[];
 
 	return { rows, total };
 }
