@@ -24,6 +24,7 @@ import { ColumnToggle } from '@/src/components/dataTable/ColumnToggle';
 import { state } from '@/src/state/state';
 import { FilterBy } from '@/src/components/dataTable/FilterBy';
 import { ActionButtons } from '@/src/components/dataTable/ActionButtons';
+import { Loader } from '@/src/components/ui/Loader';
 
 interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[];
@@ -42,6 +43,8 @@ export function DataTable<TData, TValue>({
 	const sorting = state.dataTable.query.sort.value;
 	const columnFilters = state.dataTable.query.filter.value;
 	const pagination = state.dataTable.query.pagination.value;
+
+	const isLoading = state.dataTable.isLoading.value;
 
 	function handleSorting(updaterOrValue: Updater<SortingState>) {
 		const value = typeof updaterOrValue === 'function' ? updaterOrValue(sorting) : updaterOrValue;
@@ -107,7 +110,8 @@ export function DataTable<TData, TValue>({
 				<ColumnToggle table={table} />
 			</div>
 			<div className="flex-1 overflow-auto">
-				<div className="rounded-md border">
+				<div className="relative rounded-md border">
+					{isLoading && <Loader />}
 					<Table>
 						<TableHeader>
 							{table.getHeaderGroups().map((headerGroup) => (
