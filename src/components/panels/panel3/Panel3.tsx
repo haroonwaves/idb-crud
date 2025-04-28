@@ -1,38 +1,27 @@
+import { ActionButtons } from '@/src/components/panels/panel3/ActionButtons';
+import { updateRecord } from '@/src/databases/actions';
 import { state } from '@/src/state/state';
-import { useSignalEffect } from '@preact/signals';
-import { useState } from 'preact/hooks';
-import JsonViewer from 'react-json-view';
+import { JsonViewer } from '@/src/components/panels/panel3/JsonViewer';
 
 export function Panel3() {
-	const [selectedRows, setSelectedRows] = useState<object[]>([]);
+	const selectedRows = state.dataTable.selectedRows.value;
 
-	useSignalEffect(() => {
-		const selectedRows = state.dataTable.selectedRows.value;
-		const tableData = state.dataTable.rows.value;
-		const selectedRowsData = Object.keys(selectedRows)
-			.map((row) => tableData[Number(row)])
-			.filter((row) => row !== undefined);
-		setSelectedRows(selectedRowsData);
-	});
-
-	return selectedRows.length > 0 ? (
-		<JsonViewer
-			theme="rjv-default"
-			name={'selected_rows'}
-			defaultValue={'placeholder'}
-			displayObjectSize
-			collapsed={1}
-			quotesOnKeys={false}
-			enableClipboard={false}
-			displayDataTypes={true}
-			collapseStringsAfterLength={100}
-			groupArraysAfterLength={50}
-			src={selectedRows}
-			onEdit={() => {}}
-		/>
-	) : (
-		<p className="text-muted-foreground flex h-full items-center justify-center text-center text-sm">
-			Select row(s) to view
-		</p>
+	return (
+		<>
+			<div className="sticky top-0 z-10">
+				<ActionButtons selectedRows={selectedRows} />
+			</div>
+			{selectedRows.length > 0 ? (
+				<JsonViewer
+					title={'selected_rows'}
+					value={selectedRows}
+					onEdit={(props) => void updateRecord(props)}
+				/>
+			) : (
+				<p className="text-muted-foreground flex h-full items-center justify-center text-center text-sm">
+					Select row(s) to view
+				</p>
+			)}
+		</>
 	);
 }

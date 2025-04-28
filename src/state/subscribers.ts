@@ -1,7 +1,8 @@
-import { loadTable } from '@/src/action/loadTable';
+import { loadTable } from '@/src/databases/actions';
 import { state } from '@/src/state/state';
 
 state.database.table.subscribe((table) => {
+	state.dataTable.columns.value = []; // reset columns
 	if (table) void loadTable();
 });
 

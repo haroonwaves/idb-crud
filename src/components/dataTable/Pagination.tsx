@@ -16,7 +16,7 @@ interface PaginationProps<TData> {
 
 export function Pagination<TData>({ table }: Readonly<PaginationProps<TData>>) {
 	return (
-		<div className="flex items-center justify-between px-2 py-4">
+		<div className="flex items-center justify-between pt-2">
 			<div className="text-muted-foreground flex-1 text-sm">
 				{table.getFilteredSelectedRowModel().rows.length} of {table.getRowCount()} row(s) selected.
 			</div>
