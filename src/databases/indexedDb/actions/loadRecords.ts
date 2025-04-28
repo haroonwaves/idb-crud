@@ -84,11 +84,11 @@ function createOptimizedCollection(
 	return { collection, needsMemorySort, needsMemoryFilter };
 }
 
-export async function loadRecords() {
+export async function loadRecords(countUpdater: (totalCount: number) => void) {
 	const selectedDatabase = state.database.selected.value;
 	const db = dexieDb.select(selectedDatabase);
 
-	if (!db) return { rows: [], total: 0 };
+	if (!db) return [];
 
 	const table = db.table(state.database.table.value);
 	const sort = state.dataTable.query.sort.value[0];
@@ -101,9 +101,20 @@ export async function loadRecords() {
 		filter
 	);
 
-	let processedCollection = needsMemoryFilter ? applyMemoryFilter(collection, filter) : collection;
+	let processedCollection = needsMemoryFilter
+		? applyMemoryFilter(collection, filter).clone()
+		: collection.clone();
 
-	const total = await processedCollection.count();
+	const collectionForCount = needsMemoryFilter
+		? applyMemoryFilter(collection, filter).clone()
+		: collection.clone(); // This is a hack to clone the collection, because the collection.clone on the processedCollection isn't working properly
+
+	collectionForCount
+		.count()
+		.then(countUpdater)
+		.catch((error) => {
+			throw error;
+		});
 
 	if (needsMemorySort && sort) {
 		let items: object[];
@@ -114,10 +125,7 @@ export async function loadRecords() {
 		const start = pageIndex * pageSize;
 		const end = Math.min(items.length, start + pageSize);
 
-		return {
-			rows: items.slice(start, end),
-			total,
-		};
+		return items.slice(start, end);
 	}
 
 	const rows = (await processedCollection
@@ -125,5 +133,5 @@ export async function loadRecords() {
 		.limit(pageSize)
 		.toArray()) as object[];
 
-	return { rows, total };
+	return rows;
 }

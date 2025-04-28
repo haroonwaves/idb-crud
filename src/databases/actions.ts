@@ -13,13 +13,18 @@ export async function createRecord(newRecord: object) {
 export async function loadTable() {
 	const selectedDbType = state.database.type.value;
 
-	let result: { rows: object[]; total: number } = { rows: [], total: 0 };
+	let rows: object[] = [];
 
-	if (selectedDbType === 'indexedDb') result = await indexedDbActions.loadRecords();
+	const countUpdater = (totalCount: number) => (state.dataTable.totalRows.value = totalCount);
 
-	state.dataTable.columns.value = extractColumns(result.rows);
-	state.dataTable.rows.value = result.rows;
-	state.dataTable.totalRows.value = result.total;
+	state.dataTable.isLoading.value = true;
+
+	if (selectedDbType === 'indexedDb') rows = await indexedDbActions.loadRecords(countUpdater);
+
+	state.dataTable.columns.value = extractColumns(rows);
+	state.dataTable.rows.value = rows;
+
+	state.dataTable.isLoading.value = false;
 }
 
 export async function updateRecord({ existing_src, updated_src, namespace }: InteractionProps) {
