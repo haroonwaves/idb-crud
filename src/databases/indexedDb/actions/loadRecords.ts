@@ -40,6 +40,13 @@ function createIndexedCollection(
 	return collection;
 }
 
+function handleNumericFilter(table: Dexie.Table, filterField: string, filterValue: string) {
+	const numericValue = Number.parseFloat(filterValue);
+	return Number.isNaN(numericValue)
+		? table.toCollection()
+		: table.where(filterField).anyOf([numericValue, filterValue]); // This is a hack to get the correct value
+}
+
 function createOptimizedCollection(
 	table: Dexie.Table,
 	sort: ColumnSort | undefined,
@@ -67,15 +74,10 @@ function createOptimizedCollection(
 		collection = sort.desc ? table.orderBy(sortField).reverse() : table.orderBy(sortField);
 	} else if (filterField && !needsMemoryFilter && filterValue) {
 		// Case 3: Only filter is indexed
-		// const isNumeric = /^-?\d+(\.\d+)?(e[+-]?\d+)?$/i.test(filterValue);
-		// if (isNumeric) {
-		// 	const numericValue = Number.parseFloat(filterValue);
-		// 	collection = Number.isNaN(numericValue)
-		// 		? table.toCollection()
-		// 		: table.where(filterField).anyOf([numericValue, filterValue]); // This is a hack to get the correct value
-		// } else {
-		collection = table.where(filterField).startsWith(filterValue);
-		// }
+		const isNumeric = /^-?\d+(\.\d+)?(e[+-]?\d+)?$/i.test(filterValue);
+		collection = isNumeric
+			? handleNumericFilter(table, filterField, filterValue)
+			: table.where(filterField).startsWith(filterValue);
 	} else {
 		// Case 4: Neither is indexed
 		collection = table.toCollection();

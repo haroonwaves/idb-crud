@@ -25,6 +25,7 @@ import { state } from '@/src/state/state';
 import { FilterBy } from '@/src/components/dataTable/FilterBy';
 import { ActionButtons } from '@/src/components/dataTable/ActionButtons';
 import { Loader } from '@/src/components/ui/Loader';
+import { useSignalEffect } from '@preact/signals';
 
 interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[];
@@ -76,6 +77,19 @@ export function DataTable<TData, TValue>({
 		state.dataTable.selectedRows.value = selectedRows;
 	}, [rowSelection, data]);
 
+	useSignalEffect(() => {
+		const selectedTable = state.database.table.value; // This subscribes to the table signal and triggers a re-render when the table changes
+		const selectedDatabase = state.database.selected.value; // This subscribes to the selected database signal and triggers a re-render
+		if (selectedTable || selectedDatabase) {
+			setColumnVisibility({});
+			setRowSelection({});
+		}
+	});
+
+	useEffect(() => {
+		setRowSelection({});
+	}, [sorting, pagination]);
+
 	const table = useReactTable({
 		data,
 		columns,
@@ -105,7 +119,13 @@ export function DataTable<TData, TValue>({
 	return (
 		<div className="flex h-full flex-col">
 			<div className="flex items-center justify-between pb-4">
-				<FilterBy table={table} columns={columns.slice(1)} />
+				<FilterBy
+					table={table}
+					columns={columns.slice(1)}
+					onFilterChange={() => {
+						setRowSelection({});
+					}}
+				/>
 				<ActionButtons />
 				<ColumnToggle table={table} />
 			</div>
@@ -133,7 +153,7 @@ export function DataTable<TData, TValue>({
 								table.getRowModel().rows.map((row) => (
 									<TableRow key={row.id} data-state={row.getIsSelected() && 'selected'}>
 										{row.getVisibleCells().map((cell) => (
-											<TableCell key={cell.id}>
+											<TableCell key={cell.id} className="max-w-40 truncate">
 												{flexRender(cell.column.columnDef.cell, cell.getContext())}
 											</TableCell>
 										))}

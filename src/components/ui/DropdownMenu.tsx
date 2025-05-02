@@ -73,9 +73,7 @@ function DropdownMenuContent({
 			// Check if menu would go off the right side of the screen
 			if (menu) {
 				const menuWidth = menu.getBoundingClientRect().width;
-				if (x + menuWidth > window.innerWidth) {
-					x = window.innerWidth - menuWidth - 10; // 10px padding from edge
-				}
+				if (x + menuWidth > window.innerWidth) x = window.innerWidth - menuWidth - 10; // 10px padding from edge
 			}
 
 			// Check if menu would go off the bottom of the screen
@@ -85,9 +83,7 @@ function DropdownMenuContent({
 					// Try to position above the trigger
 					y = rect.top - menuHeight - sideOffset;
 					// If still off screen, position at the bottom of the viewport
-					if (y < 0) {
-						y = window.innerHeight - menuHeight - 10; // 10px padding from bottom
-					}
+					if (y < 0) y = window.innerHeight - menuHeight - 10; // 10px padding from bottom
 				}
 			}
 
@@ -97,14 +93,23 @@ function DropdownMenuContent({
 			setPosition({ x, y });
 		};
 
-		updatePosition();
-		window.addEventListener('scroll', updatePosition);
-		window.addEventListener('resize', updatePosition);
+		const shadowRoot = document.getElementById('idb-crud-content-root')?.shadowRoot;
+		if (!shadowRoot) return;
 
-		return () => {
-			window.removeEventListener('scroll', updatePosition);
-			window.removeEventListener('resize', updatePosition);
-		};
+		// Create a MutationObserver to watch for the menu appearing
+		const observer = new MutationObserver((mutations) => {
+			for (const mutation of mutations) {
+				if (mutation.type === 'childList') {
+					const menu = shadowRoot.querySelector('[data-slot="dropdown-menu-content"]');
+					if (menu) updatePosition();
+				}
+			}
+		});
+
+		// Start observing the shadow root for changes
+		observer.observe(shadowRoot, { childList: true, subtree: true });
+
+		return () => observer.disconnect();
 	}, [sideOffset, triggerId]);
 
 	return (

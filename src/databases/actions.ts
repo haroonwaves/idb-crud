@@ -56,3 +56,37 @@ export async function deleteSelectedRows() {
 	if (selectedDbType === 'indexedDb') await indexedDbActions.deleteRecords();
 	await loadTable();
 }
+
+export async function exportRecords() {
+	const selectedDbType = state.database.type.value;
+
+	state.dataTable.isLoading.value = true;
+
+	if (selectedDbType === 'indexedDb') await indexedDbActions.exportRecords();
+
+	state.dataTable.isLoading.value = false;
+}
+
+export async function importRecords(file: File) {
+	const selectedDbType = state.database.type.value;
+	state.dataTable.isLoading.value = true;
+
+	try {
+		const text = await file.text();
+		const jsonData = JSON.parse(text);
+
+		if (!Array.isArray(jsonData)) {
+			throw new TypeError('Invalid JSON format: expected an array of records');
+		}
+
+		if (selectedDbType === 'indexedDb') {
+			await indexedDbActions.importRecords(jsonData);
+			await loadTable();
+		}
+	} catch (error) {
+		console.error('Error importing records:', error);
+		throw error;
+	} finally {
+		state.dataTable.isLoading.value = false;
+	}
+}

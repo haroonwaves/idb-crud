@@ -33,6 +33,11 @@ function constructColumns(columns: string[]) {
 			id: columnName,
 			accessorKey: columnName,
 			header: ({ column }) => <ColumnHeader column={column} title={columnName} />,
+			cell: ({ row }) => {
+				const value = row.getValue(columnName);
+				if (typeof value === 'object' || typeof value === 'function') return JSON.stringify(value);
+				return String(value as any);
+			},
 		};
 	});
 

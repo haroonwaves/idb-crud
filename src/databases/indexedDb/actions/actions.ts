@@ -49,11 +49,57 @@ async function deleteRecords() {
 	await selectedTable.bulkDelete(primaryValues);
 }
 
+async function exportRecords() {
+	const dbName = state.database.selected.value;
+	const tableName = state.database.table.value;
+	const selectedTable = dexieDb.select(dbName)?.table(tableName);
+
+	if (!selectedTable) return null;
+
+	const allRecords: any[] = [];
+
+	// Use cursor to efficiently iterate through records
+	await selectedTable.each((record) => allRecords.push(record));
+
+	// Create a blob with the JSON data
+	const jsonString = JSON.stringify(allRecords, null, 2);
+	const blob = new Blob([jsonString], { type: 'application/json' });
+
+	// Create download link
+	const url = URL.createObjectURL(blob);
+	const a = document.createElement('a');
+	a.href = url;
+	a.download = `${dbName}_${tableName}_${new Date().toISOString()}.json`;
+	document.body.append(a);
+	a.click();
+	a.remove();
+	URL.revokeObjectURL(url);
+
+	return allRecords;
+}
+
+async function importRecords(jsonData: any[]) {
+	const dbName = state.database.selected.value;
+	const tableName = state.database.table.value;
+	const selectedTable = dexieDb.select(dbName)?.table(tableName);
+
+	if (!selectedTable) return;
+
+	const CHUNK_SIZE = 50000;
+
+	for (let i = 0; i < jsonData.length; i += CHUNK_SIZE) {
+		const chunk = jsonData.slice(i, i + CHUNK_SIZE);
+		await selectedTable.bulkAdd(chunk);
+	}
+}
+
 const indexedDbActions = {
 	createRecord,
 	loadRecords,
 	updateRecord,
 	deleteRecords,
+	exportRecords,
+	importRecords,
 };
 
 export default indexedDbActions;

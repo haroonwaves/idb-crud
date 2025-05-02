@@ -7,6 +7,8 @@
 
 :host {
 	all: initial !important;
+	font-family: var(--default-font-family) !important;
+	font-size: 14px !important;
 }
 
 :host * {
@@ -14,13 +16,13 @@
 }
 
 #idb-crud-app {
-	position: relative;
+	position: relative !important;
 	z-index: 99999999999999999999999 !important;
 
-	font-family: var(--default-font-family);
+	font-family: inherit !important;
+	font-size: inherit !important;
 
-	font-size: 14px;
-	color: #4b5563;
+	color: #4b5563 !important;
 }
 
 /*
