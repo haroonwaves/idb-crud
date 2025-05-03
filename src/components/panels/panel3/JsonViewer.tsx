@@ -20,7 +20,7 @@ export function JsonViewer({
 			collapsed={1}
 			quotesOnKeys={false}
 			enableClipboard={false}
-			displayDataTypes={true}
+			displayDataTypes={false}
 			collapseStringsAfterLength={100}
 			groupArraysAfterLength={50}
 			src={value}

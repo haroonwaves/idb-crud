@@ -118,7 +118,7 @@ export function DataTable<TData, TValue>({
 
 	return (
 		<div className="flex h-full flex-col">
-			<div className="flex items-center justify-between pb-4">
+			<div className="flex items-center justify-between pb-4 select-none">
 				<FilterBy
 					table={table}
 					columns={columns.slice(1)}
