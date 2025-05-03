@@ -21,7 +21,7 @@ export function ColumnToggle<TData>({ table }: Readonly<ColumnToggleProps<TData>
 			<DropdownMenuTrigger asChild triggerId={`column-toggle`}>
 				<Button variant="outline" size="sm" className="hidden h-8 lg:flex">
 					<Settings2 />
-					View
+					Columns
 				</Button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="end" className="w-[150px]" triggerId={`column-toggle`}>

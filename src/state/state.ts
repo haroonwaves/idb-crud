@@ -22,7 +22,10 @@ const dataTable = {
 	},
 };
 
+const errors = signal<Array<{ message: string; details?: string }>>([]);
+
 export const state = {
 	database,
 	dataTable,
+	errors,
 };
