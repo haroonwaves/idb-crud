@@ -12,6 +12,7 @@ import {
 import { useEffect, useState } from 'preact/hooks';
 import { JsonViewer } from '@/src/components/panels/panel3/JsonViewer';
 import { Button } from '@/src/components/ui/Button';
+import { Tooltip } from '@/src/components/ui/Tooltip';
 
 async function copySelectedRows() {
 	const selectedRows = state.dataTable.selectedRows.value;
@@ -49,24 +50,30 @@ export function ActionButtons({ selectedRows }: Readonly<{ selectedRows: object[
 
 	return (
 		<>
-			<div className="absolute flex w-full items-center justify-center bg-white">
-				<div className="flex h-9 items-center justify-center gap-4 rounded-md border px-3 py-1">
-					<Plus
-						className={`size-4 ${selectedRows.length === 0 ? 'cursor-pointer' : 'opacity-50'}`}
-						onClick={() => selectedRows.length === 0 && setIsCreateDialogOpen(true)}
-					/>
-					<Trash
-						className={`size-4 ${selectedRows.length === 0 ? 'opacity-50' : 'cursor-pointer'}`}
-						onClick={() => selectedRows.length > 0 && setIsDeleteDialogOpen(true)}
-					/>
+			<div className="absolute right-[50%]">
+				<div className="flex h-9 items-center justify-center gap-4 rounded-md border bg-white px-3 py-1">
+					<Tooltip content="Create new record">
+						<Plus
+							className={`size-4 ${selectedRows.length === 0 ? 'cursor-pointer' : 'opacity-50'}`}
+							onClick={() => selectedRows.length === 0 && setIsCreateDialogOpen(true)}
+						/>
+					</Tooltip>
+					<Tooltip content="Delete selected record(s)">
+						<Trash
+							className={`size-4 ${selectedRows.length === 0 ? 'opacity-50' : 'cursor-pointer'}`}
+							onClick={() => selectedRows.length > 0 && setIsDeleteDialogOpen(true)}
+						/>
+					</Tooltip>
 					<div className="relative">
 						{showCopied ? (
 							<Check className="animate-scale-in size-4 text-green-500" />
 						) : (
-							<CopyIcon
-								className={`size-4 ${selectedRows.length === 0 ? 'opacity-50' : 'cursor-pointer'}`}
-								onClick={handleCopy}
-							/>
+							<Tooltip content="Copy selected record(s)">
+								<CopyIcon
+									className={`size-4 ${selectedRows.length === 0 ? 'opacity-50' : 'cursor-pointer'}`}
+									onClick={handleCopy}
+								/>
+							</Tooltip>
 						)}
 					</div>
 				</div>

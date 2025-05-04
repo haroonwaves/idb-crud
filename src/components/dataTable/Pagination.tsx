@@ -9,6 +9,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@/src/components/ui/Select';
+import { Tooltip } from '@/src/components/ui/Tooltip';
 
 interface PaginationProps<TData> {
 	table: Table<TData>;
@@ -45,42 +46,50 @@ export function Pagination<TData>({ table }: Readonly<PaginationProps<TData>>) {
 					Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
 				</div>
 				<div className="flex items-center space-x-2">
-					<Button
-						variant="outline"
-						className="hidden h-8 w-8 p-0 lg:flex"
-						onClick={() => table.setPageIndex(0)}
-						disabled={!table.getCanPreviousPage()}
-					>
-						<span className="sr-only">Go to first page</span>
-						<ChevronsLeft />
-					</Button>
-					<Button
-						variant="outline"
-						className="h-8 w-8 p-0"
-						onClick={() => table.previousPage()}
-						disabled={!table.getCanPreviousPage()}
-					>
-						<span className="sr-only">Go to previous page</span>
-						<ChevronLeft />
-					</Button>
-					<Button
-						variant="outline"
-						className="h-8 w-8 p-0"
-						onClick={() => table.nextPage()}
-						disabled={!table.getCanNextPage()}
-					>
-						<span className="sr-only">Go to next page</span>
-						<ChevronRight />
-					</Button>
-					<Button
-						variant="outline"
-						className="hidden h-8 w-8 p-0 lg:flex"
-						onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-						disabled={!table.getCanNextPage()}
-					>
-						<span className="sr-only">Go to last page</span>
-						<ChevronsRight />
-					</Button>
+					<Tooltip content="Go to first page" sideOffset={10}>
+						<Button
+							variant="outline"
+							className="hidden h-8 w-8 cursor-pointer p-0 lg:flex"
+							onClick={() => table.setPageIndex(0)}
+							disabled={!table.getCanPreviousPage()}
+						>
+							<span className="sr-only">Go to first page</span>
+							<ChevronsLeft />
+						</Button>
+					</Tooltip>
+					<Tooltip content="Go to prev page" sideOffset={10}>
+						<Button
+							variant="outline"
+							className="h-8 w-8 cursor-pointer p-0"
+							onClick={() => table.previousPage()}
+							disabled={!table.getCanPreviousPage()}
+						>
+							<span className="sr-only">Go to previous page</span>
+							<ChevronLeft />
+						</Button>
+					</Tooltip>
+					<Tooltip content="Go to next page" sideOffset={10}>
+						<Button
+							variant="outline"
+							className="h-8 w-8 cursor-pointer p-0"
+							onClick={() => table.nextPage()}
+							disabled={!table.getCanNextPage()}
+						>
+							<span className="sr-only">Go to next page</span>
+							<ChevronRight />
+						</Button>
+					</Tooltip>
+					<Tooltip content="Go to last page" sideOffset={10}>
+						<Button
+							variant="outline"
+							className="hidden h-8 w-8 cursor-pointer p-0 lg:flex"
+							onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+							disabled={!table.getCanNextPage()}
+						>
+							<span className="sr-only">Go to last page</span>
+							<ChevronsRight />
+						</Button>
+					</Tooltip>
 				</div>
 			</div>
 		</div>

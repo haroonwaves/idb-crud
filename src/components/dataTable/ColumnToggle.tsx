@@ -10,6 +10,7 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from '@/src/components/ui/DropdownMenu';
+import { Tooltip } from '@/src/components/ui/Tooltip';
 
 interface ColumnToggleProps<TData> {
 	table: Table<TData>;
@@ -18,12 +19,14 @@ interface ColumnToggleProps<TData> {
 export function ColumnToggle<TData>({ table }: Readonly<ColumnToggleProps<TData>>) {
 	return (
 		<DropdownMenu>
-			<DropdownMenuTrigger asChild triggerId={`column-toggle`}>
-				<Button variant="outline" size="sm" className="hidden h-8 lg:flex">
-					<Settings2 />
-					Columns
-				</Button>
-			</DropdownMenuTrigger>
+			<Tooltip content="Toggle columns" sideOffset={10}>
+				<DropdownMenuTrigger asChild triggerId={`column-toggle`}>
+					<Button variant="outline" size="sm" className="hidden h-8 cursor-pointer lg:flex">
+						<Settings2 />
+						Columns
+					</Button>
+				</DropdownMenuTrigger>
+			</Tooltip>
 			<DropdownMenuContent align="end" className="w-[150px]" triggerId={`column-toggle`}>
 				<DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
 				<DropdownMenuSeparator />
