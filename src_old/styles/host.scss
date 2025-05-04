@@ -1,8 +1,0 @@
-body {
-  &.idb-crud-drawer-open {
-    overflow: hidden !important; /* Hide scroll bar */
-    position: fixed !important; /* Fix the body to prevent scrolling */
-    width: 100% !important; /* Prevent horizontal scroll */
-    height: 100% !important; /* Prevent vertical scroll */
-  }
-}
