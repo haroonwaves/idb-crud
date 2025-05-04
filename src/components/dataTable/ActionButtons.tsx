@@ -1,3 +1,4 @@
+import { Tooltip } from '@/src/components/ui/Tooltip';
 import { exportRecords, importRecords, loadTable } from '@/src/databases/actions';
 import { Download as Import, RefreshCcw, Upload as Export } from 'lucide-react';
 import { useRef } from 'preact/hooks';
@@ -19,9 +20,15 @@ export function ActionButtons() {
 	return (
 		<div className="flex h-9 items-center justify-center gap-4 rounded-md border px-3 py-1 shadow-2xl">
 			<div className="flex gap-4">
-				<RefreshCcw className="size-4 cursor-pointer" onClick={() => loadTable()} />
-				<Export className="size-4 cursor-pointer" onClick={() => exportRecords()} />
-				<Import className="size-4 cursor-pointer" onClick={() => fileInputRef.current?.click()} />
+				<Tooltip content="Refresh table">
+					<RefreshCcw className="size-4 cursor-pointer" onClick={() => loadTable()} />
+				</Tooltip>
+				<Tooltip content="Export table (JSON)">
+					<Export className="size-4 cursor-pointer" onClick={() => exportRecords()} />
+				</Tooltip>
+				<Tooltip content="Import table (JSON)">
+					<Import className="size-4 cursor-pointer" onClick={() => fileInputRef.current?.click()} />
+				</Tooltip>
 				<input
 					ref={fileInputRef}
 					type="file"
