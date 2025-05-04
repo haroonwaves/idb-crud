@@ -21,13 +21,22 @@ export function ActionButtons() {
 		<div className="flex h-9 items-center justify-center gap-4 rounded-md border px-3 py-1 shadow-2xl">
 			<div className="flex gap-4">
 				<Tooltip content="Refresh table">
-					<RefreshCcw className="size-4 cursor-pointer" onClick={() => loadTable()} />
+					<RefreshCcw
+						className="hover:text-primary size-4 cursor-pointer"
+						onClick={() => loadTable()}
+					/>
 				</Tooltip>
 				<Tooltip content="Export table (JSON)">
-					<Export className="size-4 cursor-pointer" onClick={() => exportRecords()} />
+					<Export
+						className="hover:text-primary size-4 cursor-pointer"
+						onClick={() => exportRecords()}
+					/>
 				</Tooltip>
 				<Tooltip content="Import table (JSON)">
-					<Import className="size-4 cursor-pointer" onClick={() => fileInputRef.current?.click()} />
+					<Import
+						className="hover:text-primary size-4 cursor-pointer"
+						onClick={() => fileInputRef.current?.click()}
+					/>
 				</Tooltip>
 				<input
 					ref={fileInputRef}

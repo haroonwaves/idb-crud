@@ -54,13 +54,13 @@ export function ActionButtons({ selectedRows }: Readonly<{ selectedRows: object[
 				<div className="flex h-9 items-center justify-center gap-4 rounded-md border bg-white px-3 py-1">
 					<Tooltip content="Create new record">
 						<Plus
-							className={`size-4 ${selectedRows.length === 0 ? 'cursor-pointer' : 'opacity-50'}`}
+							className={`size-4 ${selectedRows.length === 0 ? 'hover:text-primary cursor-pointer' : 'opacity-50'}`}
 							onClick={() => selectedRows.length === 0 && setIsCreateDialogOpen(true)}
 						/>
 					</Tooltip>
 					<Tooltip content="Delete selected record(s)">
 						<Trash
-							className={`size-4 ${selectedRows.length === 0 ? 'opacity-50' : 'cursor-pointer'}`}
+							className={`size-4 ${selectedRows.length === 0 ? 'opacity-50' : 'hover:text-primary cursor-pointer'}`}
 							onClick={() => selectedRows.length > 0 && setIsDeleteDialogOpen(true)}
 						/>
 					</Tooltip>
@@ -70,7 +70,7 @@ export function ActionButtons({ selectedRows }: Readonly<{ selectedRows: object[
 						) : (
 							<Tooltip content="Copy selected record(s)">
 								<CopyIcon
-									className={`size-4 ${selectedRows.length === 0 ? 'opacity-50' : 'cursor-pointer'}`}
+									className={`size-4 ${selectedRows.length === 0 ? 'opacity-50' : 'hover:text-primary cursor-pointer'}`}
 									onClick={handleCopy}
 								/>
 							</Tooltip>

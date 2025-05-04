@@ -6,8 +6,10 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from '@/src/components/ui/Select';
+import { Tooltip } from '@/src/components/ui/Tooltip';
 import { dexieDb } from '@/src/databases/indexedDb/dexie';
 import { state } from '@/src/state/state';
+import { RefreshCcw } from 'lucide-react';
 import { useEffect, useState } from 'preact/hooks';
 
 const dbTypes = [
@@ -25,55 +27,81 @@ const dbTypes = [
 	},
 ];
 
-function getDbNames() {
-	if (state.database.type.value === 'indexedDb') return dexieDb.dbNames();
-	if (state.database.type.value === 'localStorage') return ['localstorage'];
-	if (state.database.type.value === 'sessionStorage') return ['sessionstorage'];
-	return [];
-}
-
 export function Panel1() {
+	const selectedDbType = state.database.type.value;
+
 	const [isConnected, setIsConnected] = useState(false);
-	const selectedDb = state.database.type.value;
+	const [dbNames, setDbNames] = useState<string[]>([]);
 
-	useEffect(() => {
-		void dexieDb.connect().then(() => setIsConnected(true));
-	}, []);
-
-	if (!isConnected) {
-		return <div className="text-muted-foreground text-center text-sm">Connecting...</div>;
-	}
-
-	const dbNames = getDbNames();
-
-	return (
-		<div className="select-none">
-			<Select
-				value={selectedDb}
-				onValueChange={(value: string) => (state.database.type.value = value)}
-			>
-				<SelectTrigger className="mb-2 w-full">
-					<SelectValue placeholder="Select a database" />
-					<SelectContent>
-						{dbTypes.map((dbType) => (
-							<SelectItem key={dbType.value} value={dbType.value}>
-								{dbType.label}
-							</SelectItem>
-						))}
-					</SelectContent>
-				</SelectTrigger>
-			</Select>
-			{dbNames.length > 0 ? (
+	const renderContent = () => {
+		if (!isConnected) {
+			return <div className="text-muted-foreground text-center text-sm">Connecting...</div>;
+		}
+		if (dbNames.length > 0) {
+			return (
 				<div className="flex flex-col">
 					{dbNames.map((dbName) => (
 						<Database key={dbName} dbName={dbName} />
 					))}
 				</div>
-			) : (
-				<p className="text-muted-foreground text-center text-sm">
-					{selectedDb ? 'No databases found' : ''}
-				</p>
-			)}
+			);
+		}
+		return (
+			<p className="text-muted-foreground text-center text-sm">
+				{selectedDbType ? 'No databases found' : ''}
+			</p>
+		);
+	};
+
+	async function getDbNames() {
+		setIsConnected(false);
+		setDbNames([]);
+
+		if (selectedDbType === 'indexedDb') {
+			await dexieDb.connect();
+			const dbNames = dexieDb.dbNames();
+			setDbNames(dbNames);
+		}
+		if (selectedDbType === 'localStorage') {
+			setDbNames(['localstorage']);
+		}
+		if (selectedDbType === 'sessionStorage') {
+			setDbNames(['sessionstorage']);
+		}
+
+		setIsConnected(true);
+	}
+
+	useEffect(() => {
+		void getDbNames();
+	}, [selectedDbType]);
+
+	return (
+		<div className="select-none">
+			<div className="mb-2 flex items-center gap-2">
+				<Select
+					value={selectedDbType}
+					onValueChange={(value: string) => (state.database.type.value = value)}
+				>
+					<SelectTrigger className="w-full">
+						<SelectValue placeholder="Select a database" />
+						<SelectContent>
+							{dbTypes.map((dbType) => (
+								<SelectItem key={dbType.value} value={dbType.value}>
+									{dbType.label}
+								</SelectItem>
+							))}
+						</SelectContent>
+					</SelectTrigger>
+				</Select>
+				<Tooltip content="Refresh databases">
+					<RefreshCcw
+						className="hover:text-primary size-4 cursor-pointer"
+						onClick={() => void getDbNames()}
+					/>
+				</Tooltip>
+			</div>
+			{renderContent()}
 		</div>
 	);
 }
