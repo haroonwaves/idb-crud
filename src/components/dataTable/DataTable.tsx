@@ -18,7 +18,7 @@ import {
 	TableHeader,
 	TableRow,
 } from '@/src/components/ui/Table';
-import React, { useEffect } from 'preact/compat';
+import React, { createRef, Dispatch, SetStateAction, useEffect } from 'preact/compat';
 import { Pagination } from '@/src/components/dataTable/Pagination';
 import { ColumnToggle } from '@/src/components/dataTable/ColumnToggle';
 import { state } from '@/src/state/state';
@@ -33,6 +33,8 @@ interface DataTableProps<TData, TValue> {
 	totalRows: number;
 }
 
+export const setRowSelectionRef = createRef<Dispatch<SetStateAction<RowSelectionState>>>();
+
 export function DataTable<TData, TValue>({
 	columns,
 	data,
@@ -40,6 +42,8 @@ export function DataTable<TData, TValue>({
 }: Readonly<DataTableProps<TData, TValue>>) {
 	const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
 	const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
+
+	setRowSelectionRef.current = setRowSelection;
 
 	const sorting = state.dataTable.query.sort.value;
 	const columnFilters = state.dataTable.query.filter.value;

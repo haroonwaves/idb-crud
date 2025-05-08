@@ -17,14 +17,6 @@ const dbTypes = [
 		label: 'IndexedDB',
 		value: 'indexedDb',
 	},
-	{
-		label: 'LocalStorage',
-		value: 'localStorage',
-	},
-	{
-		label: 'SessionStorage',
-		value: 'sessionStorage',
-	},
 ];
 
 export function Panel1() {
@@ -61,12 +53,6 @@ export function Panel1() {
 			await dexieDb.connect();
 			const dbNames = dexieDb.dbNames();
 			setDbNames(dbNames);
-		}
-		if (selectedDbType === 'localStorage') {
-			setDbNames(['localstorage']);
-		}
-		if (selectedDbType === 'sessionStorage') {
-			setDbNames(['sessionstorage']);
 		}
 
 		setIsConnected(true);

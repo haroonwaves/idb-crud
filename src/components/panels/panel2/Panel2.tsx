@@ -60,7 +60,7 @@ export function Panel2() {
 	if (!selectedDatabase || !selectedTabel) {
 		return (
 			<p className="text-muted-foreground flex h-full items-center justify-center text-center text-sm">
-				Select a database to view
+				Select a table to view
 			</p>
 		);
 	}

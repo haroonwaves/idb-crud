@@ -2,6 +2,7 @@ import { loadRecords } from '@/src/databases/indexedDb/actions/loadRecords';
 import { dexieDb } from '@/src/databases/indexedDb/dexie';
 import { state } from '@/src/state/state';
 import { IndexableType } from 'dexie';
+import streamSaver from 'streamsaver';
 
 async function createRecord(newRow: object) {
 	const dbName = state.database.selected.value;
@@ -56,26 +57,28 @@ async function exportRecords() {
 
 	if (!selectedTable) return null;
 
-	const allRecords: any[] = [];
+	const fileStream = streamSaver.createWriteStream(
+		`${dbName}_${tableName}_${new Date().toISOString()}.json`
+	);
+	const writer = fileStream.getWriter();
+	const encoder = new TextEncoder();
 
-	// Use cursor to efficiently iterate through records
-	await selectedTable.each((record) => allRecords.push(record));
+	// Start JSON array
+	await writer.write(encoder.encode('['));
 
-	// Create a blob with the JSON data
-	const jsonString = JSON.stringify(allRecords, null, 2);
-	const blob = new Blob([jsonString], { type: 'application/json' });
+	let isFirst = true;
+	await selectedTable.each(async (record) => {
+		const json = JSON.stringify(record);
+		const prefix = isFirst ? '' : ',\n';
+		await writer.write(encoder.encode(prefix + json));
+		isFirst = false;
+	});
 
-	// Create download link
-	const url = URL.createObjectURL(blob);
-	const a = document.createElement('a');
-	a.href = url;
-	a.download = `${dbName}_${tableName}_${new Date().toISOString()}.json`;
-	document.body.append(a);
-	a.click();
-	a.remove();
-	URL.revokeObjectURL(url);
+	// End JSON array
+	await writer.write(encoder.encode(']'));
+	await writer.close();
 
-	return allRecords;
+	return true;
 }
 
 async function importRecords(jsonData: any[]) {
@@ -85,12 +88,7 @@ async function importRecords(jsonData: any[]) {
 
 	if (!selectedTable) return;
 
-	const CHUNK_SIZE = 50000;
-
-	for (let i = 0; i < jsonData.length; i += CHUNK_SIZE) {
-		const chunk = jsonData.slice(i, i + CHUNK_SIZE);
-		await selectedTable.bulkAdd(chunk);
-	}
+	await selectedTable.bulkAdd(jsonData);
 }
 
 const indexedDbActions = {

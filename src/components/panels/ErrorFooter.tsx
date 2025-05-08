@@ -64,9 +64,7 @@ export function ErrorFooter() {
 										</div>
 										<div className="flex-1 space-y-1.5">
 											<div className="text-destructive font-medium">{error.message}</div>
-											{error.details && (
-												<div className="text-muted-foreground text-xs">{error.details}</div>
-											)}
+											<div className="text-muted-foreground text-xs">{error.details}</div>
 										</div>
 									</div>
 								</div>

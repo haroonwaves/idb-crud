@@ -1,6 +1,6 @@
 import { Input } from '@/src/components/ui/Input';
 import { ColumnDef, Table } from '@tanstack/react-table';
-import { useEffect, useRef, useState } from 'preact/hooks';
+import { useEffect, useRef, useState, useCallback } from 'preact/hooks';
 import {
 	Select,
 	SelectContent,
@@ -23,8 +23,30 @@ export function FilterBy<TData, TValue>({
 	const [selectedColumn, setSelectedColumn] = useState<string>('');
 	const [isInputFocused, setIsInputFocused] = useState(false);
 	const [isSelectOpen, setIsSelectOpen] = useState(false);
+	const [filterValue, setFilterValue] = useState('');
 
 	const inputRef = useRef<HTMLInputElement>(null);
+	const debounceTimeout = useRef<number>();
+
+	const debouncedOnChange = useCallback(
+		(value: string) => {
+			if (debounceTimeout.current) clearTimeout(debounceTimeout.current);
+
+			setFilterValue(value);
+
+			debounceTimeout.current = window.setTimeout(() => {
+				table.getColumn(selectedColumn)?.setFilterValue(value);
+				onFilterChange(value);
+			}, 600);
+		},
+		[selectedColumn, onFilterChange]
+	);
+
+	useEffect(() => {
+		return () => {
+			if (debounceTimeout.current) clearTimeout(debounceTimeout.current);
+		};
+	}, []);
 
 	useEffect(() => {
 		if (selectedColumn) inputRef.current?.focus();
@@ -41,10 +63,9 @@ export function FilterBy<TData, TValue>({
 			<Input
 				ref={inputRef}
 				placeholder={`Filter by ${selectedColumn}...`}
-				value={(table.getColumn(selectedColumn)?.getFilterValue() as string) ?? ''}
+				value={filterValue}
 				onChange={(event) => {
-					table.getColumn(selectedColumn)?.setFilterValue((event.target as HTMLInputElement).value);
-					onFilterChange((event.target as HTMLInputElement).value);
+					debouncedOnChange((event.target as HTMLInputElement).value);
 				}}
 				onFocus={() => {
 					if (selectedColumn === '') setIsSelectOpen(true);
@@ -60,6 +81,7 @@ export function FilterBy<TData, TValue>({
 					onOpenChange={setIsSelectOpen}
 					onValueChange={(value: string) => {
 						table.getColumn(selectedColumn)?.setFilterValue(''); // Clear the filter when changing columns
+						setFilterValue('');
 						setSelectedColumn(value);
 					}}
 				>

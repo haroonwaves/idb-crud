@@ -2,7 +2,7 @@ import { signal } from '@preact/signals';
 import { ColumnFiltersState, PaginationState, SortingState } from '@tanstack/react-table';
 
 const database = {
-	type: signal(''),
+	type: signal('indexedDb'),
 	selected: signal(''),
 	table: signal(''),
 };
@@ -22,7 +22,7 @@ const dataTable = {
 	},
 };
 
-const errors = signal<Array<{ message: string; details?: string }>>([]);
+const errors = signal<Array<{ message: string; details: string }>>([]);
 
 export const state = {
 	database,
