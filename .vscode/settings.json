@@ -1,0 +1,8 @@
+{
+	"editor.formatOnSave": true,
+	"editor.defaultFormatter": "esbenp.prettier-vscode",
+	"javascript.updateImportsOnFileMove.enabled": "prompt",
+	"typescript.updateImportsOnFileMove.enabled": "prompt",
+
+	"files.eol": "\n" // Use LF for new lines
+}
