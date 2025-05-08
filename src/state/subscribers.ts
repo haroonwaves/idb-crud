@@ -28,8 +28,8 @@ state.database.selected.subscribe((selected) => {
 
 state.database.table.subscribe((table) => {
 	if (table) {
-		void loadTable();
 		untracked(() => resetDataTableStates());
+		void loadTable();
 	}
 });
 
