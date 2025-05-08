@@ -25,7 +25,6 @@ function applyMemoryFilter(
 
 	return collection.filter((item) => {
 		const fieldValue = item[filter.id];
-		if (fieldValue === null || fieldValue === undefined) return false;
 		return String(fieldValue).toLowerCase().includes(filterValue.toLowerCase());
 	});
 }
@@ -86,13 +85,24 @@ function createOptimizedCollection(
 	return { collection, needsMemorySort, needsMemoryFilter };
 }
 
+function updateCount(collection: Dexie.Collection, countUpdater: (totalCount: number) => void) {
+	countUpdater(-1);
+	collection
+		.count()
+		.then(countUpdater)
+		.catch((error) => {
+			throw error;
+		});
+}
+
 export async function loadRecords(countUpdater: (totalCount: number) => void) {
 	const selectedDatabase = state.database.selected.value;
 	const db = dexieDb.select(selectedDatabase);
+	const tableName = state.database.table.value;
 
-	if (!db) return [];
+	if (!db || !tableName) return [];
 
-	const table = db.table(state.database.table.value);
+	const table = db.table(tableName);
 	const sort = state.dataTable.query.sort.value[0];
 	const filter = state.dataTable.query.filter.value[0];
 	const { pageIndex, pageSize } = state.dataTable.query.pagination.value;
@@ -111,13 +121,6 @@ export async function loadRecords(countUpdater: (totalCount: number) => void) {
 		? applyMemoryFilter(collection, filter).clone()
 		: collection.clone(); // This is a hack to clone the collection, because the collection.clone on the processedCollection isn't working properly
 
-	collectionForCount
-		.count()
-		.then(countUpdater)
-		.catch((error) => {
-			throw error;
-		});
-
 	if (needsMemorySort && sort) {
 		let items: object[];
 
@@ -127,6 +130,7 @@ export async function loadRecords(countUpdater: (totalCount: number) => void) {
 		const start = pageIndex * pageSize;
 		const end = Math.min(items.length, start + pageSize);
 
+		updateCount(collectionForCount, countUpdater);
 		return items.slice(start, end);
 	}
 
@@ -134,6 +138,11 @@ export async function loadRecords(countUpdater: (totalCount: number) => void) {
 		.offset(pageIndex * pageSize)
 		.limit(pageSize)
 		.toArray()) as object[];
+
+	// Show loading state while fetching total count asynchronously
+	// Using -1 as a sentinel value to indicate loading state
+	// This approach prevents blocking the UI while counting large datasets
+	updateCount(collectionForCount, countUpdater);
 
 	return rows;
 }

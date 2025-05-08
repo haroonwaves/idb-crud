@@ -1,4 +1,5 @@
 import { state } from '@/src/state/state';
+import { batch } from '@preact/signals';
 
 type TableProps = {
 	table: string;
@@ -18,8 +19,10 @@ export function Table({ table, dbName }: Readonly<TableProps>) {
 			}`}
 			key={table}
 			onClick={() => {
-				state.database.selected.value = dbName;
-				state.database.table.value = table;
+				batch(() => {
+					state.database.selected.value = dbName;
+					state.database.table.value = table;
+				});
 			}}
 		>
 			{table}

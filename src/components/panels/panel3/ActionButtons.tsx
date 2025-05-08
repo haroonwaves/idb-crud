@@ -13,6 +13,7 @@ import { useEffect, useState } from 'preact/hooks';
 import { JsonViewer } from '@/src/components/panels/panel3/JsonViewer';
 import { Button } from '@/src/components/ui/Button';
 import { Tooltip } from '@/src/components/ui/Tooltip';
+import { setRowSelectionRef } from '@/src/components/dataTable/DataTable';
 
 async function copySelectedRows() {
 	const selectedRows = state.dataTable.selectedRows.value;
@@ -83,6 +84,7 @@ export function ActionButtons({ selectedRows }: Readonly<{ selectedRows: object[
 				<DialogContent>
 					<DialogHeader>
 						<DialogTitle>Create New Record</DialogTitle>
+						<DialogDescription>Create a new record to the database table.</DialogDescription>
 					</DialogHeader>
 					<div className="py-4">
 						<JsonViewer
@@ -134,6 +136,7 @@ export function ActionButtons({ selectedRows }: Readonly<{ selectedRows: object[
 							onClick={() => {
 								void deleteSelectedRows().then(() => {
 									setIsDeleteDialogOpen(false);
+									setRowSelectionRef.current?.({});
 								});
 							}}
 							className="cursor-pointer"

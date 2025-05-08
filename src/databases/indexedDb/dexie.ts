@@ -10,6 +10,5 @@ export const dexieDb = {
 	},
 	select: (dbName: string) => {
 		if (dbName in dexieInstances) return dexieInstances[dbName];
-		throw new Error(`Database ${dbName} not found`);
 	},
 };
