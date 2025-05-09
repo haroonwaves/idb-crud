@@ -63,19 +63,23 @@ async function exportRecords() {
 	const writer = fileStream.getWriter();
 	const encoder = new TextEncoder();
 
-	// Start JSON array
-	await writer.write(encoder.encode('['));
+	await writer.write(encoder.encode('[\n'));
 
 	let isFirst = true;
-	await selectedTable.each(async (record) => {
-		const json = JSON.stringify(record);
+
+	await selectedTable.each((record) => {
 		const prefix = isFirst ? '' : ',\n';
-		await writer.write(encoder.encode(prefix + json));
+
+		const jsonIndented = JSON.stringify(record, null, 2)
+			.split('\n')
+			.map((line) => `  ${line}`) // indent each line of the object
+			.join('\n');
+
+		void writer.write(encoder.encode(prefix + jsonIndented));
 		isFirst = false;
 	});
 
-	// End JSON array
-	await writer.write(encoder.encode(']'));
+	await writer.write(encoder.encode('\n]'));
 	await writer.close();
 
 	return true;
