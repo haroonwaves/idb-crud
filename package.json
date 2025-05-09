@@ -1,8 +1,9 @@
 {
 	"name": "idb-crud",
 	"private": true,
-	"version": "2.0",
+	"version": "2.0.1",
 	"type": "module",
+	"license": "AGPL-3.0-only",
 	"scripts": {
 		"dev": "vite",
 		"build": "vite build",
