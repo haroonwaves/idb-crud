@@ -27,12 +27,14 @@ export async function createRecord(newRecord: object) {
 	await loadTable();
 }
 
-export async function loadTable() {
+export async function loadTable(loadCounts: boolean = true) {
 	const selectedDbType = state.database.type.value;
 
 	let rows: object[] = [];
 
-	const countUpdater = (totalCount: number) => (state.dataTable.totalRows.value = totalCount);
+	const countUpdater = loadCounts
+		? (totalCount: number) => (state.dataTable.totalRows.value = totalCount)
+		: null;
 
 	state.dataTable.isLoading.value = true;
 

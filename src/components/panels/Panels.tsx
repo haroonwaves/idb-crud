@@ -15,17 +15,17 @@ export function Panels() {
 					<Panel1 />
 				</div>
 			</ResizablePanel>
-			<ResizableHandle className="cursor-e-resize bg-gray-300" />
+			<ResizableHandle className="cursor-e-resize bg-gray-200" />
 			<ResizablePanel defaultSize={90}>
 				<ResizablePanelGroup direction="vertical">
 					<ResizablePanel defaultSize={75} minSize={10} maxSize={90}>
-						<div className="h-full overflow-y-auto px-2 py-3">
+						<div className="h-full overflow-y-auto p-3">
 							<Panel2 />
 						</div>
 					</ResizablePanel>
-					<ResizableHandle className="cursor-n-resize bg-gray-300" />
+					<ResizableHandle className="cursor-n-resize bg-gray-200" />
 					<ResizablePanel defaultSize={25}>
-						<div className="relative h-full overflow-y-auto bg-slate-50 px-2 py-3">
+						<div className="relative h-full overflow-y-auto bg-gray-50/40 p-3">
 							<Panel3 />
 						</div>
 					</ResizablePanel>

@@ -34,7 +34,7 @@ state.database.table.subscribe((table) => {
 });
 
 state.dataTable.query.sort.subscribe((sort) => {
-	if (sort.length > 0) void loadTable();
+	if (sort.length > 0) void loadTable(false);
 });
 
 state.dataTable.query.filter.subscribe((filter) => {
@@ -46,5 +46,5 @@ state.dataTable.query.filter.subscribe((filter) => {
 });
 
 state.dataTable.query.pagination.subscribe(() => {
-	void loadTable();
+	void loadTable(false);
 });
