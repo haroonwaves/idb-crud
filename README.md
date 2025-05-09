@@ -1,4 +1,4 @@
-![idb-crud](https://github.com/usmanharoon98/idb-crud/assets/84678818/43257921-d28a-498f-9840-9f18d86d0273)
+![Image](https://github.com/user-attachments/assets/0f664f1f-25d9-421d-be71-5f0a119a4005)
 
 # idb-crud - Database Manager
 
@@ -49,11 +49,11 @@ Fork the Project
 
 ## Branching Strategy
 
-- Feature branches: `feature/FEATURE_NAME`
+- Feature branches: `feature/*`
   ```bash
   git checkout -b feature/add-local-storage
   ```
-- Bug fix branches: `fix/ISSUE`
+- Bug fix branches: `fix/*`
   ```bash
   git checkout -b fix/table-sorting
   ```
