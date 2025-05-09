@@ -1,8 +1,11 @@
 import { defineConfig } from 'vite';
 import preact from '@preact/preset-vite';
 import { crx } from '@crxjs/vite-plugin';
+import pkg from './package.json';
 
 import manifest from './manifest.json';
+
+manifest.version = pkg.version; // Replace version in manifest with package.json version
 
 export default defineConfig({
 	plugins: [preact(), crx({ manifest })],

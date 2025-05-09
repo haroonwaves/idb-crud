@@ -1,14 +1,20 @@
 {
 	"manifest_version": 3,
-	"name": "idb crud - IndexedDB Manager",
-	"description": "Enhance your workflow with the idb crud - IndexedDB DevTool Chrome Extension",
-	"version": "2.0",
+	"name": "idb crud - Database Manager",
+	"description": "A powerful Chrome extension for managing various types of browser storage and databases with an intuitive interface",
+	"version": "__VERSION__",
+	"icons": {
+		"16": "media/icon16.png",
+		"32": "media/icon32.png",
+		"48": "media/icon48.png",
+		"128": "media/icon128.png"
+	},
 	"action": {
 		"default_icon": {
-			"16": "media/appicon16.png",
-			"32": "media/appicon32.png",
-			"48": "media/appicon48.png",
-			"128": "media/appicon128.png"
+			"16": "media/icon16.png",
+			"32": "media/icon32.png",
+			"48": "media/icon48.png",
+			"128": "media/icon128.png"
 		}
 	},
 	"permissions": ["activeTab", "storage"],
