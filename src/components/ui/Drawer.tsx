@@ -83,9 +83,10 @@ export function Drawer({
 			setIsContentVisible(false);
 			setTimeout(() => {
 				if (docStyles) removeOverlay(docStyles);
+				setDocStyles(null);
 			}, 200);
 		}
-	}, [open]);
+	}, [open]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	return (
 		<div

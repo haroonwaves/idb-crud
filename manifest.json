@@ -1,7 +1,7 @@
 {
 	"manifest_version": 3,
 	"name": "idb crud - Database Manager",
-	"description": "A powerful Chrome extension for managing various types of browser storage and databases with an intuitive interface",
+	"description": "A open-source Chrome extension for managing various types of browser storage and databases with an intuitive interface",
 	"version": "__VERSION__",
 	"icons": {
 		"16": "media/icon16.png",

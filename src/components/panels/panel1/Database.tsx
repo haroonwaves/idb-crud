@@ -1,7 +1,7 @@
 import { Table } from '@/src/components/panels/panel1/Table';
 import { dexieDb } from '@/src/databases/indexedDb/dexie';
 import { ChevronRight } from 'lucide-react';
-import { useEffect, useState } from 'preact/hooks';
+import { useCallback, useEffect, useState } from 'preact/hooks';
 
 type DatabaseProps = {
 	dbName: string;
@@ -11,17 +11,17 @@ export function Database({ dbName }: Readonly<DatabaseProps>) {
 	const [open, setOpen] = useState(false);
 	const [tables, setTables] = useState<string[]>([]);
 
-	async function openDatabase() {
+	const openDatabase = useCallback(async () => {
 		const db = dexieDb.select(dbName);
 		if (!db) return;
 
 		if (!db.isOpen()) await db?.open();
 		setTables(db.tables.map((table) => table.name));
-	}
+	}, [dbName]);
 
 	useEffect(() => {
 		void openDatabase();
-	}, [dbName]);
+	}, [openDatabase]);
 
 	return (
 		<>
