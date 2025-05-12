@@ -5,6 +5,8 @@ import sonarjs from 'eslint-plugin-sonarjs';
 import cspellPlugin from '@cspell/eslint-plugin';
 import jsx11y from 'eslint-plugin-jsx-a11y';
 import importPlugin from 'eslint-plugin-import';
+import reactPlugin from 'eslint-plugin-react';
+import reactHooksPlugin from 'eslint-plugin-react-hooks';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 
@@ -20,7 +22,6 @@ export default [
 			'node_modules/**/*',
 			'dist/**/*',
 			'coverage/**/*',
-			'src_old/**/*',
 		],
 	},
 	{
@@ -43,14 +44,15 @@ export default [
 			'@typescript-eslint': tseslintPlugin,
 			unicorn,
 			sonarjs,
-			'jsx-a11y': jsx11y,
 			import: importPlugin,
+			react: reactPlugin,
+			'react-hooks': reactHooksPlugin,
+			'jsx-a11y': jsx11y,
 			'@cspell': cspellPlugin,
 		},
 		settings: {
-			preact: {
-				version: 'detect',
-			},
+			preact: { version: 'detect' },
+			react: { version: 'detect' },
 		},
 		rules: {
 			// Base SonarJS Rules
@@ -80,6 +82,11 @@ export default [
 			'prefer-spread': 'error',
 			'prefer-template': 'error',
 			'use-isnan': 'error',
+
+			// React Rules
+			...reactPlugin.configs.recommended.rules,
+			...reactHooksPlugin.configs.recommended.rules,
+			'react/react-in-jsx-scope': 'off',
 
 			// TypeScript ESLint Rules
 			...tseslintPlugin.configs.base.rules,
