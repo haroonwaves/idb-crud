@@ -39,7 +39,7 @@ export function FilterBy<TData, TValue>({
 				onFilterChange(value);
 			}, 600);
 		},
-		[selectedColumn, onFilterChange]
+		[selectedColumn, onFilterChange, table]
 	);
 
 	useEffect(() => {
@@ -50,7 +50,7 @@ export function FilterBy<TData, TValue>({
 
 	useEffect(() => {
 		if (selectedColumn) inputRef.current?.focus();
-	}, [selectedColumn, inputRef.current]);
+	}, [selectedColumn, inputRef]);
 
 	useSignalEffect(() => {
 		const selectedTable = state.database.table.value; // This subscribes to the table signal and triggers a re-render when the table changes

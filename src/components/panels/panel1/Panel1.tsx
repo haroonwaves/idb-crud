@@ -10,7 +10,7 @@ import { Tooltip } from '@/src/components/ui/Tooltip';
 import { dexieDb } from '@/src/databases/indexedDb/dexie';
 import { state } from '@/src/state/state';
 import { RefreshCcw } from 'lucide-react';
-import { useEffect, useState } from 'preact/hooks';
+import { useCallback, useEffect, useState } from 'preact/hooks';
 
 const dbTypes = [
 	{
@@ -45,7 +45,7 @@ export function Panel1() {
 		);
 	};
 
-	async function getDbNames() {
+	const getDbNames = useCallback(async () => {
 		setIsConnected(false);
 		setDbNames([]);
 
@@ -56,11 +56,11 @@ export function Panel1() {
 		}
 
 		setIsConnected(true);
-	}
+	}, [selectedDbType]);
 
 	useEffect(() => {
 		void getDbNames();
-	}, [selectedDbType]);
+	}, [getDbNames]);
 
 	return (
 		<div className="select-none">
