@@ -1,3 +1,10 @@
+/**
+ * This file is part of idb-crud.
+ *
+ * idb-crud is licensed under the GNU General Public License v3.0.
+ * See the LICENSE file for more details.
+ */
+
 import { render } from 'preact';
 import { App } from './App';
 
