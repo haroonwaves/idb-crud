@@ -84,8 +84,8 @@ All commits MUST follow this format:
 
 # License
 
-This project is licensed under the terms of the GNU Affero General Public License (AGPL) v3. See the
-[LICENSE](LICENSE) file for details.
+This project is licensed under the GNU General Public v3.0. See the [LICENSE](LICENSE) file for
+details.
 
 # Contact
 
