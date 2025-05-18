@@ -1,8 +1,8 @@
-import { loadRecords } from '@/src/databases/indexedDb/actions/loadRecords';
+import { loadRecords } from '@/src/databases/indexedDb/loadRecords';
 import { dexieDb } from '@/src/databases/indexedDb/dexie';
 import { state } from '@/src/state/state';
 import { IndexableType } from 'dexie';
-import streamSaver from 'streamsaver';
+import { getStreamWriter } from '@/src/databases/helpers';
 
 async function createRecord(newRow: object) {
 	const dbName = state.database.selected.value;
@@ -53,21 +53,15 @@ async function deleteRecords() {
 async function exportRecords() {
 	const dbName = state.database.selected.value;
 	const tableName = state.database.table.value;
-	const selectedTable = dexieDb.select(dbName)?.table(tableName);
+	const table = dexieDb.select(dbName)?.table(tableName);
 
-	if (!selectedTable) return null;
+	if (!table) return null;
 
-	const fileStream = streamSaver.createWriteStream(
-		`${dbName}_${tableName}_${new Date().toISOString()}.json`
-	);
-	const writer = fileStream.getWriter();
-	const encoder = new TextEncoder();
-
-	await writer.write(encoder.encode('[\n'));
+	const { writer, encoder } = await getStreamWriter(`${dbName}_${tableName}.json`);
 
 	let isFirst = true;
 
-	await selectedTable.each((record) => {
+	await table.each((record) => {
 		const prefix = isFirst ? '' : ',\n';
 
 		const jsonIndented = JSON.stringify(record, null, 2)
@@ -95,7 +89,7 @@ async function importRecords(jsonData: any[]) {
 	await selectedTable.bulkAdd(jsonData);
 }
 
-const indexedDbActions = {
+const indexedDbOps = {
 	createRecord,
 	loadRecords,
 	updateRecord,
@@ -104,4 +98,4 @@ const indexedDbActions = {
 	importRecords,
 };
 
-export default indexedDbActions;
+export default indexedDbOps;

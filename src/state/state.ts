@@ -1,8 +1,10 @@
 import { signal } from '@preact/signals';
 import { ColumnFiltersState, PaginationState, SortingState } from '@tanstack/react-table';
 
+export type DbType = 'indexedDb' | 'storage';
+
 const database = {
-	type: signal('indexedDb'),
+	type: signal<DbType>(),
 	selected: signal(''),
 	table: signal(''),
 };

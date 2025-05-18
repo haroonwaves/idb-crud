@@ -8,14 +8,18 @@ import {
 } from '@/src/components/ui/Select';
 import { Tooltip } from '@/src/components/ui/Tooltip';
 import { dexieDb } from '@/src/databases/indexedDb/dexie';
-import { state } from '@/src/state/state';
+import { DbType, state } from '@/src/state/state';
 import { RefreshCcw } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'preact/hooks';
 
-const dbTypes = [
+const dbTypes: { label: string; value: DbType }[] = [
 	{
 		label: 'IndexedDB',
 		value: 'indexedDb',
+	},
+	{
+		label: 'Storages',
+		value: 'storage',
 	},
 ];
 
@@ -33,7 +37,7 @@ export function Panel1() {
 			return (
 				<div className="flex flex-col">
 					{dbNames.map((dbName) => (
-						<Database key={dbName} dbName={dbName} />
+						<Database key={dbName} dbName={dbName} selectedDbType={selectedDbType} />
 					))}
 				</div>
 			);
@@ -48,7 +52,10 @@ export function Panel1() {
 	const getDbNames = useCallback(async () => {
 		setIsConnected(false);
 		setDbNames([]);
+		state.database.table.value = '';
+		state.database.selected.value = '';
 
+		if (selectedDbType === 'storage') setDbNames(['Local storage', 'Session storage']);
 		if (selectedDbType === 'indexedDb') {
 			await dexieDb.connect();
 			const dbNames = dexieDb.dbNames();
@@ -67,7 +74,7 @@ export function Panel1() {
 			<div className="mb-2 flex items-center gap-2">
 				<Select
 					value={selectedDbType}
-					onValueChange={(value: string) => (state.database.type.value = value)}
+					onValueChange={(value: DbType) => (state.database.type.value = value)}
 				>
 					<SelectTrigger className="w-full">
 						<SelectValue placeholder="Select a database" />

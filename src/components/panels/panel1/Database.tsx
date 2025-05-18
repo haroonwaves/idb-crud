@@ -2,26 +2,37 @@ import { Table } from '@/src/components/panels/panel1/Table';
 import { dexieDb } from '@/src/databases/indexedDb/dexie';
 import { ChevronRight } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'preact/hooks';
+import { DbType } from '@/src/state/state';
 
 type DatabaseProps = {
 	dbName: string;
+	selectedDbType: DbType | undefined;
 };
 
-export function Database({ dbName }: Readonly<DatabaseProps>) {
+async function getIndexedDbTables(dbName: string) {
+	const db = dexieDb.select(dbName);
+	if (!db) return [];
+
+	if (!db.isOpen()) await db?.open();
+	return db.tables.map((table) => table.name);
+}
+
+export function Database({ dbName, selectedDbType }: Readonly<DatabaseProps>) {
 	const [open, setOpen] = useState(false);
 	const [tables, setTables] = useState<string[]>([]);
 
-	const openDatabase = useCallback(async () => {
-		const db = dexieDb.select(dbName);
-		if (!db) return;
+	const getTables = useCallback(async () => {
+		let tables: string[] = [];
 
-		if (!db.isOpen()) await db?.open();
-		setTables(db.tables.map((table) => table.name));
-	}, [dbName]);
+		if (selectedDbType === 'storage') tables = [window.location.origin];
+		if (selectedDbType === 'indexedDb') tables = await getIndexedDbTables(dbName);
+
+		setTables(tables);
+	}, [dbName, selectedDbType]);
 
 	useEffect(() => {
-		void openDatabase();
-	}, [openDatabase]);
+		void getTables();
+	}, [getTables]);
 
 	return (
 		<>

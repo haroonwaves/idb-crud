@@ -4,6 +4,8 @@
 	"version": "2.0.1",
 	"type": "module",
 	"license": "GPL-3.0-only",
+	"homepage": "https://github.com/haroonwaves/idb-crud",
+	"author": "Usman Haroon <haroonusman00@gmail.com> (https://haroonwaves.github.io)",
 	"scripts": {
 		"dev": "vite",
 		"build": "vite build",
