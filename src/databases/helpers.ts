@@ -1,5 +1,6 @@
 import { dexieDb } from '@/src/databases/indexedDb/dexie';
 import { state } from '@/src/state/state';
+import streamSaver from 'streamsaver';
 
 /* Helper function to extract the columns from the rows */
 export function extractColumns(rows: object[]) {
@@ -28,4 +29,13 @@ export function extractColumns(rows: object[]) {
 	}
 
 	return [...uniqueColumns];
+}
+
+export async function getStreamWriter(fileName: string) {
+	const fileStream = streamSaver.createWriteStream(fileName);
+	const writer = fileStream.getWriter();
+	const encoder = new TextEncoder();
+
+	await writer.write(encoder.encode('[\n'));
+	return { writer, encoder };
 }

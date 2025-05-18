@@ -1,8 +1,9 @@
 import { state } from '@/src/state/state';
-import indexedDbActions from '@/src/databases/indexedDb/actions/actions';
+import indexedDbOps from '@/src/databases/indexedDb/indexedDbOps';
 import { InteractionProps } from 'react-json-view';
 import { extractColumns } from '@/src/databases/helpers';
 import oboe from 'oboe';
+import { storageOps } from '@/src/databases/storage/storageOps';
 
 function setError(message: string, error: Error) {
 	state.errors.value = [
@@ -18,7 +19,8 @@ export async function createRecord(newRecord: object) {
 	const selectedDbType = state.database.type.value;
 
 	try {
-		if (selectedDbType === 'indexedDb') await indexedDbActions.createRecord(newRecord);
+		if (selectedDbType === 'storage') storageOps.createRecord(newRecord);
+		if (selectedDbType === 'indexedDb') await indexedDbOps.createRecord(newRecord);
 	} catch (error) {
 		setError('Error creating record', error as Error);
 		throw error;
@@ -39,7 +41,8 @@ export async function loadTable(loadCounts: boolean = true) {
 	state.dataTable.isLoading.value = true;
 
 	try {
-		if (selectedDbType === 'indexedDb') rows = await indexedDbActions.loadRecords(countUpdater);
+		if (selectedDbType === 'storage') rows = storageOps.loadRecords(countUpdater);
+		if (selectedDbType === 'indexedDb') rows = await indexedDbOps.loadRecords(countUpdater);
 	} catch (error) {
 		setError('Error loading table', error as Error);
 		throw error;
@@ -69,9 +72,8 @@ export async function updateRecord({ existing_src, updated_src, namespace }: Int
 	const selectedDbType = state.database.type.value;
 
 	try {
-		if (selectedDbType === 'indexedDb') {
-			await indexedDbActions.updateRecord(existingRow, updatedRow);
-		}
+		if (selectedDbType === 'storage') storageOps.updateRecord(existingRow, updatedRow);
+		if (selectedDbType === 'indexedDb') await indexedDbOps.updateRecord(existingRow, updatedRow);
 	} catch (error) {
 		setError('Error updating record', error as Error);
 		throw error;
@@ -84,7 +86,8 @@ export async function deleteSelectedRows() {
 	const selectedDbType = state.database.type.value;
 
 	try {
-		if (selectedDbType === 'indexedDb') await indexedDbActions.deleteRecords();
+		if (selectedDbType === 'storage') storageOps.deleteRecords();
+		if (selectedDbType === 'indexedDb') await indexedDbOps.deleteRecords();
 	} catch (error) {
 		setError('Error deleting records', error as Error);
 		throw error;
@@ -99,7 +102,8 @@ export async function exportRecords() {
 	state.dataTable.isLoading.value = true;
 
 	try {
-		if (selectedDbType === 'indexedDb') await indexedDbActions.exportRecords();
+		if (selectedDbType === 'storage') await storageOps.exportRecords();
+		if (selectedDbType === 'indexedDb') await indexedDbOps.exportRecords();
 	} catch (error) {
 		setError('Error exporting records', error as Error);
 		throw error;
@@ -112,82 +116,60 @@ export async function importRecords(file: File) {
 	const selectedDbType = state.database.type.value;
 	state.dataTable.isLoading.value = true;
 
-	try {
+	async function importBatch(batch: any[], cb?: () => void) {
+		if (selectedDbType === 'storage') {
+			storageOps.importRecords(batch);
+			cb?.();
+		}
 		if (selectedDbType === 'indexedDb') {
-			let batch: any[] = [];
-			const BATCH_SIZE = 10_000;
-			let totalProcessed = 0;
+			await indexedDbOps.importRecords(batch);
+			cb?.();
+		}
+	}
 
-			await new Promise<void>((resolve, reject) => {
-				// Convert File to URL for oboe
-				const fileUrl = URL.createObjectURL(file);
+	try {
+		let batch: any[] = [];
+		const BATCH_SIZE = 10_000;
 
-				oboe({
-					url: fileUrl,
-					headers: { 'Content-Type': 'application/json' },
+		await new Promise<void>((resolve, reject) => {
+			const fileUrl = URL.createObjectURL(file);
+
+			oboe({
+				url: fileUrl,
+				headers: { 'Content-Type': 'application/json' },
+			})
+				.node('!.*', (record) => {
+					batch.push(record);
+
+					if (batch.length >= BATCH_SIZE) {
+						const currentBatch = [...batch];
+						batch = [];
+
+						void importBatch(currentBatch);
+					}
+					return oboe.drop;
 				})
-					.node('!.*', (record) => {
-						try {
-							batch.push(record);
-							totalProcessed++;
-
-							if (batch.length >= BATCH_SIZE) {
-								// We need to create a new batch to avoid race conditions
-								const currentBatch = [...batch];
-								batch = [];
-
-								// Process batch in background
-								indexedDbActions
-									.importRecords(currentBatch)
-									.then(() => {
-										state.dataTable.totalRows.value = totalProcessed;
-									})
-									.catch((error) => {
-										reject(new Error(`Failed to import batch: ${error.message}`));
-									});
-							}
-
-							// Return oboe.drop to free up memory
-							return oboe.drop;
-						} catch (error) {
-							reject(
-								new Error(
-									`Failed to process record: ${error instanceof Error ? error.message : String(error)}`
-								)
-							);
-							return oboe.drop;
-						}
-					})
-					.done(() => {
-						// Process final batch if any
-						if (batch.length > 0) {
-							indexedDbActions
-								.importRecords(batch)
-								.then(() => {
-									state.dataTable.totalRows.value = totalProcessed;
-									URL.revokeObjectURL(fileUrl);
-									resolve();
-								})
-								.catch((error) => {
-									URL.revokeObjectURL(fileUrl);
-									reject(new Error(`Failed to import final batch: ${error.message}`));
-								});
-						} else {
+				.done(() => {
+					if (batch.length > 0) {
+						void importBatch(batch, () => {
 							URL.revokeObjectURL(fileUrl);
 							resolve();
-						}
-					})
-					.fail((error) => {
+						});
+					} else {
 						URL.revokeObjectURL(fileUrl);
-						const errorMessage = error.thrown
-							? error.thrown.message || 'Unknown parsing error'
-							: String(error as Error);
-						reject(new Error(`Failed to parse JSON: ${errorMessage}`));
-					});
-			});
+						resolve();
+					}
+				})
+				.fail((error) => {
+					URL.revokeObjectURL(fileUrl);
+					const errorMessage = error.thrown
+						? error.thrown.message || 'Unknown parsing error'
+						: String(error as Error);
+					reject(new Error(`Failed to parse JSON: ${errorMessage}`));
+				});
+		});
 
-			await loadTable();
-		}
+		await loadTable();
 	} catch (error) {
 		setError('Error importing records', error as Error);
 		throw error;

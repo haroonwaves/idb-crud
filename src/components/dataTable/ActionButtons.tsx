@@ -1,3 +1,4 @@
+import { setRowSelectionRef } from '@/src/components/dataTable/DataTable';
 import { Tooltip } from '@/src/components/ui/Tooltip';
 import { exportRecords, importRecords, loadTable } from '@/src/databases/actions';
 import { Download as Import, RefreshCcw, Upload as Export } from 'lucide-react';
@@ -23,7 +24,10 @@ export function ActionButtons() {
 				<Tooltip content="Refresh table">
 					<RefreshCcw
 						className="hover:text-primary size-4 cursor-pointer"
-						onClick={() => loadTable()}
+						onClick={() => {
+							setRowSelectionRef.current?.({});
+							void loadTable();
+						}}
 					/>
 				</Tooltip>
 				<Tooltip content="Export table (JSON)">

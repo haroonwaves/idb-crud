@@ -84,10 +84,10 @@ All commits MUST follow this format:
 
 # License
 
-This project is licensed under the GNU General Public v3.0. See the [LICENSE](LICENSE) file for
-details.
+This project is licensed under the GNU General Public v3.0 - Any forks or derivatives must remain
+open-source under the same license. See the [LICENSE](LICENSE) file for more details.
 
 # Contact
 
-Haroon – @[twitter](https://x.com/UsmanHaroon98) | @[email](mailto:<haroonusman00@gmail.com>) |
-@[Linkedin](https://www.linkedin.com/in/usman-haroon/)
+Haroon – @[email](mailto:<haroonusman00@gmail.com>) |
+@[Linkedin](https://www.linkedin.com/in/haroonwaves/)
