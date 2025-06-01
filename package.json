@@ -1,7 +1,7 @@
 {
 	"name": "idb-crud",
 	"private": true,
-	"version": "2.1.0",
+	"version": "2.2.0",
 	"type": "module",
 	"license": "GPL-3.0-only",
 	"homepage": "https://github.com/haroonwaves/idb-crud",
