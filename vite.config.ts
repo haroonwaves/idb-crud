@@ -20,6 +20,9 @@ export default defineConfig({
 		// },
 		chunkSizeWarningLimit: 600,
 	},
+	define: {
+		'process.env.APP_VERSION': JSON.stringify(pkg.version),
+	},
 	resolve: {
 		alias: {
 			'@': process.cwd(),

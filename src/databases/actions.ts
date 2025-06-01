@@ -46,12 +46,12 @@ export async function loadTable(loadCounts: boolean = true) {
 	} catch (error) {
 		setError('Error loading table', error as Error);
 		throw error;
+	} finally {
+		state.dataTable.isLoading.value = false;
 	}
 
 	state.dataTable.columns.value = extractColumns(rows);
 	state.dataTable.rows.value = rows;
-
-	state.dataTable.isLoading.value = false;
 }
 
 export async function updateRecord({ existing_src, updated_src, namespace }: InteractionProps) {
@@ -74,12 +74,11 @@ export async function updateRecord({ existing_src, updated_src, namespace }: Int
 	try {
 		if (selectedDbType === 'storage') storageOps.updateRecord(existingRow, updatedRow);
 		if (selectedDbType === 'indexedDb') await indexedDbOps.updateRecord(existingRow, updatedRow);
+		await loadTable();
 	} catch (error) {
 		setError('Error updating record', error as Error);
 		throw error;
 	}
-
-	await loadTable();
 }
 
 export async function deleteSelectedRows() {
@@ -88,12 +87,11 @@ export async function deleteSelectedRows() {
 	try {
 		if (selectedDbType === 'storage') storageOps.deleteRecords();
 		if (selectedDbType === 'indexedDb') await indexedDbOps.deleteRecords();
+		await loadTable();
 	} catch (error) {
 		setError('Error deleting records', error as Error);
 		throw error;
 	}
-
-	await loadTable();
 }
 
 export async function exportRecords() {
@@ -107,9 +105,9 @@ export async function exportRecords() {
 	} catch (error) {
 		setError('Error exporting records', error as Error);
 		throw error;
+	} finally {
+		state.dataTable.isLoading.value = false;
 	}
-
-	state.dataTable.isLoading.value = false;
 }
 
 export async function importRecords(file: File) {

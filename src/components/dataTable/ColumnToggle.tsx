@@ -21,13 +21,13 @@ export function ColumnToggle<TData>({ table }: Readonly<ColumnToggleProps<TData>
 		<DropdownMenu>
 			<Tooltip content="Toggle columns" sideOffset={10}>
 				<DropdownMenuTrigger asChild triggerId={`column-toggle`}>
-					<Button variant="outline" size="sm" className="hidden h-8 cursor-pointer lg:flex">
+					<Button variant="outline" size="sm" className="hidden h-9 cursor-pointer lg:flex">
 						<Settings2 />
 						Columns
 					</Button>
 				</DropdownMenuTrigger>
 			</Tooltip>
-			<DropdownMenuContent align="end" className="w-[150px]" triggerId={`column-toggle`}>
+			<DropdownMenuContent className="w-[150px]" triggerId={`column-toggle`}>
 				<DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
 				<DropdownMenuSeparator />
 				{table

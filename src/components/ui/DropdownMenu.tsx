@@ -66,14 +66,16 @@ function DropdownMenuContent({
 			const rect = trigger.getBoundingClientRect();
 			const menu = shadowRoot.querySelector('[data-slot="dropdown-menu-content"]');
 
-			// Default position
-			let x = rect.left;
+			// Default position - center the menu relative to the trigger
+			let x = rect.left + rect.width / 2;
 			let y = rect.bottom + sideOffset;
 
 			// Check if menu would go off the right side of the screen
 			if (menu) {
 				const menuWidth = menu.getBoundingClientRect().width;
+				x = x - menuWidth / 2; // Center the menu
 				if (x + menuWidth > window.innerWidth) x = window.innerWidth - menuWidth - 10; // 10px padding from edge
+				if (x < 10) x = 10; // Ensure menu doesn't go off the left side
 			}
 
 			// Check if menu would go off the bottom of the screen
