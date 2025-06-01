@@ -39,7 +39,7 @@ export function ColumnHeader<TData, TValue>({
 						})()}
 					</Button>
 				</DropdownMenuTrigger>
-				<DropdownMenuContent align="start" triggerId={`column-${column.id}`}>
+				<DropdownMenuContent triggerId={`column-${column.id}`}>
 					<DropdownMenuItem onClick={() => column.toggleSorting(false)}>
 						<ArrowUp className="text-muted-foreground/70 h-3.5 w-3.5" />
 						Asc

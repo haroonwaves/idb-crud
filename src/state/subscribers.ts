@@ -11,7 +11,7 @@ function resetDataTableStates() {
 		state.dataTable.isLoading.value = false; // reset is loading
 		state.dataTable.query.sort.value = []; // reset sort
 		state.dataTable.query.filter.value = []; // reset filter
-		state.dataTable.query.pagination.value = { pageIndex: 0, pageSize: 10 }; // reset pagination
+		state.dataTable.query.pagination.value = { pageIndex: 0, pageSize: 15 }; // reset pagination
 	});
 }
 

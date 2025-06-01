@@ -37,7 +37,7 @@ export function Database({ dbName, selectedDbType }: Readonly<DatabaseProps>) {
 	return (
 		<>
 			<button
-				className={`hover:bg-accent/60 flex w-full items-center rounded-md p-1 ${
+				className={`hover:bg-accent/60 flex w-full items-center rounded-md py-1 ${
 					open ? 'opacity-50' : ''
 				}`}
 				onClick={() => setOpen(!open)}

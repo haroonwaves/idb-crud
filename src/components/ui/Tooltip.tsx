@@ -53,6 +53,8 @@ export function Tooltip({
 			}
 			setPosition({ top, left });
 		}
+
+		return () => setPosition({ top: 0, left: 0 });
 	}, [visible, sideOffset, side]);
 
 	// Tooltip content element

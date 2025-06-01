@@ -55,11 +55,14 @@ export function FilterBy<TData, TValue>({
 	useSignalEffect(() => {
 		const selectedTable = state.database.table.value; // This subscribes to the table signal and triggers a re-render when the table changes
 		const selectedDatabase = state.database.selected.value; // This subscribes to the selected database signal and triggers a re-render
-		if (selectedTable || selectedDatabase) setSelectedColumn('');
+		if (selectedTable || selectedDatabase) {
+			setSelectedColumn('');
+			setFilterValue('');
+		}
 	});
 
 	return (
-		<div className="group relative">
+		<div className="group relative w-[300px]">
 			<Input
 				ref={inputRef}
 				placeholder={`Filter by ${selectedColumn}...`}

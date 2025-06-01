@@ -121,8 +121,7 @@ export function DataTable<TData, TValue>({
 	});
 
 	return (
-		<div className="relative flex h-full flex-col">
-			{isLoading && <Loader />}
+		<div className="flex h-full flex-col">
 			<div className="flex items-center justify-between pb-4 select-none">
 				<FilterBy
 					table={table}
@@ -131,11 +130,15 @@ export function DataTable<TData, TValue>({
 						setRowSelection({});
 					}}
 				/>
-				<ActionButtons />
-				<ColumnToggle table={table} />
+				<div className="ml-2 flex items-center gap-2">
+					<ActionButtons />
+					<ColumnToggle table={table} />
+				</div>
 			</div>
-			<div className="flex-1 overflow-auto">
-				<div className="rounded-md border">
+
+			<div className="overflow-y-auto rounded-md border">
+				<div className="relative">
+					{isLoading && <Loader />}
 					<Table>
 						<TableHeader>
 							{table.getHeaderGroups().map((headerGroup) => (

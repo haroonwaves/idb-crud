@@ -20,7 +20,7 @@ const dataTable = {
 	query: {
 		sort: signal<SortingState>([]),
 		filter: signal<ColumnFiltersState>([]),
-		pagination: signal<PaginationState>({ pageIndex: 0, pageSize: 10 }),
+		pagination: signal<PaginationState>({ pageIndex: 0, pageSize: 15 }),
 	},
 };
 

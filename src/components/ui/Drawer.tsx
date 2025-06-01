@@ -1,5 +1,5 @@
 import React, { createRef, useEffect, useState } from 'preact/compat';
-import { X } from 'lucide-react';
+import { ChevronsRight } from 'lucide-react';
 
 type DocStyles = {
 	position: string;
@@ -94,15 +94,15 @@ export function Drawer({
 			tabIndex={-1} // focusable
 			className={`fixed top-0 right-0 h-full outline-none! ${
 				open ? 'w-[98%]' : 'w-0'
-			} transform bg-white shadow-lg transition-all duration-500 ease-in-out`}
+			} transform bg-white transition-all duration-500 ease-in-out`}
 		>
 			<button
 				onClick={onClose}
-				className={`absolute top-2 -left-8 flex h-8 w-8 items-center justify-center rounded-full bg-white shadow-md ${
+				className={`bg-accent absolute bottom-[50%] -left-5 flex h-24 w-5 cursor-pointer items-center justify-center rounded-tl-md rounded-bl-md ${
 					open ? 'visible' : 'invisible'
 				}`}
 			>
-				<X size={20} />
+				<ChevronsRight size={20} />
 			</button>
 			<div
 				className={`h-full w-full overflow-auto ${isContentVisible ? 'opacity-100' : 'opacity-0'} transition-opacity duration-600`}

@@ -17,8 +17,8 @@ export function ErrorFooter() {
 	return (
 		<div
 			className={cn(
-				'w-full transition-all duration-300 ease-in-out',
-				isCollapsed ? 'h-10' : 'h-62'
+				'absolute bottom-4 z-50 w-[calc(100%-1.5rem)] transition-all duration-300 ease-in-out',
+				isCollapsed ? 'h-10' : 'h-120'
 			)}
 		>
 			<div className="bg-muted/50 h-full rounded-md backdrop-blur-sm">
@@ -34,7 +34,7 @@ export function ErrorFooter() {
 					<div className="flex items-center gap-1.5">
 						<button
 							onClick={() => setIsCollapsed(!isCollapsed)}
-							className="text-muted-foreground hover:bg-accent hover:text-accent-foreground rounded-md p-1.5 transition-colors"
+							className="text-muted-foreground hover:bg-accent hover:text-accent-foreground cursor-pointer rounded-md p-1.5 transition-colors"
 						>
 							{isCollapsed ? (
 								<ChevronDown className="h-4 w-4" />
@@ -44,7 +44,7 @@ export function ErrorFooter() {
 						</button>
 						<button
 							onClick={() => (state.errors.value = [])}
-							className="text-muted-foreground hover:bg-accent hover:text-accent-foreground rounded-md p-1.5 transition-colors"
+							className="text-muted-foreground hover:bg-accent hover:text-accent-foreground cursor-pointer rounded-md p-1.5 transition-colors"
 						>
 							<X className="h-4 w-4" />
 						</button>

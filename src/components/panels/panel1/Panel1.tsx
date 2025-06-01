@@ -1,4 +1,5 @@
 import { Database } from '@/src/components/panels/panel1/Database';
+import { ActionIconsContainer } from '@/src/components/ui/ActionIconsContainer';
 import {
 	Select,
 	SelectContent,
@@ -70,29 +71,33 @@ export function Panel1() {
 	}, [getDbNames]);
 
 	return (
-		<div className="select-none">
-			<div className="mb-2 flex items-center gap-2">
-				<Select
-					value={selectedDbType}
-					onValueChange={(value: DbType) => (state.database.type.value = value)}
-				>
-					<SelectTrigger className="w-full">
-						<SelectValue placeholder="Select a database" />
-						<SelectContent>
-							{dbTypes.map((dbType) => (
-								<SelectItem key={dbType.value} value={dbType.value}>
-									{dbType.label}
-								</SelectItem>
-							))}
-						</SelectContent>
-					</SelectTrigger>
-				</Select>
-				<Tooltip content="Refresh databases">
-					<RefreshCcw
-						className="hover:text-primary size-4 cursor-pointer"
-						onClick={() => void getDbNames()}
-					/>
-				</Tooltip>
+		<div className="flex-1 select-none">
+			<div className="sticky top-0 z-10 flex w-full gap-2 bg-white py-3">
+				<div className="min-w-0 flex-1">
+					<Select
+						value={selectedDbType}
+						onValueChange={(value: DbType) => (state.database.type.value = value)}
+					>
+						<SelectTrigger className="w-full">
+							<SelectValue placeholder="Select a db" />
+							<SelectContent>
+								{dbTypes.map((dbType) => (
+									<SelectItem key={dbType.value} value={dbType.value}>
+										{dbType.label}
+									</SelectItem>
+								))}
+							</SelectContent>
+						</SelectTrigger>
+					</Select>
+				</div>
+				<ActionIconsContainer>
+					<Tooltip content="Refresh databases">
+						<RefreshCcw
+							className="hover:text-primary size-4 cursor-pointer"
+							onClick={() => void getDbNames()}
+						/>
+					</Tooltip>
+				</ActionIconsContainer>
 			</div>
 			{renderContent()}
 		</div>

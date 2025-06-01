@@ -15,19 +15,42 @@ interface PaginationProps<TData> {
 	table: Table<TData>;
 }
 
+function NavigationButton({
+	icon,
+	action,
+	isDisabled,
+	tooltip,
+}: Readonly<{
+	icon: React.ReactNode;
+	action: () => void;
+	isDisabled: boolean;
+	tooltip: string;
+}>) {
+	return (
+		<Tooltip side="top" content={tooltip} sideOffset={10}>
+			<Button
+				variant="outline"
+				className="h-9 w-9 cursor-pointer p-0"
+				onClick={action}
+				disabled={isDisabled}
+			>
+				<span className="sr-only">{tooltip}</span>
+				{icon}
+			</Button>
+		</Tooltip>
+	);
+}
+
 export function Pagination<TData>({ table }: Readonly<PaginationProps<TData>>) {
 	const rowCount = Math.max(0, table.getRowCount());
-	const selectedCount = table.getFilteredSelectedRowModel().rows.length;
 	const pageCount = Math.max(0, table.getPageCount());
 
 	return (
-		<div className="flex items-center justify-between pt-2">
-			<p className="text-muted-foreground flex-1 text-sm">
-				{selectedCount} of {rowCount} row(s) selected
-			</p>
-			<div className="flex items-center space-x-6 lg:space-x-8">
+		<div className="flex items-center justify-between pt-4">
+			<p className="flex-1 text-sm">Total rows: {rowCount}</p>
+			<div className="flex items-center space-x-2">
 				<div className="flex items-center space-x-2">
-					<p className="text-sm font-medium">Rows per page</p>
+					<p className="text-sm whitespace-nowrap">Rows per page</p>
 					<Select
 						value={`${table.getState().pagination.pageSize}`}
 						onValueChange={(value: string) => {
@@ -37,8 +60,8 @@ export function Pagination<TData>({ table }: Readonly<PaginationProps<TData>>) {
 						<SelectTrigger className="h-8 w-[70px]">
 							<SelectValue placeholder={table.getState().pagination.pageSize} />
 						</SelectTrigger>
-						<SelectContent side="top">
-							{[10, 20, 30, 40, 50].map((pageSize) => (
+						<SelectContent side="top" align="center">
+							{[10, 15, 20, 30, 50].map((pageSize) => (
 								<SelectItem key={pageSize} value={`${pageSize}`}>
 									{pageSize}
 								</SelectItem>
@@ -46,54 +69,34 @@ export function Pagination<TData>({ table }: Readonly<PaginationProps<TData>>) {
 						</SelectContent>
 					</Select>
 				</div>
-				<p className="flex items-center justify-center text-sm font-medium">
+				<p className="flex items-center justify-center text-sm whitespace-nowrap">
 					Page {table.getState().pagination.pageIndex + 1} of {pageCount}
 				</p>
 				<div className="flex items-center space-x-2">
-					<Tooltip content="Go to first page" sideOffset={10}>
-						<Button
-							variant="outline"
-							className="hidden h-8 w-8 cursor-pointer p-0 lg:flex"
-							onClick={() => table.setPageIndex(0)}
-							disabled={!table.getCanPreviousPage()}
-						>
-							<span className="sr-only">Go to first page</span>
-							<ChevronsLeft />
-						</Button>
-					</Tooltip>
-					<Tooltip content="Go to prev page" sideOffset={10}>
-						<Button
-							variant="outline"
-							className="h-8 w-8 cursor-pointer p-0"
-							onClick={() => table.previousPage()}
-							disabled={!table.getCanPreviousPage()}
-						>
-							<span className="sr-only">Go to previous page</span>
-							<ChevronLeft />
-						</Button>
-					</Tooltip>
-					<Tooltip content="Go to next page" sideOffset={10}>
-						<Button
-							variant="outline"
-							className="h-8 w-8 cursor-pointer p-0"
-							onClick={() => table.nextPage()}
-							disabled={!table.getCanNextPage()}
-						>
-							<span className="sr-only">Go to next page</span>
-							<ChevronRight />
-						</Button>
-					</Tooltip>
-					<Tooltip content="Go to last page" sideOffset={10}>
-						<Button
-							variant="outline"
-							className="hidden h-8 w-8 cursor-pointer p-0 lg:flex"
-							onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-							disabled={!table.getCanNextPage()}
-						>
-							<span className="sr-only">Go to last page</span>
-							<ChevronsRight />
-						</Button>
-					</Tooltip>
+					<NavigationButton
+						icon={<ChevronsLeft />}
+						action={() => table.setPageIndex(0)}
+						isDisabled={!table.getCanPreviousPage()}
+						tooltip="Go to first page"
+					/>
+					<NavigationButton
+						icon={<ChevronLeft />}
+						action={() => table.previousPage()}
+						isDisabled={!table.getCanPreviousPage()}
+						tooltip="Go to prev page"
+					/>
+					<NavigationButton
+						icon={<ChevronRight />}
+						action={() => table.nextPage()}
+						isDisabled={!table.getCanNextPage()}
+						tooltip="Go to next page"
+					/>
+					<NavigationButton
+						icon={<ChevronsRight />}
+						action={() => table.setPageIndex(table.getPageCount() - 1)}
+						isDisabled={!table.getCanNextPage()}
+						tooltip="Go to last page"
+					/>
 				</div>
 			</div>
 		</div>
