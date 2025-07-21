@@ -17,13 +17,13 @@ export default defineContentScript({
 				fontLink.href =
 					'https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&display=swap';
 				fontLink.rel = 'stylesheet';
-				document.head.appendChild(fontLink);
+				document.head.appendChild(fontLink); // eslint-disable-line unicorn/prefer-dom-node-append
 
 				const wrapper = document.createElement('div');
 				wrapper.id = 'idb-crud-content-root';
 				container.append(wrapper);
 
-				render(App(), wrapper);
+				render(App(), wrapper); // eslint-disable-line new-cap
 				return { wrapper };
 			},
 			onRemove: (mounted) => {
