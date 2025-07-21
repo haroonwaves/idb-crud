@@ -78,7 +78,6 @@ export function Drawer({
 	});
 
 	useEffect(() => {
-		// eslint-disable-next-line sonarjs/no-selector-parameter
 		if (openDrawer) {
 			idbCrudDrawerRef.current.focus();
 			setTimeout(() => {

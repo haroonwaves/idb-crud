@@ -21,6 +21,7 @@ export default [
 			'node_modules/**/*',
 			'dist/**/*',
 			'coverage/**/*',
+			'**/*.wxt',
 		],
 	},
 	{
@@ -34,7 +35,10 @@ export default [
 		languageOptions: {
 			ecmaVersion: 2024,
 			parser: tseslintParser,
-			parserOptions: { tsconfigRootDir: __dirname },
+			parserOptions: {
+				project: './tsconfig.json',
+				tsconfigRootDir: __dirname,
+			},
 		},
 		plugins: {
 			'@typescript-eslint': tseslintPlugin,
