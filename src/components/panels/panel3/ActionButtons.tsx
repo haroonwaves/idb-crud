@@ -1,6 +1,6 @@
 import { Check, CopyIcon, Trash } from 'lucide-react';
-import { deleteSelectedRows } from '@/src/databases/actions';
-import { state } from '@/src/state/state';
+import { deleteSelectedRows } from '@/databases/actions';
+import { state } from '@/state/state';
 import {
 	Dialog,
 	DialogContent,
@@ -8,12 +8,12 @@ import {
 	DialogHeader,
 	DialogTitle,
 	DialogDescription,
-} from '@/src/components/ui/Dialog';
+} from '@/components/ui/Dialog';
 import { useState } from 'preact/hooks';
-import { Button } from '@/src/components/ui/Button';
-import { Tooltip } from '@/src/components/ui/Tooltip';
-import { setRowSelectionRef } from '@/src/components/dataTable/DataTable';
-import { ActionIconsContainer } from '@/src/components/ui/ActionIconsContainer';
+import { Button } from '@/components/ui/Button';
+import { Tooltip } from '@/components/ui/Tooltip';
+import { setRowSelectionRef } from '@/components/dataTable/DataTable';
+import { ActionIconsContainer } from '@/components/ui/ActionIconsContainer';
 
 async function copySelectedRows() {
 	const selectedRows = state.dataTable.selectedRows.value;

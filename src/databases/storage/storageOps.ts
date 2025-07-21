@@ -1,5 +1,5 @@
-import { getStreamWriter } from '@/src/databases/helpers';
-import { state } from '@/src/state/state';
+import { getStreamWriter } from '@/databases/helpers';
+import { state } from '@/state/state';
 
 const getStorage = () => {
 	const selectedStorage = state.database.selected.value;

@@ -1,4 +1,4 @@
-import { state } from '@/src/state/state';
+import { state } from '@/state/state';
 import { batch } from '@preact/signals';
 
 type TableProps = {

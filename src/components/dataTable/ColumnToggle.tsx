@@ -1,7 +1,7 @@
 import { Table } from '@tanstack/react-table';
 import { Settings2 } from 'lucide-react';
 
-import { Button } from '@/src/components/ui/Button';
+import { Button } from '@/components/ui/Button';
 import {
 	DropdownMenu,
 	DropdownMenuCheckboxItem,
@@ -9,8 +9,8 @@ import {
 	DropdownMenuLabel,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
-} from '@/src/components/ui/DropdownMenu';
-import { Tooltip } from '@/src/components/ui/Tooltip';
+} from '@/components/ui/DropdownMenu';
+import { Tooltip } from '@/components/ui/Tooltip';
 
 interface ColumnToggleProps<TData> {
 	table: Table<TData>;

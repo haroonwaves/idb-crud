@@ -1,9 +1,9 @@
-import { state } from '@/src/state/state';
-import indexedDbOps from '@/src/databases/indexedDb/indexedDbOps';
+import { state } from '@/state/state';
+import indexedDbOps from '@/databases/indexedDb/indexedDbOps';
 import { InteractionProps } from 'react-json-view';
-import { extractColumns } from '@/src/databases/helpers';
+import { extractColumns } from '@/databases/helpers';
 import oboe from 'oboe';
-import { storageOps } from '@/src/databases/storage/storageOps';
+import { storageOps } from '@/databases/storage/storageOps';
 
 function setError(message: string, error: Error) {
 	state.errors.value = [

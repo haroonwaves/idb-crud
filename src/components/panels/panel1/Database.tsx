@@ -1,8 +1,8 @@
-import { Table } from '@/src/components/panels/panel1/Table';
-import { dexieDb } from '@/src/databases/indexedDb/dexie';
+import { Table } from '@/components/panels/panel1/Table';
+import { dexieDb } from '@/databases/indexedDb/dexie';
 import { ChevronRight } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'preact/hooks';
-import { DbType } from '@/src/state/state';
+import { DbType } from '@/state/state';
 
 type DatabaseProps = {
 	dbName: string;

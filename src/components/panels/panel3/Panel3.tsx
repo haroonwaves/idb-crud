@@ -1,7 +1,7 @@
-import { ActionButtons } from '@/src/components/panels/panel3/ActionButtons';
-import { updateRecord } from '@/src/databases/actions';
-import { state } from '@/src/state/state';
-import { JsonViewer } from '@/src/components/panels/panel3/JsonViewer';
+import { ActionButtons } from '@/components/panels/panel3/ActionButtons';
+import { updateRecord } from '@/databases/actions';
+import { state } from '@/state/state';
+import { JsonViewer } from '@/components/panels/panel3/JsonViewer';
 
 export function Panel3() {
 	const selectedRows = state.dataTable.selectedRows.value;

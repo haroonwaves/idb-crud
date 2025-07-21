@@ -17,7 +17,6 @@ export default [
 		ignores: [
 			'**/node_modules/**',
 			'**/dist/**',
-			'.vite/**/*',
 			'dist',
 			'node_modules/**/*',
 			'dist/**/*',
@@ -35,10 +34,7 @@ export default [
 		languageOptions: {
 			ecmaVersion: 2024,
 			parser: tseslintParser,
-			parserOptions: {
-				project: ['./tsconfig.app.json', './tsconfig.node.json'],
-				tsconfigRootDir: __dirname,
-			},
+			parserOptions: { tsconfigRootDir: __dirname },
 		},
 		plugins: {
 			'@typescript-eslint': tseslintPlugin,

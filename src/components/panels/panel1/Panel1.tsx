@@ -1,15 +1,15 @@
-import { Database } from '@/src/components/panels/panel1/Database';
-import { ActionIconsContainer } from '@/src/components/ui/ActionIconsContainer';
+import { Database } from '@/components/panels/panel1/Database';
+import { ActionIconsContainer } from '@/components/ui/ActionIconsContainer';
 import {
 	Select,
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
 	SelectValue,
-} from '@/src/components/ui/Select';
-import { Tooltip } from '@/src/components/ui/Tooltip';
-import { dexieDb } from '@/src/databases/indexedDb/dexie';
-import { DbType, state } from '@/src/state/state';
+} from '@/components/ui/Select';
+import { Tooltip } from '@/components/ui/Tooltip';
+import { dexieDb } from '@/databases/indexedDb/dexie';
+import { DbType, state } from '@/state/state';
 import { RefreshCcw } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'preact/hooks';
 

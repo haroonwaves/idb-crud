@@ -17,14 +17,14 @@ import {
 	TableHead,
 	TableHeader,
 	TableRow,
-} from '@/src/components/ui/Table';
+} from '@/components/ui/Table';
 import React, { createRef, Dispatch, SetStateAction, useEffect } from 'preact/compat';
-import { Pagination } from '@/src/components/dataTable/Pagination';
-import { ColumnToggle } from '@/src/components/dataTable/ColumnToggle';
-import { state } from '@/src/state/state';
-import { FilterBy } from '@/src/components/dataTable/FilterBy';
-import { ActionButtons } from '@/src/components/dataTable/ActionButtons';
-import { Loader } from '@/src/components/ui/Loader';
+import { Pagination } from '@/components/dataTable/Pagination';
+import { ColumnToggle } from '@/components/dataTable/ColumnToggle';
+import { state } from '@/state/state';
+import { FilterBy } from '@/components/dataTable/FilterBy';
+import { ActionButtons } from '@/components/dataTable/ActionButtons';
+import { Loader } from '@/components/ui/Loader';
 import { useSignalEffect } from '@preact/signals';
 
 interface DataTableProps<TData, TValue> {

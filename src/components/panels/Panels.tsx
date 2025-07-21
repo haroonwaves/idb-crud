@@ -1,13 +1,9 @@
-import { Panel1 } from '@/src/components/panels/panel1/Panel1';
-import { ErrorFooter } from '@/src/components/panels/ErrorFooter';
-import { Panel2 } from '@/src/components/panels/panel2/Panel2';
-import { Panel3 } from '@/src/components/panels/panel3/Panel3';
-import {
-	ResizableHandle,
-	ResizablePanel,
-	ResizablePanelGroup,
-} from '@/src/components/ui/Resizable';
-import { Panel1Footer } from '@/src/components/panels/panel1/Footer';
+import { Panel1 } from '@/components/panels/panel1/Panel1';
+import { ErrorFooter } from '@/components/panels/ErrorFooter';
+import { Panel2 } from '@/components/panels/panel2/Panel2';
+import { Panel3 } from '@/components/panels/panel3/Panel3';
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/Resizable';
+import { Panel1Footer } from '@/components/panels/panel1/Footer';
 
 export function Panels() {
 	return (

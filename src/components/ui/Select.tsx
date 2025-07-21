@@ -2,7 +2,7 @@ import * as React from 'preact/compat';
 import * as SelectPrimitive from '@radix-ui/react-select';
 import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
 
-import { cn } from '@/src/lib/utils';
+import { cn } from '@/lib/utils';
 
 function Select({ ...props }: React.ComponentProps<typeof SelectPrimitive.Root>) {
 	return <SelectPrimitive.Root data-slot="select" {...props} />;
@@ -17,7 +17,7 @@ function SelectValue({ ...props }: React.ComponentProps<typeof SelectPrimitive.V
 }
 
 function SelectPortal({ ...props }: React.ComponentProps<typeof SelectPrimitive.Portal>) {
-	const shadowRoot = document.getElementById('idb-crud-content-root')?.shadowRoot;
+	const shadowRoot = document.getElementsByTagName('idb-crud')[0]?.shadowRoot;
 
 	if (!shadowRoot) {
 		console.warn('Shadow root not found for SelectPortal');

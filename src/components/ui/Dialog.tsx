@@ -2,7 +2,7 @@ import * as React from 'preact/compat';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { XIcon } from 'lucide-react';
 
-import { cn } from '@/src/lib/utils';
+import { cn } from '@/lib/utils';
 
 function Dialog({ ...props }: React.ComponentProps<typeof DialogPrimitive.Root>) {
 	return <DialogPrimitive.Root data-slot="dialog" {...props} />;
@@ -13,7 +13,7 @@ function DialogTrigger({ ...props }: React.ComponentProps<typeof DialogPrimitive
 }
 
 function DialogPortal({ ...props }: React.ComponentProps<typeof DialogPrimitive.Portal>) {
-	const shadowRoot = document.getElementById('idb-crud-content-root')?.shadowRoot;
+	const shadowRoot = document.getElementsByTagName('idb-crud')[0]?.shadowRoot;
 
 	if (!shadowRoot) {
 		console.warn('Shadow root not found for DialogPortal');

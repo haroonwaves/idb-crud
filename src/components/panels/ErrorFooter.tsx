@@ -1,7 +1,7 @@
-import { state } from '@/src/state/state';
+import { state } from '@/state/state';
 import { useState } from 'preact/compat';
 import { X, AlertCircle, ChevronDown, ChevronUp } from 'lucide-react';
-import { cn } from '@/src/lib/utils';
+import { cn } from '@/lib/utils';
 
 interface Error {
 	message: string;

@@ -1,19 +1,20 @@
 {
 	"name": "idb-crud",
+	"description": "An open-source Chrome extension for managing various types of browser storage and databases with an intuitive interface",
 	"private": true,
-	"version": "2.2.0",
+	"version": "2.2.1",
 	"type": "module",
 	"license": "GPL-3.0-only",
 	"homepage": "https://github.com/haroonwaves/idb-crud",
 	"author": "Usman Haroon <haroonusman00@gmail.com> (https://haroonwaves.github.io)",
 	"scripts": {
-		"dev": "vite",
-		"build": "vite build",
-		"build:watch": "vite build --watch",
-		"preview": "vite preview",
+		"dev": "wxt",
+		"build": "wxt build",
+		"zip": "wxt zip",
+		"postinstall": "wxt prepare",
 		"format": "prettier --write \"src/**/*.{ts,tsx,css}\"",
 		"lint:fix": "eslint . --ext .ts,.tsx --fix",
-		"typecheck": "tsc --noEmit --project tsconfig.app.json && tsc --noEmit --project tsconfig.node.json",
+		"typecheck": "tsc --noEmit",
 		"validate": "npm run typecheck && eslint . && prettier --check \"src/**/*.{ts,tsx,css}\"",
 		"prepare": "husky install"
 	},
@@ -42,7 +43,6 @@
 	"devDependencies": {
 		"@commitlint/cli": "^18.6.0",
 		"@commitlint/config-conventional": "^18.6.0",
-		"@crxjs/vite-plugin": "^2.0.0-beta.28",
 		"@cspell/eslint-plugin": "^8.18.1",
 		"@preact/preset-vite": "^2.10.1",
 		"@tailwindcss/postcss": "^4.1.3",
@@ -63,6 +63,6 @@
 		"prettier-plugin-tailwindcss": "^0.6.11",
 		"tailwindcss": "^4.1.3",
 		"typescript": "^5.8.3",
-		"vite": "^5.4.6"
+		"wxt": "^0.20.7"
 	}
 }

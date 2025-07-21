@@ -1,9 +1,9 @@
-import { state } from '@/src/state/state';
-import { DataTable } from '@/src/components/dataTable/DataTable';
+import { state } from '@/state/state';
+import { DataTable } from '@/components/dataTable/DataTable';
 import { computed } from '@preact/signals';
 import { ColumnDef } from '@tanstack/react-table';
-import { ColumnHeader } from '@/src/components/dataTable/ColumnHeader';
-import { Checkbox } from '@/src/components/ui/Checkbox';
+import { ColumnHeader } from '@/components/dataTable/ColumnHeader';
+import { Checkbox } from '@/components/ui/Checkbox';
 
 const selectCheckboxColumn = {
 	id: 'select',

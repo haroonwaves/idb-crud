@@ -1,8 +1,8 @@
-import { loadRecords } from '@/src/databases/indexedDb/loadRecords';
-import { dexieDb } from '@/src/databases/indexedDb/dexie';
-import { state } from '@/src/state/state';
+import { loadRecords } from '@/databases/indexedDb/loadRecords';
+import { dexieDb } from '@/databases/indexedDb/dexie';
+import { state } from '@/state/state';
 import { IndexableType } from 'dexie';
-import { getStreamWriter } from '@/src/databases/helpers';
+import { getStreamWriter } from '@/databases/helpers';
 
 async function createRecord(newRow: object) {
 	const dbName = state.database.selected.value;
