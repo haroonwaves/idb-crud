@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from 'preact/hooks';
 import { createPortal } from 'preact/compat';
-import { cn } from '@/src/lib/utils';
+import { cn } from '@/lib/utils';
 
 interface TooltipProps {
 	content: string;
@@ -10,7 +10,7 @@ interface TooltipProps {
 }
 
 const getShadowRoot = () => {
-	return document.getElementById('idb-crud-content-root')?.shadowRoot || document.body;
+	return document.getElementsByTagName('idb-crud')[0]?.shadowRoot || document.body;
 };
 
 export function Tooltip({

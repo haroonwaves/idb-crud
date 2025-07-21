@@ -58,20 +58,28 @@ function removeOverlay(docStyles: DocStyles) {
 
 export function Drawer({
 	children,
-	open,
-	onClose,
 }: Readonly<{
 	children: React.ReactNode;
-	open: boolean;
-	onClose: () => void;
 }>) {
+	const [openDrawer, setOpenDrawer] = useState(false);
 	const idbCrudDrawerRef = createRef();
 	const [isContentVisible, setIsContentVisible] = useState(false);
 	const [docStyles, setDocStyles] = useState<DocStyles | null>(null);
 
 	useEffect(() => {
+		function handleClick(request: Record<string, any>) {
+			if (request.type === 'MOUNT_UI') {
+				if (openDrawer) setOpenDrawer(false);
+				else setOpenDrawer(true);
+			}
+		}
+		chrome.runtime.onMessage.addListener(handleClick);
+		return () => chrome.runtime.onMessage.removeListener(handleClick);
+	});
+
+	useEffect(() => {
 		// eslint-disable-next-line sonarjs/no-selector-parameter
-		if (open) {
+		if (openDrawer) {
 			idbCrudDrawerRef.current.focus();
 			setTimeout(() => {
 				const docStyles = createOverlay();
@@ -86,20 +94,20 @@ export function Drawer({
 				setDocStyles(null);
 			}, 200);
 		}
-	}, [open]); // eslint-disable-line react-hooks/exhaustive-deps
+	}, [openDrawer]); // eslint-disable-line react-hooks/exhaustive-deps
 
 	return (
 		<div
 			ref={idbCrudDrawerRef}
 			tabIndex={-1} // focusable
 			className={`fixed top-0 right-0 h-full outline-none! ${
-				open ? 'w-[98%]' : 'w-0'
+				openDrawer ? 'w-[98%]' : 'w-0'
 			} transform bg-white transition-all duration-500 ease-in-out`}
 		>
 			<button
-				onClick={onClose}
+				onClick={() => setOpenDrawer(false)}
 				className={`bg-accent absolute bottom-[50%] -left-5 flex h-24 w-5 cursor-pointer items-center justify-center rounded-tl-md rounded-bl-md ${
-					open ? 'visible' : 'invisible'
+					openDrawer ? 'visible' : 'invisible'
 				}`}
 			>
 				<ChevronsRight size={20} />

@@ -2,7 +2,7 @@ import * as React from 'preact/compat';
 import * as DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
 import { CheckIcon, ChevronRightIcon, CircleIcon } from 'lucide-react';
 
-import { cn } from '@/src/lib/utils';
+import { cn } from '@/lib/utils';
 
 function DropdownMenu({ ...props }: React.ComponentProps<typeof DropdownMenuPrimitive.Root>) {
 	return <DropdownMenuPrimitive.Root data-slot="dropdown-menu" {...props} />;
@@ -11,7 +11,7 @@ function DropdownMenu({ ...props }: React.ComponentProps<typeof DropdownMenuPrim
 function DropdownMenuPortal({
 	...props
 }: React.ComponentProps<typeof DropdownMenuPrimitive.Portal>) {
-	const shadowRoot = document.getElementById('idb-crud-content-root')?.shadowRoot;
+	const shadowRoot = document.getElementsByTagName('idb-crud')[0]?.shadowRoot;
 
 	if (!shadowRoot) {
 		console.warn('Shadow root not found for DropdownMenuPortal');
@@ -54,7 +54,7 @@ function DropdownMenuContent({
 
 	React.useEffect(() => {
 		const updatePosition = () => {
-			const shadowRoot = document.getElementById('idb-crud-content-root')?.shadowRoot;
+			const shadowRoot = document.getElementsByTagName('idb-crud')[0]?.shadowRoot;
 			if (!shadowRoot) return;
 
 			// Use the triggerId to find the specific trigger element
@@ -95,7 +95,7 @@ function DropdownMenuContent({
 			setPosition({ x, y });
 		};
 
-		const shadowRoot = document.getElementById('idb-crud-content-root')?.shadowRoot;
+		const shadowRoot = document.getElementsByTagName('idb-crud')[0]?.shadowRoot;
 		if (!shadowRoot) return;
 
 		// Create a MutationObserver to watch for the menu appearing

@@ -1,15 +1,15 @@
 import { Table } from '@tanstack/react-table';
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
 
-import { Button } from '@/src/components/ui/Button';
+import { Button } from '@/components/ui/Button';
 import {
 	Select,
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
 	SelectValue,
-} from '@/src/components/ui/Select';
-import { Tooltip } from '@/src/components/ui/Tooltip';
+} from '@/components/ui/Select';
+import { Tooltip } from '@/components/ui/Tooltip';
 
 interface PaginationProps<TData> {
 	table: Table<TData>;

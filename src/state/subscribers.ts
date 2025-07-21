@@ -1,5 +1,5 @@
-import { loadTable } from '@/src/databases/actions';
-import { state } from '@/src/state/state';
+import { loadTable } from '@/databases/actions';
+import { state } from '@/state/state';
 import { batch, untracked } from '@preact/signals';
 
 function resetDataTableStates() {

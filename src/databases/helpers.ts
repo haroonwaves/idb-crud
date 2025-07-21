@@ -1,5 +1,5 @@
-import { dexieDb } from '@/src/databases/indexedDb/dexie';
-import { state } from '@/src/state/state';
+import { dexieDb } from '@/databases/indexedDb/dexie';
+import { state } from '@/state/state';
 import streamSaver from 'streamsaver';
 
 /* Helper function to extract the columns from the rows */

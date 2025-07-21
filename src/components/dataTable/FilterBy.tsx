@@ -1,4 +1,4 @@
-import { Input } from '@/src/components/ui/Input';
+import { Input } from '@/components/ui/Input';
 import { ColumnDef, Table } from '@tanstack/react-table';
 import { useEffect, useRef, useState, useCallback } from 'preact/hooks';
 import {
@@ -7,9 +7,9 @@ import {
 	SelectItem,
 	SelectTrigger,
 	SelectValue,
-} from '@/src/components/ui/Select';
+} from '@/components/ui/Select';
 import { useSignalEffect } from '@preact/signals';
-import { state } from '@/src/state/state';
+import { state } from '@/state/state';
 
 export function FilterBy<TData, TValue>({
 	table,

@@ -1,6 +1,6 @@
-import { setRowSelectionRef } from '@/src/components/dataTable/DataTable';
-import { Tooltip } from '@/src/components/ui/Tooltip';
-import { exportRecords, importRecords, loadTable } from '@/src/databases/actions';
+import { setRowSelectionRef } from '@/components/dataTable/DataTable';
+import { Tooltip } from '@/components/ui/Tooltip';
+import { exportRecords, importRecords, loadTable } from '@/databases/actions';
 import { Download as Import, RefreshCcw, Upload as Export, Plus } from 'lucide-react';
 import { useEffect, useRef, useState } from 'preact/hooks';
 import {
@@ -10,12 +10,12 @@ import {
 	DialogHeader,
 	DialogTitle,
 	DialogDescription,
-} from '@/src/components/ui/Dialog';
-import { Button } from '@/src/components/ui/Button';
-import { JsonViewer } from '@/src/components/panels/panel3/JsonViewer';
-import { createRecord } from '@/src/databases/actions';
-import { state } from '@/src/state/state';
-import { ActionIconsContainer } from '@/src/components/ui/ActionIconsContainer';
+} from '@/components/ui/Dialog';
+import { Button } from '@/components/ui/Button';
+import { JsonViewer } from '@/components/panels/panel3/JsonViewer';
+import { createRecord } from '@/databases/actions';
+import { state } from '@/state/state';
+import { ActionIconsContainer } from '@/components/ui/ActionIconsContainer';
 
 function getPlaceholderRow() {
 	const columns = state.dataTable.columns.value;

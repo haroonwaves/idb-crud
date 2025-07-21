@@ -1,6 +1,6 @@
 import * as React from 'preact';
 
-import { cn } from '@/src/lib/utils';
+import { cn } from '@/lib/utils';
 
 function Table({ className, ...props }: Readonly<React.ComponentProps<'table'>>) {
 	return (
