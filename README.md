@@ -21,16 +21,13 @@ solution for on-the-go database management.
 # Built with
 
 - [Preact](https://preactjs.com/) - Fast 3kB alternative to React with the same modern API
-- [CRXJS](https://crxjs.dev/vite-plugin) - Chrome Extension development tools
+- [WXT](https://wxt.dev/) - Extension Framework
 - [Dexie](https://dexie.org/) - A powerful wrapper for IndexedDB
 - [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS framework
 - [@preact/signals](https://preactjs.com/guide/v10/signals/) - Fine-grained reactivity system
 - [TanStack Table](https://tanstack.com/table/) - Headless UI for building powerful tables
-- [Radix UI](https://www.radix-ui.com/) - Unstyled, accessible UI components
 - [Shadcn/ui](https://ui.shadcn.com/) - Re-usable components built with Radix UI and Tailwind
 - [react-json-view](https://github.com/mac-s-g/react-json-view) - JSON viewer component
-- [react-resizable-panels](https://github.com/bvaughn/react-resizable-panels) - Resizable panel
-  groups
 
 # Installation
 
