@@ -14,6 +14,15 @@ export default defineConfig({
 		define: {
 			'process.env.APP_VERSION': JSON.stringify(pkg.version),
 		},
+		build: {
+			minify: 'terser',
+			terserOptions: {
+				compress: {
+					drop_console: true,
+					drop_debugger: true,
+				},
+			},
+		},
 	}),
 	manifest: {
 		homepage_url: 'https://github.com/haroonwaves/idb-crud',
