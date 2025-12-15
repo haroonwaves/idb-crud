@@ -21,11 +21,14 @@ async function updateRecord(existingRow: object, updatedRow: object) {
 
 	if (!selectedTable) return;
 
-	const primaryKey = Array.isArray(selectedTable.schema.primKey.keyPath)
-		? (selectedTable.schema.primKey.keyPath[0] as string)
-		: (selectedTable.schema.primKey.keyPath as string);
+	const primKeyPath = selectedTable.schema.primKey.keyPath;
+	const primaryKey = Array.isArray(primKeyPath)
+		? (primKeyPath[0] as string)
+		: (primKeyPath as string);
 
-	const primaryValue = existingRow[primaryKey as keyof typeof existingRow];
+	const keyField = primaryKey || 'id';
+
+	const primaryValue = existingRow[keyField as keyof typeof existingRow];
 	await selectedTable.delete(primaryValue);
 
 	await selectedTable.add(updatedRow);
@@ -38,14 +41,17 @@ async function deleteRecords() {
 
 	if (!selectedTable) return;
 
-	const primaryKey = Array.isArray(selectedTable.schema.primKey.keyPath)
-		? (selectedTable.schema.primKey.keyPath[0] as string)
-		: (selectedTable.schema.primKey.keyPath as string);
+	const primKeyPath = selectedTable.schema.primKey.keyPath;
+	const primaryKey = Array.isArray(primKeyPath)
+		? (primKeyPath[0] as string)
+		: (primKeyPath as string);
+
+	const keyField = primaryKey || 'id';
 
 	const selectedRows = state.dataTable.selectedRows.value;
 
 	const primaryValues: IndexableType[] = [];
-	for (const row of selectedRows) primaryValues.push(row[primaryKey as keyof typeof row]);
+	for (const row of selectedRows) primaryValues.push(row[keyField as keyof typeof row]);
 
 	await selectedTable.bulkDelete(primaryValues);
 }

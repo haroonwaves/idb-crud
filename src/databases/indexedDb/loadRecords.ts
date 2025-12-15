@@ -133,6 +133,28 @@ export async function loadRecords(countUpdater: ((totalCount: number) => void) |
 		return items.slice(start, end);
 	}
 
+	// Handle out-of-line keys (auto-increment with no key path)
+	const primKeySchema = table.schema.primKey;
+	const keyPath = primKeySchema.keyPath;
+	const isOutboundKey = (keyPath as string | string[] | null) === null;
+
+	if (isOutboundKey) {
+		const keys: any[] = [];
+		const items: any[] = [];
+
+		await processedCollection
+			.offset(pageIndex * pageSize)
+			.limit(pageSize)
+			.each((item, cursor) => {
+				items.push(item);
+				keys.push(cursor.primaryKey);
+			});
+
+		return items.map((item, index) => {
+			return { ...item, id: keys[index] };
+		});
+	}
+
 	const rows = (await processedCollection
 		.offset(pageIndex * pageSize)
 		.limit(pageSize)
