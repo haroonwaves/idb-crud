@@ -151,7 +151,7 @@ export async function loadRecords(countUpdater: ((totalCount: number) => void) |
 			});
 
 		return items.map((item, index) => {
-			return { ...item, id: keys[index] };
+			return { ...item, __primaryKey__: keys[index] };
 		});
 	}
 
