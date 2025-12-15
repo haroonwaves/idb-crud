@@ -136,9 +136,9 @@ export async function loadRecords(countUpdater: ((totalCount: number) => void) |
 	// Handle out-of-line keys (auto-increment with no key path)
 	const primKeySchema = table.schema.primKey;
 	const keyPath = primKeySchema.keyPath;
-	const isOutboundKey = (keyPath as string | string[] | null) === null;
+	const isOutOfLineKey = (keyPath as string | string[] | null) === null;
 
-	if (isOutboundKey) {
+	if (isOutOfLineKey) {
 		const keys: any[] = [];
 		const items: any[] = [];
 
