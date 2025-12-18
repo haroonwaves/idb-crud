@@ -46,7 +46,7 @@ async function deleteRecords() {
 		? (primKeyPath[0])
 		: (primKeyPath);
 
-	const keyField = primaryKey || 'id';
+	const keyField = primaryKey?.trim() || '__primaryKey__';
 
 	const selectedRows = state.dataTable.selectedRows.value;
 
