@@ -23,8 +23,8 @@ async function updateRecord(existingRow: object, updatedRow: object) {
 
 	const primKeyPath = selectedTable.schema.primKey.keyPath;
 	const primaryKey = Array.isArray(primKeyPath)
-		? (primKeyPath[0] as string)
-		: (primKeyPath as string);
+		? (primKeyPath[0])
+		: (primKeyPath);
 
 	const keyField = primaryKey?.trim() || '__primaryKey__';
 
