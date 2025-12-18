@@ -26,7 +26,7 @@ async function updateRecord(existingRow: object, updatedRow: object) {
 		? (primKeyPath[0] as string)
 		: (primKeyPath as string);
 
-	const keyField = primaryKey || 'id';
+	const keyField = primaryKey?.trim() || '__primaryKey__';
 
 	const primaryValue = existingRow[keyField as keyof typeof existingRow];
 	await selectedTable.delete(primaryValue);
