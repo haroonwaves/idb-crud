@@ -43,8 +43,8 @@ async function deleteRecords() {
 
 	const primKeyPath = selectedTable.schema.primKey.keyPath;
 	const primaryKey = Array.isArray(primKeyPath)
-		? (primKeyPath[0] as string)
-		: (primKeyPath as string);
+		? (primKeyPath[0])
+		: (primKeyPath);
 
 	const keyField = primaryKey || 'id';
 
