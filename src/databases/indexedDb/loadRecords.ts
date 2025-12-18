@@ -139,20 +139,16 @@ export async function loadRecords(countUpdater: ((totalCount: number) => void) |
 	const isOutOfLineKey = (keyPath as string | string[] | null) === null;
 
 	if (isOutOfLineKey) {
-		const keys: any[] = [];
 		const items: any[] = [];
 
 		await processedCollection
 			.offset(pageIndex * pageSize)
 			.limit(pageSize)
 			.each((item, cursor) => {
-				items.push(item);
-				keys.push(cursor.primaryKey);
+				items.push({...item, __primaryKey__: cursor.primaryKey});
 			});
 
-		return items.map((item, index) => {
-			return { ...item, __primaryKey__: keys[index] };
-		});
+		return items;
 	}
 
 	const rows = (await processedCollection
