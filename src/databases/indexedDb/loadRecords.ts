@@ -121,37 +121,67 @@ export async function loadRecords(countUpdater: ((totalCount: number) => void) |
 
 	if (countUpdater) void updateCount(collectionForCount, countUpdater);
 
+	// Determine if there are out-of-line keys
+	const primKeySchema = table.schema.primKey;
+	const keyPath = primKeySchema.keyPath;
+	const isOutboundKey = (keyPath as string | string[] | null) === null;
+
 	if (needsMemorySort && sort) {
-		let items: object[];
+		// Check if we need to handle out-of-line keys
+		if (isOutboundKey) {
+			// Capture both items and their primary keys
+			const itemsWithKeys: Array<{ item: any; __primaryKey__: any }> = [];
+			await processedCollection.each((item, cursor) => {
+				itemsWithKeys.push({ item, __primaryKey__: cursor.primaryKey });
+			});
 
-		if (sort.desc) processedCollection = processedCollection.reverse();
-		items = await processedCollection.sortBy(sort.id);
+			// Sort in memory
+			itemsWithKeys.sort((a, b) => {
+				const aValue = a.item[sort.id];
+				const bValue = b.item[sort.id];
 
-		const start = pageIndex * pageSize;
-		const end = Math.min(items.length, start + pageSize);
+				if (aValue === bValue) return 0;
+				if (aValue == null) return 1;
+				if (bValue == null) return -1;
+				const comparison = aValue < bValue ? -1 : 1;
+				return sort.desc ? -comparison : comparison;
+			});
 
-		return items.slice(start, end);
+			// Paginate
+			const start = pageIndex * pageSize;
+			const end = Math.min(itemsWithKeys.length, start + pageSize);
+			const unslicedItems = itemsWithKeys.slice(start, end);
+
+			return unslicedItems.map((entry) => ({ ...entry.item, id: entry.__primaryKey__ }));
+		} else {
+			// In-line keys - use Dexie's sortBy
+			let items: object[];
+
+			if (sort.desc) processedCollection = processedCollection.reverse();
+			items = await processedCollection.sortBy(sort.id);
+
+			const start = pageIndex * pageSize;
+			const end = Math.min(items.length, start + pageSize);
+
+			return items.slice(start, end);
+		}
 	}
 
-	// Handle out-of-line keys (auto-increment with no key path)
-	const primKeyPath = table.schema.primKey.keyPath;
-	const primaryKey = Array.isArray(primKeyPath)
-		? (primKeyPath[0])
-		: (primKeyPath);
-
-	const hasOutOfLineKeys = !primaryKey?.trim();
-
-	if (isOutOfLineKey) {
+	if (isOutboundKey) {
+		const keys: any[] = [];
 		const items: any[] = [];
 
 		await processedCollection
 			.offset(pageIndex * pageSize)
 			.limit(pageSize)
 			.each((item, cursor) => {
-				items.push({...item, __primaryKey__: cursor.primaryKey});
+				items.push(item);
+				keys.push(cursor.primaryKey);
 			});
 
-		return items;
+		return items.map((item, index) => {
+			return { ...item, id: keys[index] };
+		});
 	}
 
 	const rows = (await processedCollection
