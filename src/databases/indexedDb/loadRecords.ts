@@ -122,9 +122,11 @@ export async function loadRecords(countUpdater: ((totalCount: number) => void) |
 	if (countUpdater) void updateCount(collectionForCount, countUpdater);
 
 	// Determine if there are out-of-line keys
-	const primKeySchema = table.schema.primKey;
-	const keyPath = primKeySchema.keyPath;
-	const isOutboundKey = (keyPath as string | string[] | null) === null;
+	const primKeyPath = table.schema.primKey.keyPath;
+	const primaryKey = Array.isArray(primKeyPath)
+		? (primKeyPath[0])
+		: (primKeyPath);
+	const hasOutOfLineKeys = !primaryKey?.trim();
 
 	if (needsMemorySort && sort) {
 		// Check if we need to handle out-of-line keys
