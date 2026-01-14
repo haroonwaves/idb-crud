@@ -169,7 +169,7 @@ export async function loadRecords(countUpdater: ((totalCount: number) => void) |
 		}
 	}
 
-	if (isOutboundKey) {
+	if (hasOutOfLineKeys) {
 		const keys: any[] = [];
 		const items: any[] = [];
 
