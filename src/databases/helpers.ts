@@ -1,6 +1,16 @@
 import { dexieDb } from '@/databases/indexedDb/dexie';
 import { state } from '@/state/state';
 import streamSaver from 'streamsaver';
+import Dexie from 'dexie';
+
+export function getTableKeyInfo(table: Dexie.Table) {
+	const primKeyPath = table.schema.primKey.keyPath;
+	const primaryKey = Array.isArray(primKeyPath) ? primKeyPath[0] : primKeyPath;
+	const hasOutOfLineKeys = !primaryKey?.trim();
+	const keyField = hasOutOfLineKeys ? '__primaryKey__' : primaryKey;
+
+	return { keyField, hasOutOfLineKeys };
+}
 
 /* Helper function to extract the columns from the rows */
 export function extractColumns(rows: object[]) {

@@ -2,7 +2,7 @@ import { loadRecords } from '@/databases/indexedDb/loadRecords';
 import { dexieDb } from '@/databases/indexedDb/dexie';
 import { state } from '@/state/state';
 import { IndexableType } from 'dexie';
-import { getStreamWriter } from '@/databases/helpers';
+import { getStreamWriter, getTableKeyInfo } from '@/databases/helpers';
 
 async function createRecord(newRow: object) {
 	const dbName = state.database.selected.value;
@@ -11,7 +11,15 @@ async function createRecord(newRow: object) {
 
 	if (!selectedTable) return;
 
-	await selectedTable.add(newRow);
+	const { keyField } = getTableKeyInfo(selectedTable);
+
+	if (keyField === '__primaryKey__') {
+		const { __primaryKey__, ...rest } = newRow as any;
+		newRow = rest;
+		await selectedTable.add(newRow, __primaryKey__ as IndexableType);
+	} else {
+		await selectedTable.add(newRow);
+	}
 }
 
 async function updateRecord(existingRow: object, updatedRow: object) {
@@ -21,17 +29,19 @@ async function updateRecord(existingRow: object, updatedRow: object) {
 
 	if (!selectedTable) return;
 
-	const primKeyPath = selectedTable.schema.primKey.keyPath;
-	const primaryKey = Array.isArray(primKeyPath)
-		? (primKeyPath[0])
-		: (primKeyPath);
-
-	const keyField = primaryKey?.trim() || '__primaryKey__';
-
+	const { keyField, hasOutOfLineKeys } = getTableKeyInfo(selectedTable);
 	const primaryValue = existingRow[keyField as keyof typeof existingRow];
+
 	await selectedTable.delete(primaryValue);
 
-	await selectedTable.add(updatedRow);
+	if (hasOutOfLineKeys) {
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const { __primaryKey__, ...rest } = updatedRow as any;
+		updatedRow = rest;
+		await selectedTable.add(updatedRow, primaryValue);
+	} else {
+		await selectedTable.add(updatedRow);
+	}
 }
 
 async function deleteRecords() {
@@ -41,12 +51,7 @@ async function deleteRecords() {
 
 	if (!selectedTable) return;
 
-	const primKeyPath = selectedTable.schema.primKey.keyPath;
-	const primaryKey = Array.isArray(primKeyPath)
-		? (primKeyPath[0])
-		: (primKeyPath);
-
-	const keyField = primaryKey?.trim() || '__primaryKey__';
+	const { keyField } = getTableKeyInfo(selectedTable);
 
 	const selectedRows = state.dataTable.selectedRows.value;
 
@@ -67,8 +72,12 @@ async function exportRecords() {
 
 	let isFirst = true;
 
-	await table.each((record) => {
+	const { hasOutOfLineKeys } = getTableKeyInfo(table);
+
+	await table.each((record, cursor) => {
 		const prefix = isFirst ? '' : ',\n';
+
+		if (hasOutOfLineKeys) record['__primaryKey__'] = cursor.primaryKey;
 
 		const jsonIndented = JSON.stringify(record, null, 2)
 			.split('\n')
@@ -92,7 +101,20 @@ async function importRecords(jsonData: any[]) {
 
 	if (!selectedTable) return;
 
-	await selectedTable.bulkAdd(jsonData);
+	const { hasOutOfLineKeys } = getTableKeyInfo(selectedTable);
+
+	if (hasOutOfLineKeys) {
+		const keys: any[] = [];
+		const items = jsonData.map((item) => {
+			const { __primaryKey__, ...rest } = item;
+			keys.push(__primaryKey__);
+			return rest;
+		});
+
+		await selectedTable.bulkAdd(items, keys);
+	} else {
+		await selectedTable.bulkAdd(jsonData);
+	}
 }
 
 const indexedDbOps = {

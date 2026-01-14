@@ -2,6 +2,7 @@ import { dexieDb } from '@/databases/indexedDb/dexie';
 import { state } from '@/state/state';
 import { ColumnFilter, ColumnSort } from '@tanstack/react-table';
 import Dexie from 'dexie';
+import { getTableKeyInfo } from '@/databases/helpers';
 
 function isFieldIndexed(table: Dexie.Table, field: string): boolean {
 	const schema = table.schema;
@@ -122,11 +123,7 @@ export async function loadRecords(countUpdater: ((totalCount: number) => void) |
 	if (countUpdater) void updateCount(collectionForCount, countUpdater);
 
 	// Determine if there are out-of-line keys
-	const primKeyPath = table.schema.primKey.keyPath;
-	const primaryKey = Array.isArray(primKeyPath)
-		? (primKeyPath[0])
-		: (primKeyPath);
-	const hasOutOfLineKeys = !primaryKey?.trim();
+	const { hasOutOfLineKeys } = getTableKeyInfo(table);
 
 	if (needsMemorySort && sort) {
 		// Check if we need to handle out-of-line keys
@@ -154,7 +151,10 @@ export async function loadRecords(countUpdater: ((totalCount: number) => void) |
 			const end = Math.min(itemsWithKeys.length, start + pageSize);
 			const unslicedItems = itemsWithKeys.slice(start, end);
 
-			return unslicedItems.map((entry) => ({ ...entry.item, id: entry.__primaryKey__ }));
+			return unslicedItems.map((entry) => ({
+				...entry.item,
+				__primaryKey__: entry.__primaryKey__,
+			}));
 		} else {
 			// In-line keys - use Dexie's sortBy
 			let items: object[];
@@ -170,20 +170,16 @@ export async function loadRecords(countUpdater: ((totalCount: number) => void) |
 	}
 
 	if (hasOutOfLineKeys) {
-		const keys: any[] = [];
 		const items: any[] = [];
 
 		await processedCollection
 			.offset(pageIndex * pageSize)
 			.limit(pageSize)
 			.each((item, cursor) => {
-				items.push(item);
-				keys.push(cursor.primaryKey);
+				items.push({ ...item, __primaryKey__: cursor.primaryKey });
 			});
 
-		return items.map((item, index) => {
-			return { ...item, id: keys[index] };
-		});
+		return items;
 	}
 
 	const rows = (await processedCollection
