@@ -130,7 +130,7 @@ export async function loadRecords(countUpdater: ((totalCount: number) => void) |
 
 	if (needsMemorySort && sort) {
 		// Check if we need to handle out-of-line keys
-		if (isOutboundKey) {
+		if (hasOutOfLineKeys) {
 			// Capture both items and their primary keys
 			const itemsWithKeys: Array<{ item: any; __primaryKey__: any }> = [];
 			await processedCollection.each((item, cursor) => {
