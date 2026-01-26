@@ -2,7 +2,7 @@
 	"name": "idb-crud",
 	"description": "An open-source Chrome extension for managing various types of browser storage and databases with an intuitive interface",
 	"private": true,
-	"version": "2.2.1",
+	"version": "2.3.0",
 	"type": "module",
 	"license": "GPL-3.0-only",
 	"homepage": "https://github.com/haroonwaves/idb-crud",
