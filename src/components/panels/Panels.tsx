@@ -1,38 +1,26 @@
 import { Panel1 } from '@/components/panels/panel1/Panel1';
-import { ErrorFooter } from '@/components/panels/ErrorFooter';
 import { Panel2 } from '@/components/panels/panel2/Panel2';
-import { Panel3 } from '@/components/panels/panel3/Panel3';
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/Resizable';
 import { Panel1Footer } from '@/components/panels/panel1/Footer';
 
 export function Panels() {
 	return (
-		<ResizablePanelGroup direction="horizontal" className="h-full rounded-lg">
-			{/* Left Panel */}
-			<ResizablePanel defaultSize={12} minSize={10} maxSize={15}>
-				<div className="flex h-full flex-col overflow-y-auto px-3">
-					<Panel1 />
+		<ResizablePanelGroup direction="horizontal" className="h-full w-full bg-white text-gray-900">
+			{/* Left Panel / Sidebar */}
+			<ResizablePanel defaultSize={18} minSize={14} maxSize={26}>
+				<div className="flex h-full flex-col justify-between bg-white">
+					<div className="min-h-0 flex-1 overflow-hidden">
+						<Panel1 />
+					</div>
 					<Panel1Footer />
 				</div>
 			</ResizablePanel>
 
-			<ResizableHandle className="w-0.5 cursor-e-resize bg-gray-100" />
+			<ResizableHandle className="relative w-[1px] cursor-col-resize bg-gray-200/90 transition-colors hover:bg-blue-500 after:absolute after:inset-y-0 after:-left-1.5 after:-right-1.5 after:z-10" />
 
-			{/* Middle Panel */}
-			<ResizablePanel defaultSize={70} minSize={50}>
-				<div className="relative h-full p-3">
-					<Panel2 />
-					<ErrorFooter />
-				</div>
-			</ResizablePanel>
-
-			<ResizableHandle className="w-0.5 cursor-e-resize bg-gray-100" />
-
-			{/* Right Panel */}
-			<ResizablePanel defaultSize={18} minSize={15}>
-				<div className="h-full overflow-auto bg-gray-50/40 p-3">
-					<Panel3 />
-				</div>
+			{/* Main Content Area: Unified topbar spanning across, with separate Table box & Inspector box */}
+			<ResizablePanel defaultSize={82} minSize={74}>
+				<Panel2 />
 			</ResizablePanel>
 		</ResizablePanelGroup>
 	);

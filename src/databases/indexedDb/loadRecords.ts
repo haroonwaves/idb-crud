@@ -3,6 +3,7 @@ import { state } from '@/state/state';
 import { ColumnFilter, ColumnSort } from '@tanstack/react-table';
 import Dexie from 'dexie';
 import { getTableKeyInfo } from '@/databases/helpers';
+import { safeJsonStringify } from '@/lib/utils';
 
 function isFieldIndexed(table: Dexie.Table, field: string): boolean {
 	const schema = table.schema;
@@ -26,7 +27,10 @@ function applyMemoryFilter(
 
 	return collection.filter((item) => {
 		const fieldValue = item[filter.id];
-		return String(fieldValue).toLowerCase().includes(filterValue.toLowerCase());
+		if (fieldValue === null) return filterValue.toLowerCase().includes('null');
+		if (fieldValue === undefined) return filterValue.toLowerCase().includes('undefined');
+		const str = typeof fieldValue === 'object' ? safeJsonStringify(fieldValue, 0) : String(fieldValue);
+		return str.toLowerCase().includes(filterValue.toLowerCase());
 	});
 }
 
@@ -90,8 +94,43 @@ async function updateCount(
 	collection: Dexie.Collection,
 	countUpdater: (totalCount: number) => void
 ) {
-	const count = await collection.count();
-	countUpdater(count);
+	try {
+		const count = await collection.count();
+		countUpdater(count);
+	} catch (error) {
+		console.warn('Failed to update count:', error);
+	}
+}
+
+async function ensureDbOpen(db: Dexie, selectedDatabase: string): Promise<boolean> {
+	if (!db.isOpen()) {
+		try {
+			await db.open();
+		} catch (error) {
+			console.warn(`Failed to open Dexie db ${selectedDatabase}:`, error);
+			return false;
+		}
+	}
+	return true;
+}
+
+async function fetchOutOfLineRows(
+	collection: Dexie.Collection,
+	pageIndex: number,
+	pageSize: number
+): Promise<any[]> {
+	const items: any[] = [];
+	await collection
+		.offset(pageIndex * pageSize)
+		.limit(pageSize)
+		.each((item, cursor) => {
+			if (item !== null && typeof item === 'object') {
+				items.push({ ...item, __primaryKey__: cursor.primaryKey });
+			} else {
+				items.push({ value: item, __primaryKey__: cursor.primaryKey });
+			}
+		});
+	return items;
 }
 
 export async function loadRecords(countUpdater: ((totalCount: number) => void) | null) {
@@ -100,6 +139,7 @@ export async function loadRecords(countUpdater: ((totalCount: number) => void) |
 	const tableName = state.database.table.value;
 
 	if (!db || !tableName) return [];
+	if (!(await ensureDbOpen(db, selectedDatabase))) return [];
 
 	const table = db.table(tableName);
 	const sort = state.dataTable.query.sort.value[0];
@@ -120,7 +160,9 @@ export async function loadRecords(countUpdater: ((totalCount: number) => void) |
 		? applyMemoryFilter(collection, filter).clone()
 		: collection.clone(); // This is a hack to clone the collection, because the collection.clone on the processedCollection isn't working properly
 
-	if (countUpdater) void updateCount(collectionForCount, countUpdater);
+	if (countUpdater) {
+		void updateCount(collectionForCount, countUpdater);
+	}
 
 	// Determine if there are out-of-line keys
 	const { hasOutOfLineKeys } = getTableKeyInfo(table);
@@ -142,7 +184,9 @@ export async function loadRecords(countUpdater: ((totalCount: number) => void) |
 				if (aValue === bValue) return 0;
 				if (aValue == null) return 1;
 				if (bValue == null) return -1;
-				const comparison = aValue < bValue ? -1 : 1;
+				const compA = typeof aValue === 'object' ? safeJsonStringify(aValue, 0) : aValue;
+				const compB = typeof bValue === 'object' ? safeJsonStringify(bValue, 0) : bValue;
+				const comparison = compA < compB ? -1 : 1;
 				return sort.desc ? -comparison : comparison;
 			});
 
@@ -170,16 +214,7 @@ export async function loadRecords(countUpdater: ((totalCount: number) => void) |
 	}
 
 	if (hasOutOfLineKeys) {
-		const items: any[] = [];
-
-		await processedCollection
-			.offset(pageIndex * pageSize)
-			.limit(pageSize)
-			.each((item, cursor) => {
-				items.push({ ...item, __primaryKey__: cursor.primaryKey });
-			});
-
-		return items;
+		return fetchOutOfLineRows(processedCollection, pageIndex, pageSize);
 	}
 
 	const rows = (await processedCollection

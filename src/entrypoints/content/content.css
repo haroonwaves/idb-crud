@@ -5,10 +5,27 @@
 */
 @custom-variant dark (&:is(.dark *));
 
+@theme {
+	--spacing: 4px;
+	--text-xs: 12px;
+	--text-xs--line-height: 16px;
+	--text-sm: 14px;
+	--text-sm--line-height: 20px;
+	--text-base: 16px;
+	--text-base--line-height: 24px;
+	--text-lg: 18px;
+	--text-lg--line-height: 28px;
+	--text-xl: 20px;
+	--text-xl--line-height: 28px;
+	--text-2xl: 24px;
+	--text-2xl--line-height: 32px;
+}
+
 :host {
 	all: initial !important;
 	font-family: var(--default-font-family) !important;
 	font-size: 14px !important;
+	line-height: 1.5 !important;
 }
 
 :host * {
@@ -75,25 +92,25 @@
 :host {
 	--default-font-family: 'Archivo', apple-system, BlinkMacSystemFont, sans-serif, 'Segoe UI';
 
-	--radius: 0.625rem;
+	--radius: 0.5rem;
 	--background: oklch(1 0 0);
 	--foreground: oklch(0.145 0 0);
 	--card: oklch(1 0 0);
 	--card-foreground: oklch(0.145 0 0);
 	--popover: oklch(1 0 0);
 	--popover-foreground: oklch(0.145 0 0);
-	--primary: oklch(0.205 0 0);
-	--primary-foreground: oklch(0.985 0 0);
+	--primary: #2563eb;
+	--primary-foreground: #ffffff;
 	--secondary: oklch(0.97 0 0);
 	--secondary-foreground: oklch(0.205 0 0);
-	--muted: oklch(0.97 0 0);
-	--muted-foreground: oklch(0.556 0 0);
-	--accent: oklch(0.97 0 0);
-	--accent-foreground: oklch(0.205 0 0);
-	--destructive: oklch(0.577 0.245 27.325);
-	--border: oklch(0.922 0 0);
-	--input: oklch(0.922 0 0);
-	--ring: oklch(0.708 0 0);
+	--muted: oklch(0.975 0 0);
+	--muted-foreground: oklch(0.55 0 0);
+	--accent: #eff6ff;
+	--accent-foreground: #1d4ed8;
+	--destructive: #ef4444;
+	--border: #e5e7eb;
+	--input: #e5e7eb;
+	--ring: #3b82f6;
 	--chart-1: oklch(0.646 0.222 41.116);
 	--chart-2: oklch(0.6 0.118 184.704);
 	--chart-3: oklch(0.398 0.07 227.392);

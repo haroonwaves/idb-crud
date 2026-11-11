@@ -1,5 +1,5 @@
 import { signal } from '@preact/signals';
-import { ColumnFiltersState, PaginationState, SortingState } from '@tanstack/react-table';
+import { ColumnFiltersState, PaginationState, SortingState, VisibilityState } from '@tanstack/react-table';
 
 export type DbType = 'indexedDb' | 'storage';
 
@@ -13,6 +13,8 @@ const dataTable = {
 	rows: signal<object[]>([]),
 	selectedRows: signal<object[]>([]),
 	columns: signal<string[]>([]),
+	searchTerm: signal(''),
+	columnVisibility: signal<VisibilityState>({}),
 
 	totalRows: signal(0),
 	isLoading: signal(false),

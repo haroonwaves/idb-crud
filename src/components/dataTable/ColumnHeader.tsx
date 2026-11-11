@@ -1,19 +1,20 @@
 import { Column } from '@tanstack/react-table';
-import { ArrowDown, ArrowUp, ChevronsUpDown, EyeOff } from 'lucide-react';
-
+import { ArrowDown, ArrowUp, ChevronsUpDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/Button';
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuSeparator,
-	DropdownMenuTrigger,
-} from '@/components/ui/DropdownMenu';
 
 interface ColumnHeaderProps<TData, TValue> extends React.HTMLAttributes<HTMLDivElement> {
 	column: Column<TData, TValue>;
 	title: string;
+}
+
+function renderSortIcon(sortDirection: false | 'asc' | 'desc') {
+	if (sortDirection === 'desc') {
+		return <ArrowDown className="size-3.5 text-blue-600" />;
+	}
+	if (sortDirection === 'asc') {
+		return <ArrowUp className="size-3.5 text-blue-600" />;
+	}
+	return <ChevronsUpDown className="size-3.5" />;
 }
 
 export function ColumnHeader<TData, TValue>({
@@ -22,39 +23,24 @@ export function ColumnHeader<TData, TValue>({
 	className,
 }: Readonly<ColumnHeaderProps<TData, TValue>>) {
 	if (!column.getCanSort()) {
-		return <div className={cn(className)}>{title}</div>;
+		return <div className={cn('text-xs font-semibold text-gray-700', className)}>{title}</div>;
 	}
 
+	const sortDirection = column.getIsSorted();
+
 	return (
-		<div className={cn('flex items-center space-x-2', className)}>
-			<DropdownMenu>
-				<DropdownMenuTrigger asChild triggerId={`column-${column.id}`}>
-					<Button variant="ghost" size="sm" className="data-[state=open]:bg-accent -ml-3 h-8">
-						<span>{title}</span>
-						{(() => {
-							const sortDirection = column.getIsSorted();
-							if (sortDirection === 'desc') return <ArrowDown />;
-							else if (sortDirection === 'asc') return <ArrowUp />;
-							else return <ChevronsUpDown />;
-						})()}
-					</Button>
-				</DropdownMenuTrigger>
-				<DropdownMenuContent triggerId={`column-${column.id}`}>
-					<DropdownMenuItem onClick={() => column.toggleSorting(false)}>
-						<ArrowUp className="text-muted-foreground/70 h-3.5 w-3.5" />
-						Asc
-					</DropdownMenuItem>
-					<DropdownMenuItem onClick={() => column.toggleSorting(true)}>
-						<ArrowDown className="text-muted-foreground/70 h-3.5 w-3.5" />
-						Desc
-					</DropdownMenuItem>
-					<DropdownMenuSeparator />
-					<DropdownMenuItem onClick={() => column.toggleVisibility(false)}>
-						<EyeOff className="text-muted-foreground/70 h-3.5 w-3.5" />
-						Hide
-					</DropdownMenuItem>
-				</DropdownMenuContent>
-			</DropdownMenu>
-		</div>
+		<button
+			type="button"
+			className={cn(
+				'group flex w-full cursor-pointer items-center justify-between gap-1.5 text-xs font-semibold text-gray-700 transition-colors select-none hover:text-gray-950',
+				className
+			)}
+			onClick={() => column.toggleSorting(sortDirection === 'asc')}
+		>
+			<span className="truncate">{title}</span>
+			<span className="shrink-0 text-gray-400 group-hover:text-gray-700">
+				{renderSortIcon(sortDirection)}
+			</span>
+		</button>
 	);
 }

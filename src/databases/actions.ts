@@ -1,9 +1,11 @@
 import { state } from '@/state/state';
 import indexedDbOps from '@/databases/indexedDb/indexedDbOps';
+import { dexieDb } from '@/databases/indexedDb/dexie';
 import { InteractionProps } from 'react-json-view';
-import { extractColumns } from '@/databases/helpers';
+import { extractColumns, getStreamWriter, getTableKeyInfo } from '@/databases/helpers';
 import oboe from 'oboe';
 import { storageOps } from '@/databases/storage/storageOps';
+import { parseValueForDisplay, safeJsonStringify } from '@/lib/utils';
 
 function setError(message: string, error: Error) {
 	state.errors.value = [
@@ -31,6 +33,12 @@ export async function createRecord(newRecord: object) {
 
 export async function loadTable(loadCounts: boolean = true) {
 	const selectedDbType = state.database.type.value;
+	const selectedTable = state.database.table.value;
+
+	if (!selectedDbType || !selectedTable) {
+		state.dataTable.isLoading.value = false;
+		return;
+	}
 
 	let rows: object[] = [];
 
@@ -45,7 +53,7 @@ export async function loadTable(loadCounts: boolean = true) {
 		if (selectedDbType === 'indexedDb') rows = await indexedDbOps.loadRecords(countUpdater);
 	} catch (error) {
 		setError('Error loading table', error as Error);
-		throw error;
+		console.warn('Error loading table:', error);
 	} finally {
 		state.dataTable.isLoading.value = false;
 	}
@@ -69,6 +77,10 @@ export async function updateRecord({ existing_src, updated_src, namespace }: Int
 
 	if (!existingRow || !updatedRow) return;
 
+	await updateRecordDirect(existingRow, updatedRow);
+}
+
+export async function updateRecordDirect(existingRow: object, updatedRow: object) {
 	const selectedDbType = state.database.type.value;
 
 	try {
@@ -79,6 +91,98 @@ export async function updateRecord({ existing_src, updated_src, namespace }: Int
 		setError('Error updating record', error as Error);
 		throw error;
 	}
+}
+
+export async function copySelectedRows() {
+	const selectedRows = state.dataTable.selectedRows.value;
+	if (selectedRows.length === 0) return;
+	const formatted = selectedRows.map((row) => parseValueForDisplay(row));
+	await navigator.clipboard.writeText(safeJsonStringify(formatted, 2));
+}
+
+function duplicateStorageRow(row: object) {
+	const r = row as { key?: unknown; value?: unknown };
+	if (r.key !== undefined) {
+		const keyStr = typeof r.key === 'string' ? r.key : safeJsonStringify(r.key, 0);
+		const newKey = `${keyStr}_copy_${Date.now().toString(36)}`;
+		storageOps.createRecord({ key: newKey, value: r.value });
+	}
+}
+
+async function duplicateIndexedDbRow(row: object) {
+	let clone: Record<string, unknown>;
+	try {
+		clone = structuredClone(row) as Record<string, unknown>;
+	} catch {
+		clone = JSON.parse(safeJsonStringify(row));
+	}
+	const dbName = state.database.selected.value;
+	const tableName = state.database.table.value;
+	const table = dexieDb.select(dbName)?.table(tableName);
+	if (!table) return;
+
+	const { keyField, hasOutOfLineKeys } = getTableKeyInfo(table);
+	if (hasOutOfLineKeys) {
+		delete clone.__primaryKey__;
+		await table.add(clone);
+		return;
+	}
+
+	if (!keyField) return;
+	const primKey = table.schema.primKey as any;
+	if (primKey?.autoIncrement) {
+		delete clone[keyField];
+	} else if (typeof clone[keyField] === 'string') {
+		clone[keyField] = `${String(clone[keyField])}_copy`;
+	} else if (typeof clone[keyField] === 'number') {
+		clone[keyField] = Number(clone[keyField]) + 1;
+	}
+	await table.add(clone);
+}
+
+export async function duplicateSelectedRows() {
+	const selectedDbType = state.database.type.value;
+	const selectedRows = state.dataTable.selectedRows.value;
+	if (selectedRows.length === 0) return;
+
+	try {
+		for (const row of selectedRows) {
+			if (selectedDbType === 'storage') {
+				duplicateStorageRow(row);
+			} else if (selectedDbType === 'indexedDb') {
+				await duplicateIndexedDbRow(row);
+			}
+		}
+		await loadTable();
+	} catch (error) {
+		setError('Error duplicating record', error as Error);
+		throw error;
+	}
+}
+
+export async function exportSelectedRows() {
+	const selectedRows = state.dataTable.selectedRows.value;
+	if (selectedRows.length === 0) {
+		await exportRecords();
+		return;
+	}
+
+	const dbName = state.database.selected.value;
+	const tableName = state.database.table.value;
+	const { writer, encoder } = await getStreamWriter(`${dbName}_${tableName}_selected.json`);
+
+	let isFirst = true;
+	for (const row of selectedRows) {
+		const prefix = isFirst ? '' : ',\n';
+		const jsonIndented = JSON.stringify(row, null, 2)
+			.split('\n')
+			.map((line) => `  ${line}`)
+			.join('\n');
+		void writer.write(encoder.encode(prefix + jsonIndented));
+		isFirst = false;
+	}
+	await writer.write(encoder.encode('\n]'));
+	await writer.close();
 }
 
 export async function deleteSelectedRows() {

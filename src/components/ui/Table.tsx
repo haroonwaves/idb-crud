@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 
 function Table({ className, ...props }: Readonly<React.ComponentProps<'table'>>) {
 	return (
-		<div data-slot="table-container" className="relative w-full overflow-x-auto">
+		<div data-slot="table-container" className="relative w-full overflow-x-auto min-h-full flex flex-col flex-1">
 			<table
 				data-slot="table"
 				className={cn('w-full caption-bottom text-sm', className)}
@@ -24,7 +24,7 @@ function TableBody({ className, ...props }: Readonly<React.ComponentProps<'tbody
 	return (
 		<tbody
 			data-slot="table-body"
-			className={cn('[&_tr:last-child]:border-0', className)}
+			className={cn('[&_tr:last-child]:border-b-0', className)}
 			{...props}
 		/>
 	);
