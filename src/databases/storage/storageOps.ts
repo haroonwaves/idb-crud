@@ -1,5 +1,6 @@
 import { getStreamWriter } from '@/databases/helpers';
 import { state } from '@/state/state';
+import { safeJsonStringify } from '@/lib/utils';
 
 const getStorage = () => {
 	const selectedStorage = state.database.selected.value;
@@ -7,26 +8,53 @@ const getStorage = () => {
 	return storage;
 };
 
+function serializeStorageValue(val: unknown): string {
+	if (typeof val === 'string') {
+		return val;
+	}
+	return JSON.stringify(val);
+}
+
+function parseStorageValue(rawValue: string): unknown {
+	let parsed: unknown;
+
+	try {
+		parsed = JSON.parse(rawValue);
+	} catch {
+		return rawValue;
+	}
+
+	// Handle double-stringified JSON (e.g. '"[\"1\"]"' -> '["1"]' -> ['1'])
+	if (typeof parsed === 'string') {
+		const trimmed = parsed.trim();
+		if (
+			(trimmed.startsWith('{') && trimmed.endsWith('}')) ||
+			(trimmed.startsWith('[') && trimmed.endsWith(']'))
+		) {
+			try {
+				parsed = JSON.parse(trimmed);
+			} catch {
+				// keep as string
+			}
+		}
+	}
+
+	return parsed;
+}
+
 const checkForKeyValue = (data: object) => 'key' in data && 'value' in data;
 
 function createRecord(newRow: object) {
 	if (!checkForKeyValue(newRow)) throw new Error('key and value are required for localStorage');
 
-	getStorage().setItem(String(newRow.key), JSON.stringify(newRow.value));
+	getStorage().setItem(String(newRow.key), serializeStorageValue(newRow.value));
 }
 
 function getAllRows() {
-	let rows: object[] = [];
+	const rows: object[] = [];
 
 	for (const [key, value] of Object.entries(getStorage())) {
-		let parsedValue = '';
-
-		try {
-			parsedValue = JSON.parse(value as string);
-		} catch {
-			parsedValue = value;
-		}
-
+		const parsedValue = parseStorageValue(value as string);
 		rows.push({ key, value: parsedValue });
 	}
 
@@ -42,7 +70,8 @@ function loadRecords(countUpdater: ((totalCount: number) => void) | null) {
 
 	if (filter?.id && filter?.value) {
 		rows = rows.filter((row) => {
-			const rowValue = JSON.stringify(row[filter.id as keyof typeof row]);
+			const rawVal = row[filter.id as keyof typeof row];
+			const rowValue = typeof rawVal === 'string' ? rawVal : (safeJsonStringify(rawVal, 0) ?? '');
 			const filterValue = filter.value as string;
 			return rowValue.toLowerCase().includes(filterValue.toLowerCase());
 		});
@@ -50,8 +79,15 @@ function loadRecords(countUpdater: ((totalCount: number) => void) | null) {
 
 	if (sort?.id) {
 		rows = rows.sort((a, b) => {
-			const rowValueA = JSON.stringify(a[sort.id as keyof typeof a]);
-			const rowValueB = JSON.stringify(b[sort.id as keyof typeof b]);
+			const valA = a[sort.id as keyof typeof a];
+			const valB = b[sort.id as keyof typeof b];
+
+			if (valA === valB) return 0;
+			if (valA == null) return 1;
+			if (valB == null) return -1;
+
+			const rowValueA = typeof valA === 'string' ? valA : (safeJsonStringify(valA, 0) ?? '');
+			const rowValueB = typeof valB === 'string' ? valB : (safeJsonStringify(valB, 0) ?? '');
 
 			if (sort.desc) return rowValueB.localeCompare(rowValueA);
 			return rowValueA.localeCompare(rowValueB);
@@ -73,7 +109,7 @@ function updateRecord(existingRow: object, updatedRow: object) {
 		throw new Error(`key and value are required for ${getStorage().name}`);
 
 	getStorage().removeItem(String(existingRow.key));
-	getStorage().setItem(String(updatedRow.key), JSON.stringify(updatedRow.value));
+	getStorage().setItem(String(updatedRow.key), serializeStorageValue(updatedRow.value));
 }
 
 function deleteRecords() {
@@ -115,7 +151,7 @@ function importRecords(jsonData: any[]) {
 		if (!checkForKeyValue(row as object))
 			throw new Error(`key and value are required for ${getStorage().name}`);
 
-		getStorage().setItem(String(row.key), JSON.stringify(row.value));
+		getStorage().setItem(String(row.key), serializeStorageValue(row.value));
 	}
 }
 

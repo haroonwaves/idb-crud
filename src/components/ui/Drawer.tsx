@@ -6,7 +6,6 @@ type DocStyles = {
 	overflow: string;
 	height: string;
 	width: string;
-	fontSize: string;
 };
 
 function createOverlay() {
@@ -28,20 +27,17 @@ function createOverlay() {
 	const overflow = document.documentElement.style.overflow;
 	const height = document.documentElement.style.height;
 	const width = document.documentElement.style.width;
-	const fontSize = document.documentElement.style.fontSize;
 
 	document.documentElement.style.position = 'fixed';
 	document.documentElement.style.overflow = 'hidden';
 	document.documentElement.style.height = '100vh';
 	document.documentElement.style.width = '100vw';
-	document.documentElement.style.fontSize = 'unset';
 
 	return {
 		position,
 		overflow,
 		height,
 		width,
-		fontSize,
 	};
 }
 
@@ -53,7 +49,6 @@ function removeOverlay(docStyles: DocStyles) {
 	document.documentElement.style.overflow = docStyles.overflow;
 	document.documentElement.style.height = docStyles.height;
 	document.documentElement.style.width = docStyles.width;
-	document.documentElement.style.fontSize = docStyles.fontSize;
 }
 
 export function Drawer({

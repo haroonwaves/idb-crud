@@ -1,25 +1,29 @@
 import { useRef, useState, useEffect } from 'preact/hooks';
 import { createPortal } from 'preact/compat';
-import { cn } from '@/lib/utils';
+import { cn, getShadowRoot } from '@/lib/utils';
 
 interface TooltipProps {
 	content: string;
 	children: preact.ComponentChildren;
 	sideOffset?: number;
 	side?: 'top' | 'bottom' | 'left' | 'right';
+	delayDuration?: number;
+	className?: string;
 }
 
-const getShadowRoot = () => {
-	return document.getElementsByTagName('idb-crud')[0]?.shadowRoot || document.body;
+const getTooltipContainer = () => {
+	return getShadowRoot() || document.body;
 };
 
 export function Tooltip({
 	content,
 	children,
-	sideOffset = 15,
+	sideOffset = 6,
 	side = 'bottom',
+	delayDuration = 450,
+	className,
 }: Readonly<TooltipProps>) {
-	const triggerRef = useRef<HTMLElement | null>(null);
+	const triggerRef = useRef<HTMLSpanElement | null>(null);
 	const [visible, setVisible] = useState(false);
 	const [position, setPosition] = useState({ top: 0, left: 0 });
 	const delayTimeout = useRef<number | null>(null);
@@ -28,8 +32,9 @@ export function Tooltip({
 	useEffect(() => {
 		if (visible && triggerRef.current) {
 			const rect = triggerRef.current.getBoundingClientRect();
-			let top = 0,
-				left = 0;
+			let top = 0;
+			let left = 0;
+
 			switch (side) {
 				case 'bottom': {
 					top = rect.bottom + window.scrollY + sideOffset;
@@ -57,7 +62,7 @@ export function Tooltip({
 		return () => setPosition({ top: 0, left: 0 });
 	}, [visible, sideOffset, side]);
 
-	// Tooltip content element
+	// Transform based on side
 	let transform = '';
 	switch (side) {
 		case 'top': {
@@ -81,12 +86,28 @@ export function Tooltip({
 		}
 	}
 
+	const handleMouseEnter = () => {
+		if (delayTimeout.current) clearTimeout(delayTimeout.current);
+		delayTimeout.current = window.setTimeout(() => setVisible(true), delayDuration);
+	};
+
+	const handleMouseLeave = () => {
+		if (delayTimeout.current) clearTimeout(delayTimeout.current);
+		setVisible(false);
+	};
+
+	useEffect(() => {
+		return () => {
+			if (delayTimeout.current) clearTimeout(delayTimeout.current);
+		};
+	}, []);
+
 	const tooltipEl =
 		visible && !(position.top === 0 && position.left === 0)
 			? createPortal(
 					<div
 						className={cn(
-							'bg-primary text-primary-foreground pointer-events-none fixed z-[1000000000] scale-100 rounded-md px-3 py-1.5 text-xs text-balance opacity-100 shadow-lg transition-all duration-150'
+							'pointer-events-none fixed scale-100 rounded-md bg-gray-900 px-2.5 py-1 text-[11px] font-medium text-white opacity-100 shadow-md transition-opacity duration-150 select-none'
 						)}
 						style={{
 							top: position.top,
@@ -98,50 +119,21 @@ export function Tooltip({
 					>
 						{content}
 					</div>,
-					getShadowRoot()
+					getTooltipContainer()
 				)
 			: null;
 
-	// Clone child to attach ref and event handlers
-	const child = (Array.isArray(children) ? children[0] : children) as HTMLElement;
-	const childProps = {
-		ref: (el: HTMLElement) => {
-			triggerRef.current = el;
-			if (typeof (child as any).ref === 'function') (child as any).ref(el);
-		},
-		onMouseEnter: () => {
-			if (delayTimeout.current) clearTimeout(delayTimeout.current);
-			delayTimeout.current = window.setTimeout(() => setVisible(true), 800);
-		},
-		onFocus: () => {
-			if (delayTimeout.current) clearTimeout(delayTimeout.current);
-			delayTimeout.current = window.setTimeout(() => setVisible(true), 800);
-		},
-		onMouseLeave: () => {
-			if (delayTimeout.current) clearTimeout(delayTimeout.current);
-			setVisible(false);
-		},
-		onBlur: () => {
-			if (delayTimeout.current) clearTimeout(delayTimeout.current);
-			setVisible(false);
-		},
-		tabIndex: (child as any)?.props?.tabIndex ?? 0,
-		style: { ...(child as any)?.props?.style, outline: 'none' },
-	};
-
-	// Cleanup timeout on unmount
-	useEffect(() => {
-		return () => {
-			if (delayTimeout.current) clearTimeout(delayTimeout.current);
-		};
-	}, []);
-
 	return (
-		<>
-			{children && typeof child === 'object'
-				? { ...child, props: { ...(child as any).props, ...childProps } }
-				: children}
+		<span
+			ref={triggerRef}
+			onMouseEnter={handleMouseEnter}
+			onMouseLeave={handleMouseLeave}
+			onFocus={handleMouseEnter}
+			onBlur={handleMouseLeave}
+			className={cn('inline-flex shrink-0 items-center justify-center', className)}
+		>
+			{children}
 			{tooltipEl}
-		</>
+		</span>
 	);
 }
