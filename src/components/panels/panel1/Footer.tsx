@@ -11,7 +11,7 @@ import {
 
 export function Panel1Footer() {
 	const [infoOpen, setInfoOpen] = useState(false);
-	const version = process.env.APP_VERSION || '2.3.0';
+	const version = process.env.APP_VERSION || '3.0.0';
 
 	return (
 		<>
