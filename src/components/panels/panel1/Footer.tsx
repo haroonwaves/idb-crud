@@ -11,11 +11,11 @@ import {
 
 export function Panel1Footer() {
 	const [infoOpen, setInfoOpen] = useState(false);
-	const version = process.env.APP_VERSION || '3.0.0';
+	const version = process.env.APP_VERSION || '3.0.1';
 
 	return (
 		<>
-			<div className="flex h-11 shrink-0 items-center justify-between bg-white px-4 mb-3 select-none">
+			<div className="mb-3 flex h-11 shrink-0 items-center justify-between bg-white px-4 select-none">
 				<Tooltip content="About IDB CRUD">
 					<Info
 						className="size-3.5 cursor-pointer text-gray-400 transition-colors hover:text-gray-700"

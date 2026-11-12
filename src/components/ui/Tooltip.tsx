@@ -12,7 +12,13 @@ interface TooltipProps {
 }
 
 const getTooltipContainer = () => {
-	return getShadowRoot() || document.body;
+	const shadowRoot = getShadowRoot();
+	return (
+		shadowRoot?.querySelector('#idb-crud-app') ||
+		shadowRoot?.getElementById('idb-crud-content-root') ||
+		shadowRoot ||
+		document.body
+	);
 };
 
 export function Tooltip({

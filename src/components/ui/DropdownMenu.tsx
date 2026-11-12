@@ -12,14 +12,19 @@ function DropdownMenuPortal({
 }: React.ComponentProps<typeof DropdownMenuPrimitive.Portal>) {
 	const shadowRoot = getShadowRoot();
 
-	if (!shadowRoot) {
+	const container =
+		shadowRoot?.querySelector('#idb-crud-app') ||
+		shadowRoot?.getElementById('idb-crud-content-root') ||
+		shadowRoot;
+
+	if (!container) {
 		return <DropdownMenuPrimitive.Portal {...props} />;
 	}
 
 	return (
 		<DropdownMenuPrimitive.Portal
 			data-slot="dropdown-menu-portal"
-			container={shadowRoot}
+			container={container as HTMLElement}
 			{...props}
 		/>
 	);

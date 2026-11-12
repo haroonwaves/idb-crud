@@ -2,7 +2,7 @@
 	"name": "idb-crud",
 	"description": "An open-source Chrome extension for managing various types of browser storage and databases with an intuitive interface",
 	"private": true,
-	"version": "3.0.0",
+	"version": "3.0.1",
 	"type": "module",
 	"license": "GPL-3.0-only",
 	"homepage": "https://github.com/haroonwaves/idb-crud",
@@ -21,7 +21,6 @@
 	"dependencies": {
 		"@preact/signals": "^1.2.3",
 		"@radix-ui/react-checkbox": "^1.2.2",
-		"@radix-ui/react-dialog": "^1.1.11",
 		"@radix-ui/react-dropdown-menu": "^2.1.7",
 		"@radix-ui/react-select": "^2.2.2",
 		"@radix-ui/react-slot": "^1.2.0",

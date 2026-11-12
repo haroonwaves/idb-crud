@@ -19,12 +19,23 @@ function SelectValue({ ...props }: React.ComponentProps<typeof SelectPrimitive.V
 function SelectPortal({ ...props }: React.ComponentProps<typeof SelectPrimitive.Portal>) {
 	const shadowRoot = getShadowRoot();
 
-	if (!shadowRoot) {
+	const container =
+		shadowRoot?.querySelector('#idb-crud-app') ||
+		shadowRoot?.getElementById('idb-crud-content-root') ||
+		shadowRoot;
+
+	if (!container) {
 		console.warn('Shadow root not found for SelectPortal');
 		return <SelectPrimitive.Portal {...props} />;
 	}
 
-	return <SelectPrimitive.Portal data-slot="select-portal" container={shadowRoot} {...props} />;
+	return (
+		<SelectPrimitive.Portal
+			data-slot="select-portal"
+			container={container as HTMLElement}
+			{...props}
+		/>
+	);
 }
 
 function SelectTrigger({

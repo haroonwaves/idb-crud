@@ -1,43 +1,165 @@
 import * as React from 'preact/compat';
-import * as DialogPrimitive from '@radix-ui/react-dialog';
+import { createContext } from 'preact';
+import { useContext, useState, useEffect, useCallback, useRef } from 'preact/hooks';
+import { createPortal } from 'preact/compat';
+import { Slot } from '@radix-ui/react-slot';
 import { XIcon } from 'lucide-react';
+import { cn, getShadowRoot } from '@/lib/utils';
 
-import { cn } from '@/lib/utils';
-
-function Dialog({ ...props }: React.ComponentProps<typeof DialogPrimitive.Root>) {
-	return <DialogPrimitive.Root data-slot="dialog" {...props} />;
+interface DialogContextType {
+	open: boolean;
+	setOpen: (open: boolean) => void;
 }
 
-function DialogTrigger({ ...props }: React.ComponentProps<typeof DialogPrimitive.Trigger>) {
-	return <DialogPrimitive.Trigger data-slot="dialog-trigger" {...props} />;
-}
+const DialogContext = createContext<DialogContextType | null>(null);
 
-function DialogPortal({ ...props }: React.ComponentProps<typeof DialogPrimitive.Portal>) {
-	const shadowRoot = document.getElementsByTagName('idb-crud')[0]?.shadowRoot;
-
-	if (!shadowRoot) {
-		console.warn('Shadow root not found for DialogPortal');
-		return <DialogPrimitive.Portal {...props} />;
+function useDialog() {
+	const context = useContext(DialogContext);
+	if (!context) {
+		throw new Error('Dialog components must be used within a Dialog');
 	}
-
-	return <DialogPrimitive.Portal data-slot="dialog-portal" container={shadowRoot} {...props} />;
+	return context;
 }
 
-function DialogClose({ ...props }: React.ComponentProps<typeof DialogPrimitive.Close>) {
-	return <DialogPrimitive.Close data-slot="dialog-close" {...props} />;
+interface DialogProps {
+	open?: boolean;
+	defaultOpen?: boolean;
+	onOpenChange?: (open: boolean) => void;
+	children?: React.ReactNode;
 }
 
-function DialogOverlay({
-	className,
+function Dialog({
+	open: controlledOpen,
+	defaultOpen = false,
+	onOpenChange,
+	children,
+}: Readonly<DialogProps>) {
+	const [uncontrolledOpen, setUncontrolledOpen] = useState(defaultOpen);
+	const isControlled = controlledOpen !== undefined;
+	const open = isControlled ? controlledOpen : uncontrolledOpen;
+
+	const setOpen = useCallback(
+		(newOpen: boolean) => {
+			if (!isControlled) {
+				setUncontrolledOpen(newOpen);
+			}
+			onOpenChange?.(newOpen);
+		},
+		[isControlled, onOpenChange]
+	);
+
+	return <DialogContext.Provider value={{ open, setOpen }}>{children}</DialogContext.Provider>;
+}
+
+type ButtonClickEvent = Parameters<NonNullable<React.ComponentProps<'button'>['onClick']>>[0];
+type DialogTriggerProps = React.ComponentProps<'button'> & { asChild?: boolean };
+
+function DialogTrigger({
+	asChild,
+	children,
+	onClick,
 	...props
-}: React.ComponentProps<typeof DialogPrimitive.Overlay>) {
+}: Readonly<DialogTriggerProps>) {
+	const { setOpen } = useDialog();
+
+	const Comp = asChild ? Slot : 'button';
+
 	return (
-		<DialogPrimitive.Overlay
+		<Comp
+			type={asChild ? undefined : 'button'}
+			onClick={(e: ButtonClickEvent) => {
+				onClick?.(e);
+				if (!e.defaultPrevented) {
+					setOpen(true);
+				}
+			}}
+			{...props}
+		>
+			{children}
+		</Comp>
+	);
+}
+
+type DialogCloseProps = React.ComponentProps<'button'> & { asChild?: boolean };
+
+function DialogClose({
+	asChild,
+	children,
+	onClick,
+	...props
+}: Readonly<DialogCloseProps>) {
+	const { setOpen } = useDialog();
+
+	const Comp = asChild ? Slot : 'button';
+
+	return (
+		<Comp
+			type={asChild ? undefined : 'button'}
+			onClick={(e: ButtonClickEvent) => {
+				onClick?.(e);
+				if (!e.defaultPrevented) {
+					setOpen(false);
+				}
+			}}
+			{...props}
+		>
+			{children}
+		</Comp>
+	);
+}
+
+const getDialogContainer = () => {
+	const shadowRoot = getShadowRoot();
+	return (
+		shadowRoot?.querySelector('#idb-crud-app') ||
+		shadowRoot?.getElementById('idb-crud-content-root') ||
+		shadowRoot?.host ||
+		document.body
+	);
+};
+
+function DialogPortal({ children }: Readonly<{ children: React.ReactNode }>) {
+	const { open } = useDialog();
+	if (!open) return null;
+
+	const container = getDialogContainer();
+	if (!container) return null;
+
+	return createPortal(children, container);
+}
+
+function DialogOverlay({ className, style, onClick, ...props }: Readonly<React.ComponentProps<'div'>>) {
+	const { setOpen } = useDialog();
+
+	return (
+		<div
+			role="button"
+			tabIndex={-1}
 			data-slot="dialog-overlay"
 			className={cn(
-				'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50',
-				className as string
+				'fixed inset-0 bg-black/50 backdrop-blur-xs transition-opacity duration-150',
+				className
 			)}
+			style={{
+				position: 'fixed',
+				top: 0,
+				left: 0,
+				right: 0,
+				bottom: 0,
+				zIndex: 9999990,
+				...(style as object),
+			}}
+			onClick={(e) => {
+				onClick?.(e);
+				if (!e.defaultPrevented) {
+					setOpen(false);
+				}
+			}}
+			onKeyDown={(e) => {
+				if (e.key === 'Enter' || e.key === ' ') {
+					setOpen(false);
+				}
+			}}
 			{...props}
 		/>
 	);
@@ -46,28 +168,69 @@ function DialogOverlay({
 function DialogContent({
 	className,
 	children,
+	style,
 	...props
-}: React.ComponentProps<typeof DialogPrimitive.Content>) {
+}: Readonly<React.ComponentProps<'div'>>) {
+	const { open, setOpen } = useDialog();
+	const contentRef = useRef<HTMLDivElement>(null);
+
+	// Close on Escape key
+	useEffect(() => {
+		if (!open) return;
+
+		const handleKeyDown = (e: KeyboardEvent) => {
+			if (e.key === 'Escape') {
+				e.stopPropagation();
+				setOpen(false);
+			}
+		};
+
+		window.addEventListener('keydown', handleKeyDown, true);
+		return () => window.removeEventListener('keydown', handleKeyDown, true);
+	}, [open, setOpen]);
+
+	if (!open) return null;
+
 	return (
-		<DialogPortal data-slot="dialog-portal">
-			<div className="fixed inset-0 bg-black/50" style={{ zIndex: 10000000000 }} />
-			<DialogPrimitive.Content
+		<DialogPortal>
+			<DialogOverlay />
+			<div
+				ref={contentRef}
 				data-slot="dialog-content"
+				role="dialog"
+				aria-modal="true"
 				className={cn(
-					'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-[50%] left-[50%] z-50 grid w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg border bg-white p-6 duration-200 outline-none! sm:max-w-lg',
-					className as string
+					'fixed inset-0 m-auto flex flex-col gap-4 rounded-xl border border-gray-200 bg-white p-6 shadow-2xl outline-none! max-w-lg overflow-y-auto',
+					className
 				)}
 				style={{
-					zIndex: 10000000000000000,
+					position: 'fixed',
+					top: 0,
+					left: 0,
+					right: 0,
+					bottom: 0,
+					margin: 'auto',
+					width: 'calc(100% - 2rem)',
+					height: 'fit-content',
+					maxHeight: 'calc(100vh - 4rem)',
+					zIndex: 10000000,
+					...(style as object),
 				}}
+				onClick={(e) => e.stopPropagation()}
+				onKeyDown={(e) => e.stopPropagation()}
 				{...props}
 			>
 				{children}
-				<DialogPrimitive.Close className="ring-offset-background focus:ring-ring data-[state=open]:bg-accent data-[state=open]:text-muted-foreground absolute top-4 right-4 cursor-pointer rounded-xs opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4">
-					<XIcon />
+				<button
+					type="button"
+					onClick={() => setOpen(false)}
+					className="absolute top-4 right-4 cursor-pointer rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:outline-hidden disabled:pointer-events-none"
+					aria-label="Close"
+				>
+					<XIcon className="size-4 text-gray-500 hover:text-gray-900" />
 					<span className="sr-only">Close</span>
-				</DialogPrimitive.Close>
-			</DialogPrimitive.Content>
+				</button>
+			</div>
 		</DialogPortal>
 	);
 }
@@ -92,11 +255,11 @@ function DialogFooter({ className, ...props }: Readonly<React.ComponentProps<'di
 	);
 }
 
-function DialogTitle({ className, ...props }: React.ComponentProps<typeof DialogPrimitive.Title>) {
+function DialogTitle({ className, ...props }: Readonly<React.ComponentProps<'h2'>>) {
 	return (
-		<DialogPrimitive.Title
+		<h2
 			data-slot="dialog-title"
-			className={cn('text-lg leading-none font-semibold', className as string)}
+			className={cn('text-lg leading-none font-semibold text-gray-900', className)}
 			{...props}
 		/>
 	);
@@ -105,11 +268,11 @@ function DialogTitle({ className, ...props }: React.ComponentProps<typeof Dialog
 function DialogDescription({
 	className,
 	...props
-}: React.ComponentProps<typeof DialogPrimitive.Description>) {
+}: Readonly<React.ComponentProps<'p'>>) {
 	return (
-		<DialogPrimitive.Description
+		<p
 			data-slot="dialog-description"
-			className={cn('text-muted-foreground text-sm', className as string)}
+			className={cn('text-sm text-gray-500', className)}
 			{...props}
 		/>
 	);

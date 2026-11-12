@@ -27,7 +27,6 @@ export default defineConfig({
 	manifest: {
 		homepage_url: 'https://github.com/haroonwaves/idb-crud',
 		author: { email: 'haroonusman00@gmail.com' },
-		permissions: ['activeTab', 'storage'],
 		action: {},
 	},
 	alias: {
